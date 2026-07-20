@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hotelería — Facturación</title>
+<link rel="stylesheet" href="assets/styles.css">
+</head>
+<body>
+<div class="app-shell">
+
+  <aside class="sidebar">
+    <div class="sidebar-brand">
+      <div class="mark">H</div>
+      <div class="name">Hotelería<span>Panel administrativo</span></div>
+    </div>
+
+    <div class="nav-group-label">General</div>
+    <a class="nav-link" href="dashboard.html">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="7" height="9" rx="1.5"/><rect x="14" y="3" width="7" height="5" rx="1.5"/><rect x="14" y="12" width="7" height="9" rx="1.5"/><rect x="3" y="16" width="7" height="5" rx="1.5"/></svg>
+      Panel principal
+    </a>
+
+    <div class="nav-group-label">Operación</div>
+    <a class="nav-link" href="habitaciones.html">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 21V8l8-5 8 5v13"/><path d="M9 21v-6h6v6"/></svg>
+      Habitaciones
+    </a>
+    <a class="nav-link" href="reservas.html">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4" width="18" height="17" rx="2"/><path d="M3 9h18M8 2v4M16 2v4"/></svg>
+      Reservas
+    </a>
+    <a class="nav-link" href="huespedes.html">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="8" r="3.5"/><path d="M4.5 20.5c1.6-3.6 4.4-5.5 7.5-5.5s5.9 1.9 7.5 5.5"/></svg>
+      Huéspedes
+    </a>
+
+    <div class="nav-group-label">Administración</div>
+    <a class="nav-link active" href="facturacion.html">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 8h8M8 12h8M8 16h5"/></svg>
+      Facturación
+    </a>
+    <a class="nav-link" href="reportes.html">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 20V10M12 20V4M20 20v-7"/></svg>
+      Reportes
+    </a>
+
+    <div class="sidebar-footer">
+      <div class="sucursal-pill">
+        <span class="dot"></span>
+        <span class="txt" data-sucursal-pill></span>
+      </div>
+      <a class="logout-link" href="#" onclick="logout(); return false;">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4M16 17l5-5-5-5M21 12H9"/></svg>
+        Cerrar sesión
+      </a>
+    </div>
+  </aside>
+
+  <div class="main">
+    <div class="topbar">
+      <div>
+        <h1>Facturación</h1>
+        <div class="subtitle" id="subFacturacion"></div>
+      </div>
+      <div class="topbar-right">
+        <div class="currency-toggle">
+          <button data-currency="PYG">Gs</button>
+          <button data-currency="USD">US$</button>
+          <button data-currency="BRL">R$</button>
+        </div>
+        <div class="user-chip">
+          <div class="avatar" data-user-avatar></div>
+          <div class="info"><b data-user-name></b><small data-user-role></small></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="content">
+
+      <div class="grid grid-3" style="margin-bottom:20px;">
+        <div class="stat-card">
+          <div class="stat-top">
+            <div class="icon-box"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 1v22M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg></div>
+          </div>
+          <div class="value" id="statTotal">—</div>
+          <div class="label">Facturado este mes</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-top">
+            <div class="icon-box"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 12l2 2 4-4"/><circle cx="12" cy="12" r="9"/></svg></div>
+          </div>
+          <div class="value" id="statPagadas">—</div>
+          <div class="label">Facturas pagadas</div>
+        </div>
+        <div class="stat-card accent">
+          <div class="stat-top">
+            <div class="icon-box"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg></div>
+          </div>
+          <div class="value" id="statPendientes">—</div>
+          <div class="label">Facturas pendientes</div>
+        </div>
+      </div>
+
+      <div class="toolbar">
+        <div class="search-box">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+          <input type="text" id="buscador" placeholder="Buscar por huésped o código de factura...">
+        </div>
+        <div class="filters">
+          <select class="chip-select" id="filtroEstado">
+            <option value="">Todos los estados</option>
+            <option value="pagada">Pagada</option>
+            <option value="pendiente">Pendiente</option>
+          </select>
+          <button class="btn btn-accent btn-sm" onclick="abrirModal()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>
+            Nueva factura
+          </button>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Factura</th><th>Huésped</th><th>Concepto</th><th>Subtotal</th><th>IVA (10%)</th><th>Total</th><th>Método</th><th>Estado</th><th></th>
+              </tr>
+            </thead>
+            <tbody id="tablaFacturas"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="card" style="margin-top:16px;">
+        <div class="card-body" style="display:flex; align-items:center; gap:10px; color:var(--gray-500); font-size:12.5px;">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" style="width:16px;height:16px;flex-shrink:0;"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16h.01"/></svg>
+          Los montos se calculan en guaraníes y se convierten automáticamente según la moneda seleccionada arriba. Tasas de referencia: 1 US$ = Gs 7.300 · 1 R$ = Gs 1.350.
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal nueva factura -->
+<div class="modal-overlay" id="modalFactura">
+  <div class="modal">
+    <div class="modal-head">
+      <h3>Nueva factura</h3>
+      <button class="modal-close" onclick="cerrarModal()">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="field">
+        <label>Huésped <span class="req">*</span></label>
+        <input type="text" placeholder="Nombre y apellido">
+      </div>
+      <div class="field">
+        <label>Concepto <span class="req">*</span></label>
+        <input type="text" placeholder="Ej. Hospedaje Doble · 3 noches">
+      </div>
+      <div class="field-row">
+        <div class="field">
+          <label>Moneda de cobro</label>
+          <select>
+            <option>Guaraníes (Gs)</option>
+            <option>Dólares (US$)</option>
+            <option>Reales (R$)</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>Método de pago</label>
+          <select>
+            <option>Efectivo</option>
+            <option>Tarjeta</option>
+            <option>Transferencia</option>
+          </select>
+        </div>
+      </div>
+      <div class="field mb-0">
+        <label>Subtotal <span class="req">*</span></label>
+        <div class="prefix-input">
+          <span>Gs</span>
+          <input type="text" placeholder="450.000">
+        </div>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-ghost" onclick="cerrarModal()">Cancelar</button>
+      <button class="btn btn-primary" onclick="cerrarModal()">Emitir factura</button>
+    </div>
+  </div>
+</div>
+
+<script src="assets/app.js"></script>
+<script>
+  requireAuth();
+  const suc = getSucursalActual();
+  const facturas = generarFacturas(suc);
+
+  document.getElementById('subFacturacion').textContent = `${suc.corto} · ${facturas.length} facturas`;
+
+  function render(){
+    const cur = getCurrentCurrency();
+    const texto = document.getElementById('buscador').value.toLowerCase();
+    const estado = document.getElementById('filtroEstado').value;
+
+    const filtradas = facturas.filter(f =>
+      (f.huesped.toLowerCase().includes(texto) || f.id.toLowerCase().includes(texto))
+      && (estado === '' || f.estado === estado)
+    );
+
+    document.getElementById('tablaFacturas').innerHTML = filtradas.map(f => `
+      <tr>
+        <td class="cell-strong mono">${f.id}</td>
+        <td>${f.huesped}</td>
+        <td class="cell-muted">${f.concepto}</td>
+        <td class="mono">${formatMoney(f.subtotalPYG, cur)}</td>
+        <td class="mono cell-muted">${formatMoney(f.impuestoPYG, cur)}</td>
+        <td class="mono cell-strong">${formatMoney(f.totalPYG, cur)}</td>
+        <td class="cell-muted">${f.metodo}</td>
+        <td><span class="badge badge-${f.estado === 'pagada' ? 'confirmada' : 'pendiente'}">${f.estado.charAt(0).toUpperCase()+f.estado.slice(1)}</span></td>
+        <td class="text-right"><button class="btn btn-ghost btn-sm" onclick="abrirModal()">Ver</button></td>
+      </tr>
+    `).join('');
+
+    document.getElementById('statTotal').textContent = formatMoney(facturas.reduce((a,f)=>a+f.totalPYG,0), cur);
+    document.getElementById('statPagadas').textContent = facturas.filter(f=>f.estado==='pagada').length;
+    document.getElementById('statPendientes').textContent = facturas.filter(f=>f.estado==='pendiente').length;
+  }
+
+  document.getElementById('buscador').addEventListener('input', render);
+  document.getElementById('filtroEstado').addEventListener('change', render);
+  window.addEventListener('currencychange', render);
+
+  function abrirModal(){ document.getElementById('modalFactura').classList.add('open'); }
+  function cerrarModal(){ document.getElementById('modalFactura').classList.remove('open'); }
+
+  render();
+</script>
+</body>
+</html>

@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hotelería — Iniciar sesión</title>
+<link rel="stylesheet" href="assets/styles.css">
+<style>
+  body.login-body{
+    min-height:100vh;
+    display:flex;
+    background:
+      radial-gradient(circle at 15% 15%, rgba(245,169,104,.10), transparent 40%),
+      radial-gradient(circle at 85% 85%, rgba(59,138,196,.16), transparent 45%),
+      var(--blue-950);
+  }
+  .login-shell{
+    display:grid;
+    grid-template-columns:1fr 460px;
+    width:100%;
+  }
+  .login-visual{
+    position:relative;
+    padding:52px;
+    display:flex;
+    flex-direction:column;
+    justify-content:space-between;
+    color:var(--white);
+    overflow:hidden;
+  }
+  .login-visual::before{
+    content:'';
+    position:absolute; inset:0;
+    background:
+      linear-gradient(180deg, rgba(10,42,69,.2), rgba(10,42,69,.85)),
+      url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="600" height="600"><rect width="600" height="600" fill="none"/></svg>');
+    z-index:0;
+  }
+  .login-visual > *{position:relative; z-index:1;}
+  .brandmark{display:flex; align-items:center; gap:12px;}
+  .brandmark .mark{
+    width:42px; height:42px; border-radius:11px;
+    background:var(--orange-400);
+    display:flex; align-items:center; justify-content:center;
+    font-family:var(--font-display); font-weight:800; font-size:18px; color:var(--blue-950);
+  }
+  .brandmark .name{font-family:var(--font-display); font-weight:700; font-size:20px;}
+  .brandmark .name span{display:block; font-size:11.5px; font-weight:500; color:rgba(255,255,255,.55); margin-top:1px;}
+
+  .visual-copy h2{
+    font-size:34px; color:var(--white); line-height:1.18; max-width:460px; font-weight:700;
+  }
+  .visual-copy p{
+    font-size:14.5px; color:rgba(255,255,255,.65); max-width:420px; margin-top:14px; line-height:1.6;
+  }
+  .visual-stats{display:flex; gap:34px; margin-top:34px;}
+  .visual-stats div b{display:block; font-family:var(--font-display); font-size:24px; font-weight:800;}
+  .visual-stats div small{font-size:11.5px; color:rgba(255,255,255,.5); font-weight:500;}
+  .visual-footer{font-size:12px; color:rgba(255,255,255,.4);}
+
+  .login-panel{
+    background:var(--white);
+    display:flex; flex-direction:column; justify-content:center;
+    padding:52px 46px;
+  }
+  .login-panel h1{font-size:23px; margin-bottom:6px;}
+  .login-panel .lead{font-size:13.5px; color:var(--gray-500); margin-bottom:28px; font-weight:500;}
+
+  .step-label{
+    font-size:11px; text-transform:uppercase; letter-spacing:.07em;
+    font-weight:700; color:var(--blue-700); margin-bottom:10px;
+  }
+
+  .sucursal-options{display:flex; flex-direction:column; gap:10px; margin-bottom:6px;}
+  .sucursal-card{
+    display:flex; align-items:center; gap:13px;
+    border:1.5px solid var(--gray-200);
+    border-radius:12px;
+    padding:14px;
+    cursor:pointer;
+    transition:border-color .15s ease, background .15s ease;
+    text-align:left;
+    background:var(--white);
+  }
+  .sucursal-card:hover{border-color:var(--blue-500); background:var(--blue-50);}
+  .sucursal-card.selected{border-color:var(--blue-700); background:var(--blue-50); box-shadow:0 0 0 3px var(--blue-100);}
+  .sucursal-card .icon{
+    width:38px; height:38px; border-radius:9px; flex-shrink:0;
+    background:var(--blue-100); color:var(--blue-800);
+    display:flex; align-items:center; justify-content:center;
+  }
+  .sucursal-card .icon svg{width:19px; height:19px;}
+  .sucursal-card .info b{display:block; font-size:14px; color:var(--blue-950); font-weight:700;}
+  .sucursal-card .info small{font-size:12px; color:var(--gray-500); font-weight:500;}
+  .sucursal-card .check{
+    margin-left:auto; width:20px; height:20px; border-radius:50%;
+    border:1.5px solid var(--gray-300); flex-shrink:0;
+    display:flex; align-items:center; justify-content:center;
+  }
+  .sucursal-card.selected .check{background:var(--blue-700); border-color:var(--blue-700);}
+  .sucursal-card.selected .check::after{content:''; width:8px; height:8px; border-radius:50%; background:var(--white);}
+
+  .divider-line{height:1px; background:var(--gray-200); margin:22px 0;}
+
+  .login-form{display:none;}
+  .login-form.visible{display:block;}
+  .back-link{display:inline-flex; align-items:center; gap:6px; font-size:12.5px; font-weight:600; color:var(--gray-500); margin-bottom:16px; cursor:pointer;}
+  .back-link svg{width:14px;height:14px;}
+  .back-link:hover{color:var(--blue-700);}
+
+  .form-sucursal-tag{
+    display:inline-flex; align-items:center; gap:7px;
+    background:var(--orange-100); color:#B5651D;
+    font-size:12px; font-weight:700;
+    padding:6px 11px; border-radius:20px; margin-bottom:20px;
+  }
+  .form-sucursal-tag .dot{width:6px; height:6px; border-radius:50%; background:var(--orange-500);}
+
+  .checkbox-row{display:flex; align-items:center; justify-content:space-between; margin-bottom:22px; font-size:13px;}
+  .checkbox-row label{display:flex; align-items:center; gap:7px; color:var(--gray-700); font-weight:500; cursor:pointer;}
+  .checkbox-row a{color:var(--blue-700); font-weight:600;}
+
+  .error-msg{
+    display:none;
+    background:var(--danger-bg); color:var(--danger);
+    font-size:12.5px; font-weight:600;
+    padding:9px 12px; border-radius:8px; margin-bottom:16px;
+  }
+  .error-msg.visible{display:block;}
+
+  .demo-hint{
+    margin-top:22px; padding:12px 14px;
+    background:var(--gray-50); border:1px dashed var(--gray-300);
+    border-radius:10px; font-size:12px; color:var(--gray-500); line-height:1.6;
+  }
+  .demo-hint b{color:var(--gray-700);}
+
+  @media (max-width: 900px){
+    .login-shell{grid-template-columns:1fr;}
+    .login-visual{display:none;}
+  }
+</style>
+</head>
+<body class="login-body">
+
+  <div class="login-shell">
+    <!-- Panel visual -->
+    <div class="login-visual">
+      <div class="brandmark">
+        <div class="mark">H</div>
+        <div class="name">Hotelería<span>Sistema de gestión hotelera</span></div>
+      </div>
+
+      <div class="visual-copy">
+        <h2>Gestioná tus sucursales desde un solo lugar.</h2>
+        <p>Reservas, habitaciones, huéspedes y facturación en guaraníes, reales o dólares — sincronizado en tiempo real entre sucursales.</p>
+        <div class="visual-stats">
+          <div><b>2</b><small>Sucursales activas</small></div>
+          <div><b>52</b><small>Habitaciones en total</small></div>
+          <div><b>3</b><small>Monedas soportadas</small></div>
+        </div>
+      </div>
+
+      <div class="visual-footer">© 2026 Hotelería — Panel administrativo interno</div>
+    </div>
+
+    <!-- Panel de login -->
+    <div class="login-panel">
+
+      <!-- Paso 1: selección de sucursal -->
+      <div id="stepSucursal">
+        <h1>Iniciar sesión</h1>
+        <p class="lead">Elegí la sucursal a la que querés ingresar.</p>
+
+        <div class="step-label">Paso 1 de 2 · Sucursal</div>
+        <div class="sucursal-options">
+          <button type="button" class="sucursal-card" data-sucursal="centro" onclick="seleccionarSucursal('centro')">
+            <div class="icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 21V8l8-5 8 5v13"/><path d="M9 21v-6h6v6"/><path d="M9 12h.01M15 12h.01M9 9h.01M15 9h.01"/></svg>
+            </div>
+            <div class="info">
+              <b>Sucursal Centro</b>
+              <small>Asunción · 30 habitaciones (101–130)</small>
+            </div>
+            <div class="check"></div>
+          </button>
+
+          <button type="button" class="sucursal-card" data-sucursal="este" onclick="seleccionarSucursal('este')">
+            <div class="icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 21h18M5 21V7l7-4 7 4v14M9 21v-5h6v5"/></svg>
+            </div>
+            <div class="info">
+              <b>Sucursal Ciudad del Este</b>
+              <small>CDE · 22 habitaciones (201–222)</small>
+            </div>
+            <div class="check"></div>
+          </button>
+        </div>
+
+        <div class="demo-hint"><b>Demo:</b> cada sucursal tiene su propia numeración de habitaciones, ocupación y montos — son independientes entre sí.</div>
+      </div>
+
+      <!-- Paso 2: credenciales -->
+      <div id="stepLogin" class="login-form">
+        <span class="back-link" onclick="volverASucursal()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+          Cambiar sucursal
+        </span>
+
+        <h1>Ingresar al sistema</h1>
+        <p class="lead">Ingresá tus credenciales para continuar.</p>
+
+        <div class="form-sucursal-tag"><span class="dot"></span><span id="tagSucursalNombre">Sucursal Centro</span></div>
+
+        <div id="errorMsg" class="error-msg">Usuario o contraseña incorrectos. Probá con las credenciales de demostración.</div>
+
+        <form id="loginForm" onsubmit="return manejarLogin(event)">
+          <div class="field">
+            <label>Usuario</label>
+            <input type="text" id="usuario" placeholder="p. ej. recepcion.centro" required>
+          </div>
+          <div class="field">
+            <label>Contraseña</label>
+            <input type="password" id="password" placeholder="••••••••" required>
+          </div>
+          <div class="checkbox-row">
+            <label><input type="checkbox" checked style="width:auto;"> Recordarme</label>
+            <a href="#">¿Olvidaste tu contraseña?</a>
+          </div>
+          <button type="submit" class="btn btn-primary btn-block">Ingresar</button>
+        </form>
+
+        <div class="demo-hint"><b>Credenciales de demo:</b> usuario <b>admin</b> · contraseña <b>admin</b> (cualquier combinación funciona en esta demo).</div>
+      </div>
+
+    </div>
+  </div>
+
+<script>
+  let sucursalElegida = null;
+
+  const nombresSucursal = {
+    centro: 'Sucursal Centro',
+    este: 'Sucursal Ciudad del Este'
+  };
+
+  function seleccionarSucursal(id){
+    sucursalElegida = id;
+    document.querySelectorAll('.sucursal-card').forEach(c=>{
+      c.classList.toggle('selected', c.dataset.sucursal === id);
+    });
+    setTimeout(()=>{
+      document.getElementById('stepSucursal').style.display = 'none';
+      document.getElementById('stepLogin').classList.add('visible');
+      document.getElementById('tagSucursalNombre').textContent = nombresSucursal[id];
+    }, 180);
+  }
+
+  function volverASucursal(){
+    document.getElementById('stepLogin').classList.remove('visible');
+    document.getElementById('stepSucursal').style.display = 'block';
+    document.getElementById('errorMsg').classList.remove('visible');
+  }
+
+  function manejarLogin(e){
+    e.preventDefault();
+    const usuario = document.getElementById('usuario').value.trim();
+    const password = document.getElementById('password').value.trim();
+
+    if(!usuario || !password){
+      document.getElementById('errorMsg').classList.add('visible');
+      return false;
+    }
+
+    localStorage.setItem('hoteleria_sucursal', sucursalElegida);
+    localStorage.setItem('hoteleria_auth', JSON.stringify({
+      nombre: usuario.charAt(0).toUpperCase() + usuario.slice(1),
+      rol: 'Recepción',
+      usuario
+    }));
+    if(!localStorage.getItem('hoteleria_currency')){
+      localStorage.setItem('hoteleria_currency', 'PYG');
+    }
+    window.location.href = 'dashboard.html';
+    return false;
+  }
+</script>
+</body>
+</html>

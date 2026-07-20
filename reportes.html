@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hotelería — Reportes</title>
+<link rel="stylesheet" href="assets/styles.css">
+<style>
+  .bar-chart{display:flex; align-items:flex-end; gap:14px; height:220px; padding:10px 6px 0;}
+  .bar-chart .col{flex:1; display:flex; flex-direction:column; align-items:center; gap:8px; height:100%; justify-content:flex-end;}
+  .bar-chart .bar{width:100%; max-width:34px; border-radius:6px 6px 0 0; background:var(--blue-600); position:relative; transition:height .4s ease;}
+  .bar-chart .bar.accent{background:var(--orange-400);}
+  .bar-chart .lbl{font-size:11px; color:var(--gray-500); font-weight:600;}
+  .donut-wrap{display:flex; align-items:center; gap:24px;}
+  .donut-legend{display:flex; flex-direction:column; gap:10px;}
+  .donut-legend .row{display:flex; align-items:center; gap:9px; font-size:13px;}
+  .donut-legend .sw{width:10px; height:10px; border-radius:3px;}
+  .donut-legend b{margin-left:auto; font-family:var(--font-display);}
+</style>
+</head>
+<body>
+<div class="app-shell">
+
+  <aside class="sidebar">
+    <div class="sidebar-brand">
+      <div class="mark">H</div>
+      <div class="name">Hotelería<span>Panel administrativo</span></div>
+    </div>
+
+    <div class="nav-group-label">General</div>
+    <a class="nav-link" href="dashboard.html">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="7" height="9" rx="1.5"/><rect x="14" y="3" width="7" height="5" rx="1.5"/><rect x="14" y="12" width="7" height="9" rx="1.5"/><rect x="3" y="16" width="7" height="5" rx="1.5"/></svg>
+      Panel principal
+    </a>
+
+    <div class="nav-group-label">Operación</div>
+    <a class="nav-link" href="habitaciones.html">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 21V8l8-5 8 5v13"/><path d="M9 21v-6h6v6"/></svg>
+      Habitaciones
+    </a>
+    <a class="nav-link" href="reservas.html">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4" width="18" height="17" rx="2"/><path d="M3 9h18M8 2v4M16 2v4"/></svg>
+      Reservas
+    </a>
+    <a class="nav-link" href="huespedes.html">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="8" r="3.5"/><path d="M4.5 20.5c1.6-3.6 4.4-5.5 7.5-5.5s5.9 1.9 7.5 5.5"/></svg>
+      Huéspedes
+    </a>
+
+    <div class="nav-group-label">Administración</div>
+    <a class="nav-link" href="facturacion.html">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 8h8M8 12h8M8 16h5"/></svg>
+      Facturación
+    </a>
+    <a class="nav-link active" href="reportes.html">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 20V10M12 20V4M20 20v-7"/></svg>
+      Reportes
+    </a>
+
+    <div class="sidebar-footer">
+      <div class="sucursal-pill">
+        <span class="dot"></span>
+        <span class="txt" data-sucursal-pill></span>
+      </div>
+      <a class="logout-link" href="#" onclick="logout(); return false;">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4M16 17l5-5-5-5M21 12H9"/></svg>
+        Cerrar sesión
+      </a>
+    </div>
+  </aside>
+
+  <div class="main">
+    <div class="topbar">
+      <div>
+        <h1>Reportes</h1>
+        <div class="subtitle" id="subReportes"></div>
+      </div>
+      <div class="topbar-right">
+        <div class="currency-toggle">
+          <button data-currency="PYG">Gs</button>
+          <button data-currency="USD">US$</button>
+          <button data-currency="BRL">R$</button>
+        </div>
+        <div class="user-chip">
+          <div class="avatar" data-user-avatar></div>
+          <div class="info"><b data-user-name></b><small data-user-role></small></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="content">
+      <div class="grid grid-2" style="align-items:start;">
+        <div class="card">
+          <div class="card-header">
+            <div>
+              <h3>Ingresos de los últimos 7 días</h3>
+              <div class="hint">Por sucursal actual</div>
+            </div>
+          </div>
+          <div class="card-body">
+            <div class="bar-chart" id="barChart"></div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <h3>Distribución por tipo de habitación</h3>
+          </div>
+          <div class="card-body">
+            <div class="donut-wrap">
+              <svg width="140" height="140" viewBox="0 0 42 42" id="donutSvg"></svg>
+              <div class="donut-legend" id="donutLegend"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card" style="margin-top:20px;">
+        <div class="card-header">
+          <h3>Resumen comparativo de sucursales</h3>
+          <div class="hint">Solo con fines de referencia — datos de demostración</div>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr><th>Sucursal</th><th>Habitaciones</th><th>Ocupación</th><th>Numeración</th><th>Ingresos estimados/mes</th></tr>
+            </thead>
+            <tbody id="tablaComparativo"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="assets/app.js"></script>
+<script>
+  requireAuth();
+  const suc = getSucursalActual();
+  const reservas = generarReservas(suc);
+  const habitaciones = generarHabitaciones(suc);
+
+  document.getElementById('subReportes').textContent = `${suc.corto} · Indicadores de desempeño`;
+
+  function pintarBarras(){
+    const cur = getCurrentCurrency();
+    const dias = ['Lun','Mar','Mié','Jue','Vie','Sáb','Dom'];
+    const valores = dias.map((_,i) => 900000 + ((i * 137 + suc.prefijoHabitacion * 211) % 700000));
+    const max = Math.max(...valores);
+    document.getElementById('barChart').innerHTML = dias.map((d,i) => `
+      <div class="col">
+        <div class="bar ${i===5 ? 'accent' : ''}" style="height:${(valores[i]/max)*170}px;"></div>
+        <div class="lbl">${d}</div>
+      </div>
+    `).join('');
+  }
+
+  function pintarDonut(){
+    const tipos = suc.tiposHabitacion.map(t => ({
+      tipo: t.tipo,
+      cantidad: habitaciones.filter(h=>h.tipo===t.tipo).length
+    }));
+    const total = tipos.reduce((a,t)=>a+t.cantidad,0);
+    const colores = ['#1B5D8F', '#3B8AC4', '#F0904A'];
+
+    let acc = 0;
+    const circles = tipos.map((t,i) => {
+      const pct = t.cantidad/total*100;
+      const dash = `${pct} ${100-pct}`;
+      const offset = 25 - acc;
+      acc += pct;
+      return `<circle cx="21" cy="21" r="15.9" fill="transparent" stroke="${colores[i]}" stroke-width="6" stroke-dasharray="${dash}" stroke-dashoffset="${offset}"></circle>`;
+    }).join('');
+    document.getElementById('donutSvg').innerHTML = circles;
+
+    document.getElementById('donutLegend').innerHTML = tipos.map((t,i) => `
+      <div class="row"><span class="sw" style="background:${colores[i]};"></span>${t.tipo}<b>${t.cantidad}</b></div>
+    `).join('');
+  }
+
+  function pintarComparativo(){
+    const cur = getCurrentCurrency();
+    document.getElementById('tablaComparativo').innerHTML = Object.values(SUCURSALES).map(s => {
+      const ingresosEstimados = s.totalHabitaciones * 420000 * 22 * s.ocupacionHoy;
+      const esActual = s.id === suc.id;
+      return `
+        <tr style="${esActual ? 'background:var(--blue-50);' : ''}">
+          <td class="cell-strong">${s.corto} ${esActual ? '<span class=\"badge badge-confirmada\" style=\"margin-left:8px;\">Actual</span>' : ''}</td>
+          <td>${s.totalHabitaciones}</td>
+          <td>${Math.round(s.ocupacionHoy*100)}%</td>
+          <td class="mono cell-muted">${s.prefijoHabitacion}xx</td>
+          <td class="mono cell-strong">${formatMoney(ingresosEstimados, cur)}</td>
+        </tr>
+      `;
+    }).join('');
+  }
+
+  function pintarTodo(){ pintarBarras(); pintarDonut(); pintarComparativo(); }
+  pintarTodo();
+  window.addEventListener('currencychange', pintarTodo);
+</script>
+</body>
+</html>
