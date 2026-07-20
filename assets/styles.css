@@ -297,13 +297,11 @@ img{max-width:100%; display:block;}
 .stat-card .stat-top{display:flex; align-items:center; justify-content:space-between; margin-bottom:12px;}
 .stat-card .icon-box{
   width:36px; height:36px;
-  border-radius:9px;
   display:flex; align-items:center; justify-content:center;
-  color:var(--blue-800);
-  background:var(--blue-100);
+  color:var(--blue-700);
 }
-.stat-card .icon-box svg{width:18px;height:18px;}
-.stat-card.accent .icon-box{background:var(--orange-100); color:var(--orange-500);}
+.stat-card .icon-box svg{width:20px;height:20px;}
+.stat-card.accent .icon-box{color:var(--orange-500);}
 .stat-card .delta{
   font-size:11.5px; font-weight:700;
   padding:3px 7px; border-radius:20px;
@@ -441,8 +439,8 @@ tbody tr:hover{background:var(--gray-50);}
 .room-tile.ocupada .state{background:var(--orange-500); color:var(--white);}
 .room-tile.limpieza{background:var(--gray-50);}
 .room-tile.limpieza .state{background:var(--gray-200); color:var(--gray-700);}
-.room-tile.mantenimiento{background:var(--danger-bg);}
-.room-tile.mantenimiento .state{background:var(--danger); color:var(--white);}
+.room-tile.mantenimiento{background:var(--white); border-color:var(--gray-200);}
+.room-tile.mantenimiento .state{background:var(--danger-bg); color:var(--danger);}
 
 .legend{display:flex; gap:16px; flex-wrap:wrap; font-size:12px; color:var(--gray-500); font-weight:500;}
 .legend .item{display:flex; align-items:center; gap:6px;}
