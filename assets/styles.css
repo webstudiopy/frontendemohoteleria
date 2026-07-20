@@ -502,11 +502,71 @@ tbody tr:hover{background:var(--gray-50);}
 .mb-0{margin-bottom:0;}
 .avatar-sm{width:32px;height:32px;border-radius:8px;background:var(--blue-100);color:var(--blue-800);display:flex;align-items:center;justify-content:center;font-family:var(--font-display);font-weight:700;font-size:12px;}
 
+/* ==========================================================================
+   Navegación móvil (menú hamburguesa + drawer)
+   ========================================================================== */
+.mobile-topbar{
+  display:none;
+  align-items:center;
+  justify-content:space-between;
+  padding:14px 18px;
+  background:var(--blue-950);
+  position:sticky;
+  top:0;
+  z-index:60;
+}
+.mobile-topbar .brandmark{display:flex; align-items:center; gap:9px;}
+.mobile-topbar .mark{
+  width:30px; height:30px; border-radius:8px;
+  background:var(--orange-400);
+  display:flex; align-items:center; justify-content:center;
+  color:var(--blue-950); font-family:var(--font-display); font-weight:800; font-size:14px;
+}
+.mobile-topbar .brandname{color:var(--white); font-family:var(--font-display); font-weight:700; font-size:15px;}
+.hamburger-btn{
+  width:38px; height:38px;
+  border-radius:9px;
+  background:rgba(255,255,255,.08);
+  border:none;
+  display:flex; align-items:center; justify-content:center;
+  color:var(--white);
+  cursor:pointer;
+}
+.hamburger-btn svg{width:20px; height:20px;}
+
+.sidebar-overlay{
+  display:none;
+  position:fixed; inset:0;
+  background:rgba(10,42,69,.5);
+  z-index:70;
+}
+.sidebar-overlay.open{display:block;}
+
 @media (max-width: 980px){
   .app-shell{grid-template-columns:1fr;}
-  .sidebar{display:none;}
+  .mobile-topbar{display:flex;}
+
+  .sidebar{
+    position:fixed;
+    top:0; left:0;
+    height:100vh;
+    width:270px;
+    max-width:82vw;
+    z-index:80;
+    transform:translateX(-100%);
+    transition:transform .25s ease;
+  }
+  .sidebar.open{transform:translateX(0);}
+
+  .topbar{padding:12px 16px; flex-wrap:wrap; gap:10px;}
+  .content{padding:20px 16px 60px;}
+
   .grid-4{grid-template-columns:repeat(2,1fr);}
   .grid-3{grid-template-columns:1fr;}
   .grid-2{grid-template-columns:1fr;}
   .field-row{grid-template-columns:1fr;}
+}
+
+@media (max-width: 480px){
+  .grid-4{grid-template-columns:1fr 1fr;}
 }
