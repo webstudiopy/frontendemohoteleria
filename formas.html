@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Hotelería — Formas de pago</title>
+  <link rel="stylesheet" href="assets/styles.css" />
+  <style>
+    /* ===== SIDEBAR CON SCROLL ===== */
+    .sidebar {
+      overflow-y: auto;
+      max-height: 100vh;
+      scrollbar-width: thin;
+    }
+    .sidebar::-webkit-scrollbar {
+      width: 4px;
+    }
+    .sidebar::-webkit-scrollbar-thumb {
+      background: #cbd5e1;
+      border-radius: 4px;
+    }
+    .sidebar::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    /* ===== SUCURSAL EN SIDEBAR (dinámico) ===== */
+    .sidebar-footer {
+      background: transparent;
+    }
+    .sucursal-info {
+      padding: 0.5rem 0.8rem;
+      font-size: 0.8rem;
+      color: #ffffff;
+      line-height: 1.5;
+    }
+    .sucursal-info .nombre {
+      font-weight: 600;
+      color: #ffffff;
+      display: block;
+    }
+    .sucursal-info .direccion {
+      font-size: 0.7rem;
+      color: rgba(255, 255, 255, 0.6);
+      display: block;
+    }
+    .logout-link {
+      color: #ffffff !important;
+    }
+    .logout-link:hover {
+      color: rgba(255, 255, 255, 0.7) !important;
+    }
+
+    /* ===== MODAL DE CIERRE DE SESIÓN ===== */
+    .modal-confirm {
+      max-width: 400px;
+      width: 90%;
+    }
+    .modal-confirm .modal-body p {
+      font-size: 1rem;
+      color: #1e293b;
+      margin: 0.5rem 0 1.2rem;
+      line-height: 1.6;
+    }
+    .modal-confirm .modal-foot {
+      display: flex;
+      gap: 0.8rem;
+      justify-content: center;
+      padding-top: 0.5rem;
+    }
+    .modal-confirm .btn-cancel {
+      background: #e2e8f0;
+      color: #1e293b;
+      border: none;
+      padding: 0.5rem 1.5rem;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: background 0.2s;
+      min-width: 100px;
+    }
+    .modal-confirm .btn-cancel:hover {
+      background: #cbd5e1;
+    }
+    .modal-confirm .btn-danger {
+      background: #dc2626;
+      color: #fff;
+      border: none;
+      padding: 0.5rem 1.5rem;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: background 0.2s;
+      min-width: 100px;
+    }
+    .modal-confirm .btn-danger:hover {
+      background: #b91c1c;
+    }
+
+    /* ===== ESTILOS ORIGINALES DE FORMAS DE PAGO ===== */
+    .payment-summary {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+    }
+    .payment-card {
+      background: #fff;
+      border-radius: 12px;
+      padding: 1.2rem 1.5rem;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+      border: 1px solid #e9edf2;
+    }
+    .payment-card .label {
+      font-size: 0.85rem;
+      color: #64748b;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .payment-card .amount {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: #0f172a;
+      margin-top: 0.25rem;
+    }
+    .payment-card .sub {
+      font-size: 0.9rem;
+      color: #475569;
+      margin-top: 0.25rem;
+    }
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(0,0,0,0.4);
+      justify-content: center;
+      align-items: center;
+      z-index: 999;
+    }
+    .modal-overlay.active { display: flex; }
+    .modal-box {
+      background: #fff;
+      border-radius: 12px;
+      padding: 2rem 2.5rem;
+      max-width: 420px;
+      width: 90%;
+      box-shadow: 0 12px 40px rgba(0,0,0,0.2);
+      text-align: center;
+    }
+    .modal-box p {
+      font-size: 1.1rem;
+      margin: 0 0 1.5rem;
+      color: #1e293b;
+      white-space: pre-line;
+    }
+    .modal-box .btn-modal {
+      background: #2a7de1;
+      border: none;
+      color: #fff;
+      padding: 0.6rem 2.2rem;
+      border-radius: 30px;
+      font-weight: 600;
+      font-size: 0.95rem;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .modal-box .btn-modal:hover { background: #1a5fb0; }
+    .no-data-msg {
+      text-align: center;
+      padding: 2rem;
+      color: #dc2626;
+      font-weight: 600;
+    }
+  </style>
+</head>
+<body>
+<div class="mobile-topbar">
+  <div class="brandmark"><div class="mark">H</div><span class="brandname">Hotelería</span></div>
+  <button class="hamburger-btn" onclick="toggleSidebar()" aria-label="Abrir menú">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+  </button>
+</div>
+<div class="sidebar-overlay" onclick="closeSidebar()"></div>
+<div class="app-shell">
+
+  <!-- ===== SIDEBAR ACTUALIZADA ===== -->
+  <aside class="sidebar">
+    <div class="sidebar-brand">
+      <div class="mark">H</div>
+      <div class="name">Hotelería<span>Panel administrativo</span></div>
+    </div>
+
+    <div class="nav-group-label">General</div>
+    <a class="nav-link" href="dashboard.html">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="7" height="9" rx="1.5"/><rect x="14" y="3" width="7" height="5" rx="1.5"/><rect x="14" y="12" width="7" height="9" rx="1.5"/><rect x="3" y="16" width="7" height="5" rx="1.5"/></svg>
+      Panel principal
+    </a>
+
+    <div class="nav-group-label">Operación</div>
+    <a class="nav-link" href="habitaciones.html">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 21V8l8-5 8 5v13"/><path d="M9 21v-6h6v6"/></svg>
+      Habitaciones
+    </a>
+    <a class="nav-link" href="reservas.html">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4" width="18" height="17" rx="2"/><path d="M3 9h18M8 2v4M16 2v4"/></svg>
+      Reservas
+    </a>
+    <a class="nav-link" href="huespedes.html">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="8" r="3.5"/><path d="M4.5 20.5c1.6-3.6 4.4-5.5 7.5-5.5s5.9 1.9 7.5 5.5"/></svg>
+      Huéspedes
+    </a>
+    <!-- ===== NUEVO ENLACE AL MAPA DE HABITACIONES ===== -->
+    <a class="nav-link" href="mapa.html">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M3 15h18M9 3v18M15 3v18"/></svg>
+      Mapa de habitaciones
+    </a>
+
+    <div class="nav-group-label">Administración</div>
+    <a class="nav-link" href="facturacion.html">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 8h8M8 12h8M8 16h5"/></svg>
+      Facturación
+    </a>
+    <a class="nav-link" href="reportes.html">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 20V10M12 20V4M20 20v-7"/></svg>
+      Reportes
+    </a>
+    <a class="nav-link" href="usuarios.html">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="8" r="3.5"/><path d="M4.5 20.5c1.6-3.6 4.4-5.5 7.5-5.5s5.9 1.9 7.5 5.5"/><path d="M16.5 16.5c1.6-1.6 2.5-3.8 2.5-6.5"/></svg>
+      Usuarios
+    </a>
+
+    <div class="nav-group-label">Finanzas</div>
+    <a class="nav-link active" href="formas.html">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+        <rect x="2" y="6" width="20" height="14" rx="2"/><path d="M2 10h20"/>
+      </svg>
+      Formas de pago
+    </a>
+    <a class="nav-link" href="caja.html">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+        <circle cx="12" cy="12" r="3"/><path d="M20 12h-4M8 12H4"/><path d="M12 8V4M12 20v-4"/>
+      </svg>
+      Caja
+    </a>
+
+    <div class="sidebar-footer">
+      <div class="sucursal-info" id="sucursalSidebar">
+        <span class="nombre" id="sucursalNombre">Sucursal Centro</span>
+        <span class="direccion" id="sucursalDireccion">Palma c/ 14 de Mayo, Asunción</span>
+      </div>
+      <a class="logout-link" href="#" onclick="abrirModalCierre(); return false;">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4M16 17l5-5-5-5M21 12H9"/></svg>
+        Cerrar sesión
+      </a>
+    </div>
+  </aside>
+
+  <!-- ===== MAIN ===== -->
+  <div class="main">
+    <div class="topbar">
+      <div>
+        <h1>Formas de pago</h1>
+        <div class="subtitle" id="subFormasPago"></div>
+      </div>
+      <div class="topbar-right">
+        <div class="currency-toggle">
+          <button data-currency="PYG">Gs</button>
+          <button data-currency="USD">US$</button>
+          <button data-currency="BRL">R$</button>
+        </div>
+        <div class="user-chip">
+          <div class="avatar" data-user-avatar></div>
+          <div class="info"><b data-user-name></b><small data-user-role></small></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="content">
+
+      <!-- ===== RESUMEN DE PAGOS ===== -->
+      <div class="payment-summary" id="paymentSummary">
+        <!-- Se llena con JS -->
+      </div>
+
+      <!-- ===== TABLA DETALLE POR FORMA/BANCO ===== -->
+      <div class="card">
+        <div class="card-header">
+          <div>
+            <h3>Detalle por forma / banco</h3>
+            <div class="hint">Movimientos agrupados</div>
+          </div>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr><th>Forma / Banco</th><th style="text-align:right">Hoy</th><th style="text-align:right">Mes</th></tr>
+            </thead>
+            <tbody id="detailTableBody">
+              <!-- se llena con JS -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- ===== ÚLTIMOS MOVIMIENTOS ===== -->
+      <div class="card" style="margin-top:16px;">
+        <div class="card-header">
+          <div>
+            <h3>Últimos movimientos (con comprobante)</h3>
+            <div class="hint">Registros recientes</div>
+          </div>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr><th>ID</th><th>Fecha</th><th>Cliente</th><th>Forma/Banco</th><th>Nro. Comprobante</th><th style="text-align:right">Total</th></tr>
+            </thead>
+            <tbody id="movementsTableBody">
+              <!-- se llena con JS -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- ===== MODAL DE CIERRE DE SESIÓN ===== -->
+<div class="modal-overlay" id="modalCierreSesion">
+  <div class="modal modal-confirm">
+    <div class="modal-head">
+      <h3>Confirmar cierre</h3>
+      <button class="modal-close" onclick="cerrarModalCierre()">✕</button>
+    </div>
+    <div class="modal-body">
+      <p>¿Está seguro de que desea cerrar sesión? Se perderán los cambios no guardados.</p>
+    </div>
+    <div class="modal-foot">
+      <button class="btn-cancel" onclick="cerrarModalCierre()">Cancelar</button>
+      <button class="btn-danger" id="btnConfirmarCierre">Cerrar sesión</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== MODAL GENÉRICO ===== -->
+<div class="modal-overlay" id="modalOverlay">
+  <div class="modal-box">
+    <p id="modalMessage">Mensaje</p>
+    <button class="btn-modal" id="modalConfirmBtn">Aceptar</button>
+  </div>
+</div>
+
+<script src="assets/app.js"></script>
+<script>
+  (function() {
+    // ---- Modal de cierre de sesión ----
+    const modalCierre = document.getElementById('modalCierreSesion');
+    const btnConfirmar = document.getElementById('btnConfirmarCierre');
+
+    window.abrirModalCierre = function() {
+      modalCierre.classList.add('open');
+    };
+    window.cerrarModalCierre = function() {
+      modalCierre.classList.remove('open');
+    };
+    btnConfirmar.addEventListener('click', function() {
+      if (typeof logout === 'function') {
+        logout();
+      } else {
+        localStorage.removeItem('hoteleria_auth');
+        localStorage.removeItem('hoteleria_sucursal');
+        window.location.href = 'index.html';
+      }
+      modalCierre.classList.remove('open');
+    });
+    modalCierre.addEventListener('click', function(e) {
+      if (e.target === modalCierre) modalCierre.classList.remove('open');
+    });
+
+    // ---- Obtener sucursal activa ----
+    const suc = getSucursalActual();
+
+    // ---- Sidebar dinámico ----
+    const direcciones = {
+      centro: 'Palma c/ 14 de Mayo, Asunción',
+      este: 'Av. Monseñor Rodríguez, Ciudad del Este'
+    };
+    document.getElementById('sucursalNombre').textContent = suc.corto || 'Sucursal';
+    document.getElementById('sucursalDireccion').textContent = direcciones[suc.id] || '';
+    document.getElementById('subFormasPago').textContent = `${suc.corto} · Resumen de cobros`;
+
+    // ---- Datos diferenciados por sucursal ----
+    const paymentData = {
+      centro: {
+        name: 'Sucursal Centro',
+        summary: {
+          efectivo: { hoy: 0, mes: 735000 },
+          transferencia: { hoy: 0, mes: 640000 },
+          total: { hoy: 0, mes: 1375000 }
+        },
+        detail: [
+          { forma: 'Efectivo', hoy: 0, mes: 735000 },
+          { forma: 'Otro Banco', hoy: 0, mes: 640000 }
+        ],
+        movements: [
+          { id: 109, fecha: '2026-07-08', cliente: 'Consumidor Final', forma: 'Otro Banco', comprobante: '1233456', total: 220000 },
+          { id: 107, fecha: '2026-07-08', cliente: 'Consumidor Final', forma: 'Otro Banco', comprobante: '23445', total: 220000 },
+          { id: 110, fecha: '2026-07-07', cliente: 'Ana Pérez', forma: 'Efectivo', comprobante: '998877', total: 150000 },
+          { id: 111, fecha: '2026-07-06', cliente: 'Luis Gómez', forma: 'Transferencia', comprobante: '112233', total: 320000 }
+        ]
+      },
+      este: {
+        name: 'Sucursal Ciudad del Este',
+        summary: {
+          efectivo: { hoy: 150000, mes: 520000 },
+          transferencia: { hoy: 80000, mes: 410000 },
+          total: { hoy: 230000, mes: 930000 }
+        },
+        detail: [
+          { forma: 'Efectivo', hoy: 150000, mes: 520000 },
+          { forma: 'Banco Itaú', hoy: 80000, mes: 410000 }
+        ],
+        movements: [
+          { id: 201, fecha: '2026-07-09', cliente: 'Ana Pereira', forma: 'Efectivo', comprobante: '78901', total: 150000 },
+          { id: 202, fecha: '2026-07-09', cliente: 'Carlos Benítez', forma: 'Banco Itaú', comprobante: '78902', total: 80000 }
+        ]
+      }
+    };
+
+    const data = paymentData[suc.id];
+    const summaryContainer = document.getElementById('paymentSummary');
+
+    if (!data) {
+      summaryContainer.innerHTML = `<div class="no-data-msg">⚠️ No hay datos de pago para la sucursal seleccionada.</div>`;
+      document.getElementById('detailTableBody').innerHTML = '<tr><td colspan="3" style="text-align:center;color:#64748b;">Sin datos</td></tr>';
+      document.getElementById('movementsTableBody').innerHTML = '<tr><td colspan="6" style="text-align:center;color:#64748b;">Sin movimientos</td></tr>';
+      return;
+    }
+
+    // ---- Renderizar resumen ----
+    const summary = data.summary;
+    summaryContainer.innerHTML = `
+      <div class="payment-card">
+        <div class="label">Efectivo · Hoy</div>
+        <div class="amount">Gs. ${summary.efectivo.hoy.toLocaleString()}</div>
+        <div class="sub">Mes: Gs. ${summary.efectivo.mes.toLocaleString()}</div>
+      </div>
+      <div class="payment-card">
+        <div class="label">Transferencia · Hoy</div>
+        <div class="amount">Gs. ${summary.transferencia.hoy.toLocaleString()}</div>
+        <div class="sub">Mes: Gs. ${summary.transferencia.mes.toLocaleString()}</div>
+      </div>
+      <div class="payment-card">
+        <div class="label">Total · Hoy</div>
+        <div class="amount">Gs. ${summary.total.hoy.toLocaleString()}</div>
+        <div class="sub">Mes: Gs. ${summary.total.mes.toLocaleString()}</div>
+      </div>
+    `;
+
+    // ---- Renderizar tabla de detalle ----
+    const detailBody = document.getElementById('detailTableBody');
+    detailBody.innerHTML = '';
+    data.detail.forEach(row => {
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td>${row.forma}</td>
+        <td style="text-align:right">Gs. ${row.hoy.toLocaleString()}</td>
+        <td style="text-align:right">Gs. ${row.mes.toLocaleString()}</td>
+      `;
+      detailBody.appendChild(tr);
+    });
+
+    // ---- Renderizar tabla de movimientos ----
+    const movementsBody = document.getElementById('movementsTableBody');
+    movementsBody.innerHTML = '';
+    data.movements.forEach(m => {
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td class="mono">${m.id}</td>
+        <td class="mono">${m.fecha}</td>
+        <td>${m.cliente}</td>
+        <td>${m.forma}</td>
+        <td>${m.comprobante}</td>
+        <td style="text-align:right" class="mono">Gs. ${m.total.toLocaleString()}</td>
+      `;
+      movementsBody.appendChild(tr);
+    });
+
+    // ---- Modal genérico ----
+    const modalOverlay = document.getElementById('modalOverlay');
+    const modalMessage = document.getElementById('modalMessage');
+    const modalConfirmBtn = document.getElementById('modalConfirmBtn');
+    function showModal(msg) {
+      modalMessage.textContent = msg;
+      modalOverlay.classList.add('active');
+    }
+    modalConfirmBtn.addEventListener('click', () => modalOverlay.classList.remove('active'));
+    modalOverlay.addEventListener('click', (e) => {
+      if (e.target === modalOverlay) modalOverlay.classList.remove('active');
+    });
+
+    // ---- Clic en movimientos ----
+    document.querySelectorAll('#movementsTableBody tr').forEach(row => {
+      row.style.cursor = 'pointer';
+      row.addEventListener('click', function() {
+        const id = this.querySelector('.mono')?.textContent || '';
+        showModal(`Movimiento ID ${id}. Ver comprobante asociado.`);
+      });
+    });
+
+  })();
+</script>
+</body>
+</html>

@@ -5,6 +5,148 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Hotelería — Habitaciones</title>
 <link rel="stylesheet" href="assets/styles.css">
+<style>
+  /* ===== SIDEBAR CON SCROLL ===== */
+  .sidebar {
+    overflow-y: auto;
+    max-height: 100vh;
+    scrollbar-width: thin;
+  }
+  .sidebar::-webkit-scrollbar {
+    width: 4px;
+  }
+  .sidebar::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 4px;
+  }
+  .sidebar::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .sidebar-footer {
+    background: transparent;
+  }
+  .sucursal-info {
+    padding: 0.5rem 0.8rem;
+    font-size: 0.8rem;
+    color: #ffffff;
+    line-height: 1.5;
+  }
+  .sucursal-info .nombre {
+    font-weight: 600;
+    color: #ffffff;
+    display: block;
+  }
+  .sucursal-info .direccion {
+    font-size: 0.7rem;
+    color: rgba(255, 255, 255, 0.6);
+    display: block;
+  }
+  .logout-link {
+    color: #ffffff !important;
+  }
+  .logout-link:hover {
+    color: rgba(255, 255, 255, 0.7) !important;
+  }
+
+  /* ===== MODALES DE CONFIRMACIÓN ===== */
+  .modal-confirm {
+    max-width: 400px;
+    width: 90%;
+  }
+  .modal-confirm .modal-body p {
+    font-size: 1rem;
+    color: #1e293b;
+    margin: 0.5rem 0 1.2rem;
+    line-height: 1.6;
+  }
+  .modal-confirm .modal-foot {
+    display: flex;
+    gap: 0.8rem;
+    justify-content: center;
+    padding-top: 0.5rem;
+  }
+  .modal-confirm .btn-cancel {
+    background: #e2e8f0;
+    color: #1e293b;
+    border: none;
+    padding: 0.5rem 1.5rem;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: background 0.2s;
+    min-width: 100px;
+  }
+  .modal-confirm .btn-cancel:hover {
+    background: #cbd5e1;
+  }
+  .modal-confirm .btn-danger {
+    background: #dc2626;
+    color: #fff;
+    border: none;
+    padding: 0.5rem 1.5rem;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: background 0.2s;
+    min-width: 100px;
+  }
+  .modal-confirm .btn-danger:hover {
+    background: #b91c1c;
+  }
+
+  /* ===== CAMPO HUÉSPED SIEMPRE VISIBLE ===== */
+  .field.huesped-field {
+    display: block;
+  }
+  .field.huesped-field .req {
+    display: inline;
+  }
+  .field.huesped-field .req.oculto {
+    display: none;
+  }
+  .field.huesped-field small {
+    display: block;
+    margin-top: 0.25rem;
+  }
+
+  /* ===== BOTONES DE ACCIÓN CON ÍCONOS ===== */
+  .action-btns {
+    display: flex;
+    gap: 0.4rem;
+    justify-content: flex-end;
+  }
+  .action-btns .btn-icon {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 0.2rem 0.3rem;
+    border-radius: 6px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.15s;
+    color: #64748b;
+  }
+  .action-btns .btn-icon:hover {
+    background: #f1f5f9;
+  }
+  .action-btns .btn-icon.edit:hover {
+    color: #2563eb;
+  }
+  .action-btns .btn-icon.delete:hover {
+    color: #dc2626;
+  }
+  .action-btns .btn-icon svg {
+    width: 18px;
+    height: 18px;
+    stroke: currentColor;
+    stroke-width: 1.8;
+    fill: none;
+  }
+</style>
 </head>
 <body>
 <div class="mobile-topbar">
@@ -16,6 +158,7 @@
 <div class="sidebar-overlay" onclick="closeSidebar()"></div>
 <div class="app-shell">
 
+  <!-- ===== SIDEBAR ACTUALIZADA ===== -->
   <aside class="sidebar">
     <div class="sidebar-brand">
       <div class="mark">H</div>
@@ -41,6 +184,11 @@
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="8" r="3.5"/><path d="M4.5 20.5c1.6-3.6 4.4-5.5 7.5-5.5s5.9 1.9 7.5 5.5"/></svg>
       Huéspedes
     </a>
+    <!-- ===== NUEVO ENLACE AL MAPA DE HABITACIONES ===== -->
+    <a class="nav-link" href="mapa.html">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M3 15h18M9 3v18M15 3v18"/></svg>
+      Mapa de habitaciones
+    </a>
 
     <div class="nav-group-label">Administración</div>
     <a class="nav-link" href="facturacion.html">
@@ -51,19 +199,38 @@
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 20V10M12 20V4M20 20v-7"/></svg>
       Reportes
     </a>
+    <a class="nav-link" href="usuarios.html">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="8" r="3.5"/><path d="M4.5 20.5c1.6-3.6 4.4-5.5 7.5-5.5s5.9 1.9 7.5 5.5"/><path d="M16.5 16.5c1.6-1.6 2.5-3.8 2.5-6.5"/></svg>
+      Usuarios
+    </a>
+
+    <div class="nav-group-label">Finanzas</div>
+    <a class="nav-link" href="formas.html">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+        <rect x="2" y="6" width="20" height="14" rx="2"/><path d="M2 10h20"/>
+      </svg>
+      Formas de pago
+    </a>
+    <a class="nav-link" href="caja.html">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+        <circle cx="12" cy="12" r="3"/><path d="M20 12h-4M8 12H4"/><path d="M12 8V4M12 20v-4"/>
+      </svg>
+      Caja
+    </a>
 
     <div class="sidebar-footer">
-      <div class="sucursal-pill">
-        <span class="dot"></span>
-        <span class="txt" data-sucursal-pill></span>
+      <div class="sucursal-info" id="sucursalSidebar">
+        <span class="nombre" id="sucursalNombre">Sucursal Centro</span>
+        <span class="direccion" id="sucursalDireccion">Palma c/ 14 de Mayo, Asunción</span>
       </div>
-      <a class="logout-link" href="#" onclick="logout(); return false;">
+      <a class="logout-link" href="#" onclick="abrirModalCierre(); return false;">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4M16 17l5-5-5-5M21 12H9"/></svg>
         Cerrar sesión
       </a>
     </div>
   </aside>
 
+  <!-- ===== MAIN ===== -->
   <div class="main">
     <div class="topbar">
       <div>
@@ -126,11 +293,45 @@
   </div>
 </div>
 
-<!-- Modal nueva habitación -->
+<!-- ===== MODAL DE CIERRE DE SESIÓN ===== -->
+<div class="modal-overlay" id="modalCierreSesion">
+  <div class="modal modal-confirm">
+    <div class="modal-head">
+      <h3>Confirmar cierre</h3>
+      <button class="modal-close" onclick="cerrarModalCierre()">✕</button>
+    </div>
+    <div class="modal-body">
+      <p>¿Está seguro de que desea cerrar sesión? Se perderán los cambios no guardados.</p>
+    </div>
+    <div class="modal-foot">
+      <button class="btn-cancel" onclick="cerrarModalCierre()">Cancelar</button>
+      <button class="btn-danger" id="btnConfirmarCierre">Cerrar sesión</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== MODAL DE CONFIRMACIÓN PARA ELIMINAR ===== -->
+<div class="modal-overlay" id="modalEliminar">
+  <div class="modal modal-confirm">
+    <div class="modal-head">
+      <h3>Confirmar eliminación</h3>
+      <button class="modal-close" onclick="cerrarModalEliminar()">✕</button>
+    </div>
+    <div class="modal-body">
+      <p id="modalEliminarTexto">¿Está seguro de eliminar la habitación <strong>2101</strong>?</p>
+    </div>
+    <div class="modal-foot">
+      <button class="btn-cancel" onclick="cerrarModalEliminar()">Cancelar</button>
+      <button class="btn-danger" id="btnConfirmarEliminar">Eliminar</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== MODAL NUEVA / EDICIÓN HABITACIÓN ===== -->
 <div class="modal-overlay" id="modalHabitacion">
   <div class="modal">
     <div class="modal-head">
-      <h3>Nueva habitación</h3>
+      <h3 id="modalHabitacionTitulo">Nueva habitación</h3>
       <button class="modal-close" onclick="cerrarModal()">✕</button>
     </div>
     <div class="modal-body">
@@ -159,37 +360,201 @@
           <input type="text" placeholder="320.000" id="nuevoPrecio">
         </div>
       </div>
-      <div class="field mb-0">
+      <div class="field">
         <label>Estado inicial</label>
         <select id="nuevoEstado">
           <option value="disponible">Disponible</option>
           <option value="limpieza">En limpieza</option>
           <option value="mantenimiento">Mantenimiento</option>
+          <option value="ocupada">Ocupada</option>
         </select>
+      </div>
+
+      <!-- Campo HUÉSPED ACTUAL como SELECT -->
+      <div class="field huesped-field">
+        <label>Huésped actual <span class="req" id="huespedReq">*</span></label>
+        <select id="nuevoHuesped">
+          <option value="">— Seleccionar —</option>
+        </select>
+        <small style="color:#64748b;font-size:0.7rem;">Seleccione un huésped de la lista. Solo requerido si el estado es "Ocupada".</small>
       </div>
     </div>
     <div class="modal-foot">
       <button class="btn btn-ghost" onclick="cerrarModal()">Cancelar</button>
-      <button class="btn btn-primary" onclick="cerrarModal()">Guardar habitación</button>
+      <button class="btn btn-primary" id="guardarHabitacionBtn">Guardar habitación</button>
     </div>
   </div>
 </div>
 
 <script src="assets/app.js"></script>
 <script>
+  // ---- Lista estática de todos los huéspedes registrados ----
+  const listaHuespedes = [
+    'Julia Souza',
+    'Pedro Duarte',
+    'Camila Ríos',
+    'Hugo Martínez',
+    'Rosa Cáceres',
+    'Iván Gómez',
+    'Nadia López',
+    'Sergio Aquino'
+  ];
+
+  // ---- Modal de cierre de sesión ----
+  (function() {
+    const modalCierre = document.getElementById('modalCierreSesion');
+    const btnConfirmar = document.getElementById('btnConfirmarCierre');
+
+    window.abrirModalCierre = function() {
+      modalCierre.classList.add('open');
+    };
+    window.cerrarModalCierre = function() {
+      modalCierre.classList.remove('open');
+    };
+    btnConfirmar.addEventListener('click', function() {
+      if (typeof logout === 'function') {
+        logout();
+      } else {
+        localStorage.removeItem('hoteleria_auth');
+        localStorage.removeItem('hoteleria_sucursal');
+        window.location.href = 'index.html';
+      }
+      modalCierre.classList.remove('open');
+    });
+    modalCierre.addEventListener('click', function(e) {
+      if (e.target === modalCierre) modalCierre.classList.remove('open');
+    });
+  })();
+
+  // ---- Modal de confirmación de eliminación ----
+  (function() {
+    const modalEliminar = document.getElementById('modalEliminar');
+    const btnConfirmar = document.getElementById('btnConfirmarEliminar');
+    let numeroAEliminar = null;
+
+    window.abrirModalEliminar = function(numero) {
+      numeroAEliminar = numero;
+      document.getElementById('modalEliminarTexto').innerHTML = 
+        `¿Está seguro de eliminar la habitación <strong>${numero}</strong>? Esta acción no se puede deshacer.`;
+      modalEliminar.classList.add('open');
+    };
+
+    window.cerrarModalEliminar = function() {
+      modalEliminar.classList.remove('open');
+      numeroAEliminar = null;
+    };
+
+    btnConfirmar.addEventListener('click', function() {
+      if (numeroAEliminar) {
+        habitaciones = habitaciones.filter(h => h.numero !== numeroAEliminar);
+        render();
+        cerrarModalEliminar();
+      }
+    });
+
+    modalEliminar.addEventListener('click', function(e) {
+      if (e.target === modalEliminar) cerrarModalEliminar();
+    });
+  })();
+
+  // ---- Código principal de habitaciones ----
   requireAuth();
   const suc = getSucursalActual();
-  let habitaciones = generarHabitaciones(suc);
 
-  document.getElementById('subHabitaciones').textContent = `${suc.corto} · Numeración ${suc.prefijoHabitacion}xx · ${suc.totalHabitaciones} habitaciones`;
+  // Sidebar dinámico
+  const direcciones = {
+    centro: 'Palma c/ 14 de Mayo, Asunción',
+    este: 'Av. Monseñor Rodríguez, Ciudad del Este'
+  };
+  document.getElementById('sucursalNombre').textContent = suc.corto || 'Sucursal';
+  document.getElementById('sucursalDireccion').textContent = direcciones[suc.id] || '';
 
-  function render(){
+  // ---- Generar habitaciones diferenciadas según sucursal ----
+  function generarHabitacionesLocal(sucId) {
+    const tipos = ['Individual', 'Doble', 'Suite'];
+    const precios = { Individual: 320000, Doble: 450000, Suite: 780000 };
+    const habitaciones = [];
+
+    let total, prefijo;
+    if (sucId === 'centro') {
+      total = 30;
+      prefijo = 1;
+    } else {
+      total = 22;
+      prefijo = 2;
+    }
+
+    const pisos = 3;
+    const habPorPiso = Math.ceil(total / pisos);
+
+    let count = 0;
+    for (let piso = 1; piso <= pisos; piso++) {
+      for (let i = 1; i <= habPorPiso; i++) {
+        if (count >= total) break;
+        const numero = `${prefijo}${piso}${String(i).padStart(2, '0')}`;
+        const tipo = tipos[count % tipos.length];
+        const precio = precios[tipo] || 450000;
+
+        let estado;
+        const rand = Math.random();
+        if (sucId === 'centro') {
+          if (rand < 0.25) estado = 'disponible';
+          else if (rand < 0.55) estado = 'ocupada';
+          else if (rand < 0.80) estado = 'limpieza';
+          else estado = 'mantenimiento';
+        } else {
+          if (rand < 0.50) estado = 'disponible';
+          else if (rand < 0.70) estado = 'ocupada';
+          else if (rand < 0.85) estado = 'limpieza';
+          else estado = 'mantenimiento';
+        }
+
+        let huesped = null;
+        if (estado === 'ocupada') {
+          const idx = Math.floor(Math.random() * listaHuespedes.length);
+          huesped = listaHuespedes[idx];
+        }
+
+        habitaciones.push({
+          numero,
+          piso,
+          tipo,
+          precioPYG: precio,
+          estado,
+          huesped
+        });
+        count++;
+      }
+    }
+    return habitaciones;
+  }
+
+  let habitaciones = generarHabitacionesLocal(suc.id);
+  let editandoNumero = null;
+
+  document.getElementById('subHabitaciones').textContent = `${suc.corto} · ${habitaciones.length} habitaciones`;
+
+  // ---- Llenar el select con todos los huéspedes registrados ----
+  function llenarSelectHuespedes() {
+    const select = document.getElementById('nuevoHuesped');
+    select.innerHTML = '<option value="">— Seleccionar —</option>';
+    listaHuespedes.forEach(nombre => {
+      const opt = document.createElement('option');
+      opt.value = nombre;
+      opt.textContent = nombre;
+      select.appendChild(opt);
+    });
+  }
+  llenarSelectHuespedes();
+
+  // ---- Renderizado de la tabla con íconos de acción ----
+  function render() {
     const cur = getCurrentCurrency();
     const texto = document.getElementById('buscador').value.toLowerCase();
     const estado = document.getElementById('filtroEstado').value;
     const tipo = document.getElementById('filtroTipo').value;
 
-    const filtradas = habitaciones.filter(h=>{
+    const filtradas = habitaciones.filter(h => {
       return h.numero.toLowerCase().includes(texto)
         && (estado === '' || h.estado === estado)
         && (tipo === '' || h.tipo === tipo);
@@ -203,19 +568,134 @@
         <td class="mono cell-strong">${formatMoney(h.precioPYG, cur)}</td>
         <td><span class="badge badge-${h.estado}">${h.estado.charAt(0).toUpperCase()+h.estado.slice(1)}</span></td>
         <td class="cell-muted">${h.huesped ? h.huesped : '—'}</td>
-        <td class="text-right"><button class="btn btn-ghost btn-sm" onclick="abrirModal()">Editar</button></td>
+        <td>
+          <div class="action-btns">
+            <button class="btn-icon edit" onclick="abrirModal('${h.numero}')" title="Editar">
+              <svg viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+            </button>
+            <button class="btn-icon delete" onclick="abrirModalEliminar('${h.numero}')" title="Eliminar">
+              <svg viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg>
+            </button>
+          </div>
+        </td>
       </tr>
     `).join('');
   }
 
+  // ---- Actualizar visibilidad del asterisco según estado ----
+  function actualizarRequeridoHuesped(estado) {
+    const req = document.getElementById('huespedReq');
+    if (estado === 'ocupada') {
+      req.style.display = 'inline';
+    } else {
+      req.style.display = 'none';
+    }
+  }
+
+  // ---- Abrir modal (para nueva o edición) ----
+  window.abrirModal = function(numero) {
+    const modal = document.getElementById('modalHabitacion');
+    const titulo = document.getElementById('modalHabitacionTitulo');
+    const btnGuardar = document.getElementById('guardarHabitacionBtn');
+
+    // Resetear campos
+    document.getElementById('nuevoNumero').value = '';
+    document.getElementById('nuevoPiso').value = '';
+    document.getElementById('nuevoTipo').value = 'Individual';
+    document.getElementById('nuevoPrecio').value = '';
+    document.getElementById('nuevoEstado').value = 'disponible';
+    document.getElementById('nuevoHuesped').value = '';
+    actualizarRequeridoHuesped('disponible');
+
+    if (numero) {
+      // Modo edición
+      const hab = habitaciones.find(h => h.numero === numero);
+      if (!hab) return;
+      editandoNumero = numero;
+      titulo.textContent = `Editar habitación ${hab.numero}`;
+      btnGuardar.textContent = 'Actualizar habitación';
+      document.getElementById('nuevoNumero').value = hab.numero;
+      document.getElementById('nuevoPiso').value = hab.piso;
+      document.getElementById('nuevoTipo').value = hab.tipo;
+      document.getElementById('nuevoPrecio').value = hab.precioPYG;
+      document.getElementById('nuevoEstado').value = hab.estado;
+      document.getElementById('nuevoHuesped').value = hab.huesped || '';
+      actualizarRequeridoHuesped(hab.estado);
+    } else {
+      // Modo nueva
+      editandoNumero = null;
+      titulo.textContent = 'Nueva habitación';
+      btnGuardar.textContent = 'Guardar habitación';
+      // Generar número sugerido automáticamente
+      const ultimo = habitaciones.reduce((max, h) => Math.max(max, parseInt(h.numero)), 0);
+      const siguiente = ultimo + 1;
+      document.getElementById('nuevoNumero').value = siguiente.toString().padStart(4, '0');
+    }
+
+    modal.classList.add('open');
+  };
+
+  window.cerrarModal = function() {
+    document.getElementById('modalHabitacion').classList.remove('open');
+    editandoNumero = null;
+  };
+
+  // ---- Cambio de estado en el modal (actualiza el asterisco y limpia el select si no es ocupada) ----
+  document.getElementById('nuevoEstado').addEventListener('change', function() {
+    actualizarRequeridoHuesped(this.value);
+    if (this.value !== 'ocupada') {
+      document.getElementById('nuevoHuesped').value = '';
+    }
+  });
+
+  // ---- Guardar (nueva o edición) ----
+  document.getElementById('guardarHabitacionBtn').addEventListener('click', function() {
+    const numero = document.getElementById('nuevoNumero').value.trim();
+    const piso = parseInt(document.getElementById('nuevoPiso').value);
+    const tipo = document.getElementById('nuevoTipo').value;
+    const precioRaw = document.getElementById('nuevoPrecio').value.replace(/[^0-9]/g, '');
+    const precio = parseInt(precioRaw) || 0;
+    const estado = document.getElementById('nuevoEstado').value;
+    const huesped = document.getElementById('nuevoHuesped').value || null;
+
+    // Validaciones
+    if (!numero || !piso || !tipo || precio <= 0) {
+      alert('Por favor complete todos los campos obligatorios.');
+      return;
+    }
+    if (estado === 'ocupada' && !huesped) {
+      alert('Debe seleccionar un huésped para una habitación ocupada.');
+      return;
+    }
+
+    // Verificar si ya existe (para edición)
+    const existente = habitaciones.find(h => h.numero === numero);
+    if (existente && editandoNumero !== numero) {
+      alert('Ya existe una habitación con ese número.');
+      return;
+    }
+
+    if (editandoNumero) {
+      // Editar
+      const idx = habitaciones.findIndex(h => h.numero === editandoNumero);
+      if (idx === -1) return;
+      habitaciones[idx] = { numero, piso, tipo, precioPYG: precio, estado, huesped };
+    } else {
+      // Nueva
+      habitaciones.push({ numero, piso, tipo, precioPYG: precio, estado, huesped });
+    }
+
+    render();
+    cerrarModal();
+  });
+
+  // ---- Eventos de filtro y búsqueda ----
   document.getElementById('buscador').addEventListener('input', render);
   document.getElementById('filtroEstado').addEventListener('change', render);
   document.getElementById('filtroTipo').addEventListener('change', render);
   window.addEventListener('currencychange', render);
 
-  function abrirModal(){ document.getElementById('modalHabitacion').classList.add('open'); }
-  function cerrarModal(){ document.getElementById('modalHabitacion').classList.remove('open'); }
-
+  // ---- Inicializar ----
   render();
 </script>
 </body>

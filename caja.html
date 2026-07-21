@@ -1,0 +1,691 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hotelería — Caja</title>
+  <link rel="stylesheet" href="assets/styles.css">
+  <style>
+    .caja-layout {
+      display: flex;
+      gap: 1.5rem;
+      flex-wrap: wrap;
+      margin-bottom: 2rem;
+    }
+    .caja-card {
+      flex: 1 1 280px;
+      background: #fff;
+      border-radius: 16px;
+      padding: 1.5rem 1.5rem 1.8rem;
+      border: 1px solid #e5e7eb;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+      transition: box-shadow 0.2s;
+    }
+    .caja-card:hover {
+      box-shadow: 0 4px 12px rgba(0,0,0,0.04);
+    }
+    .caja-card .card-title {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: #0f172a;
+      margin-bottom: 1.2rem;
+      padding-bottom: 0.6rem;
+      border-bottom: 1px solid #eef2f6;
+    }
+    .caja-card .card-title .left {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+    }
+    .caja-card .card-title .left svg {
+      width: 20px;
+      height: 20px;
+      stroke: #475569;
+      stroke-width: 1.8;
+      fill: none;
+      flex-shrink: 0;
+    }
+
+    /* ===== ESTADOS SIN FONDO, SOLO TEXTO Y BORDE ===== */
+    .caja-card .estado {
+      font-size: 0.65rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      padding: 0.15rem 0.7rem;
+      border-radius: 20px;
+      border: 1px solid transparent;
+    }
+    .caja-card .estado.cerrada {
+      color: #991b1b;
+      border-color: #fecaca;
+      background: transparent;
+    }
+    .caja-card .estado.abierta {
+      color: #166534;
+      border-color: #bbf7d0;
+      background: transparent;
+    }
+
+    .period-label {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      color: #94a3b8;
+      letter-spacing: 0.04em;
+      padding: 0.3rem 0 0.1rem;
+      border-bottom: 1px dashed #e2e8f0;
+      margin-bottom: 0.4rem;
+    }
+    .period-label + .period-label {
+      margin-top: 0.8rem;
+    }
+    .row-item {
+      display: flex;
+      justify-content: space-between;
+      padding: 0.3rem 0;
+      font-size: 0.95rem;
+    }
+    .row-item .label {
+      color: #334155;
+      font-weight: 500;
+    }
+    .row-item .value {
+      font-weight: 600;
+    }
+    .row-item .value.ingreso {
+      color: #E67E22;
+    }
+    .row-item .value.egreso {
+      color: #E74C3C;
+    }
+
+    /* ===== BOTONES MÁS COMPACTOS ===== */
+    .caja-actions {
+      display: flex;
+      gap: 0.6rem;
+      margin-top: 1rem;
+      padding-top: 0.8rem;
+      border-top: 1px solid #eef2f6;
+      justify-content: center;
+    }
+    .caja-actions button {
+      padding: 0.4rem 1.2rem;
+      border-radius: 8px;
+      border: none;
+      font-weight: 600;
+      font-size: 0.75rem;
+      cursor: pointer;
+      transition: background 0.15s;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+      min-width: 100px;
+      flex: 0 1 auto;
+    }
+    .btn-abrir {
+      background: #dc2626;
+      color: #fff;
+    }
+    .btn-abrir:hover:not(:disabled) {
+      background: #b91c1c;
+    }
+    .btn-abrir:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+    }
+    .btn-cerrar {
+      background: #64748b;
+      color: #fff;
+    }
+    .btn-cerrar:hover:not(:disabled) {
+      background: #475569;
+    }
+    .btn-cerrar:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+    }
+
+    .total-box {
+      background: #fff;
+      border-radius: 16px;
+      padding: 1.5rem 1.8rem;
+      border: 1px solid #e5e7eb;
+      margin-top: 0.5rem;
+    }
+    .total-box .total-title {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: #0f172a;
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      margin-bottom: 1rem;
+    }
+    .total-box .total-title svg {
+      width: 20px;
+      height: 20px;
+      stroke: #475569;
+      stroke-width: 1.8;
+      fill: none;
+    }
+    .total-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 0.3rem 0;
+      font-size: 0.95rem;
+    }
+    .total-row .label {
+      color: #334155;
+      font-weight: 500;
+    }
+    .total-row .value {
+      font-weight: 600;
+    }
+    .total-row .value.ingreso {
+      color: #E67E22;
+    }
+    .total-row .value.egreso {
+      color: #E74C3C;
+    }
+
+    .saldo-multimoneda {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: #f8fafc;
+      padding: 0.8rem 1.2rem;
+      border-radius: 12px;
+      margin-top: 0.6rem;
+      border: 1px solid #eef2f6;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+    .saldo-multimoneda .saldo-label {
+      font-weight: 600;
+      color: #0f172a;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+    .saldo-multimoneda .saldo-label svg {
+      width: 18px;
+      height: 18px;
+      stroke: #475569;
+      stroke-width: 1.8;
+      fill: none;
+    }
+    .saldo-multimoneda .monedas {
+      display: flex;
+      gap: 1.2rem;
+      flex-wrap: wrap;
+    }
+    .saldo-multimoneda .monedas span {
+      font-weight: 600;
+      color: #0f172a;
+    }
+    .saldo-multimoneda .monedas .moneda {
+      font-weight: 400;
+      color: #64748b;
+      font-size: 0.75rem;
+      margin-right: 0.2rem;
+    }
+
+    @media (max-width: 640px) {
+      .caja-card {
+        flex: 1 1 100%;
+      }
+      .saldo-multimoneda {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0.4rem;
+      }
+      .saldo-multimoneda .monedas {
+        justify-content: space-between;
+      }
+      .caja-actions button {
+        min-width: 80px;
+        padding: 0.3rem 0.8rem;
+        font-size: 0.7rem;
+      }
+    }
+
+    /* ===== SIDEBAR CON SCROLL ===== */
+    .sidebar {
+      overflow-y: auto;
+      max-height: 100vh;
+      scrollbar-width: thin;
+    }
+    .sidebar::-webkit-scrollbar {
+      width: 4px;
+    }
+    .sidebar::-webkit-scrollbar-thumb {
+      background: #cbd5e1;
+      border-radius: 4px;
+    }
+    .sidebar::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    /* ===== SUCURSAL EN SIDEBAR (dinámico) ===== */
+    .sidebar-footer {
+      background: transparent;
+    }
+    .sucursal-info {
+      padding: 0.5rem 0.8rem;
+      font-size: 0.8rem;
+      color: #ffffff;
+      line-height: 1.5;
+    }
+    .sucursal-info .nombre {
+      font-weight: 600;
+      color: #ffffff;
+      display: block;
+    }
+    .sucursal-info .direccion {
+      font-size: 0.7rem;
+      color: rgba(255, 255, 255, 0.6);
+      display: block;
+    }
+    .logout-link {
+      color: #ffffff !important;
+    }
+    .logout-link:hover {
+      color: rgba(255, 255, 255, 0.7) !important;
+    }
+
+    /* ===== MODAL DE CIERRE DE SESIÓN ===== */
+    .modal-confirm {
+      max-width: 400px;
+      width: 90%;
+    }
+    .modal-confirm .modal-body p {
+      font-size: 1rem;
+      color: #1e293b;
+      margin: 0.5rem 0 1.2rem;
+      line-height: 1.6;
+    }
+    .modal-confirm .modal-foot {
+      display: flex;
+      gap: 0.8rem;
+      justify-content: center;
+      padding-top: 0.5rem;
+    }
+    .modal-confirm .btn-cancel {
+      background: #e2e8f0;
+      color: #1e293b;
+      border: none;
+      padding: 0.5rem 1.5rem;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: background 0.2s;
+      min-width: 100px;
+    }
+    .modal-confirm .btn-cancel:hover {
+      background: #cbd5e1;
+    }
+    .modal-confirm .btn-danger {
+      background: #dc2626;
+      color: #fff;
+      border: none;
+      padding: 0.5rem 1.5rem;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: background 0.2s;
+      min-width: 100px;
+    }
+    .modal-confirm .btn-danger:hover {
+      background: #b91c1c;
+    }
+  </style>
+</head>
+<body>
+<div class="mobile-topbar">
+  <div class="brandmark"><div class="mark">H</div><span class="brandname">Hotelería</span></div>
+  <button class="hamburger-btn" onclick="toggleSidebar()" aria-label="Abrir menú">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+  </button>
+</div>
+<div class="sidebar-overlay" onclick="closeSidebar()"></div>
+<div class="app-shell">
+
+  <!-- ===== SIDEBAR ACTUALIZADA ===== -->
+  <aside class="sidebar">
+    <div class="sidebar-brand">
+      <div class="mark">H</div>
+      <div class="name">Hotelería<span>Panel administrativo</span></div>
+    </div>
+
+    <div class="nav-group-label">General</div>
+    <a class="nav-link" href="dashboard.html">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="7" height="9" rx="1.5"/><rect x="14" y="3" width="7" height="5" rx="1.5"/><rect x="14" y="12" width="7" height="9" rx="1.5"/><rect x="3" y="16" width="7" height="5" rx="1.5"/></svg>
+      Panel principal
+    </a>
+
+    <div class="nav-group-label">Operación</div>
+    <a class="nav-link" href="habitaciones.html">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 21V8l8-5 8 5v13"/><path d="M9 21v-6h6v6"/></svg>
+      Habitaciones
+    </a>
+    <a class="nav-link" href="reservas.html">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4" width="18" height="17" rx="2"/><path d="M3 9h18M8 2v4M16 2v4"/></svg>
+      Reservas
+    </a>
+    <a class="nav-link" href="huespedes.html">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="8" r="3.5"/><path d="M4.5 20.5c1.6-3.6 4.4-5.5 7.5-5.5s5.9 1.9 7.5 5.5"/></svg>
+      Huéspedes
+    </a>
+    <!-- ===== NUEVO ENLACE AL MAPA DE HABITACIONES ===== -->
+    <a class="nav-link" href="mapa.html">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M3 15h18M9 3v18M15 3v18"/></svg>
+      Mapa de habitaciones
+    </a>
+
+    <div class="nav-group-label">Administración</div>
+    <a class="nav-link" href="facturacion.html">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 8h8M8 12h8M8 16h5"/></svg>
+      Facturación
+    </a>
+    <a class="nav-link" href="reportes.html">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 20V10M12 20V4M20 20v-7"/></svg>
+      Reportes
+    </a>
+    <a class="nav-link" href="usuarios.html">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="8" r="3.5"/><path d="M4.5 20.5c1.6-3.6 4.4-5.5 7.5-5.5s5.9 1.9 7.5 5.5"/><path d="M16.5 16.5c1.6-1.6 2.5-3.8 2.5-6.5"/></svg>
+      Usuarios
+    </a>
+
+    <div class="nav-group-label">Finanzas</div>
+    <a class="nav-link" href="formas.html">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+        <rect x="2" y="6" width="20" height="14" rx="2"/><path d="M2 10h20"/>
+      </svg>
+      Formas de pago
+    </a>
+    <a class="nav-link active" href="caja.html">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+        <circle cx="12" cy="12" r="3"/><path d="M20 12h-4M8 12H4"/><path d="M12 8V4M12 20v-4"/>
+      </svg>
+      Caja
+    </a>
+
+    <div class="sidebar-footer">
+      <div class="sucursal-info" id="sucursalSidebar">
+        <span class="nombre" id="sucursalNombre">Sucursal Centro</span>
+        <span class="direccion" id="sucursalDireccion">Palma c/ 14 de Mayo, Asunción</span>
+      </div>
+      <a class="logout-link" href="#" onclick="abrirModalCierre(); return false;">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4M16 17l5-5-5-5M21 12H9"/></svg>
+        Cerrar sesión
+      </a>
+    </div>
+  </aside>
+
+  <!-- ===== MAIN ===== -->
+  <div class="main">
+    <div class="topbar">
+      <div>
+        <h1>Caja</h1>
+        <div class="subtitle" id="subCaja"></div>
+      </div>
+      <div class="topbar-right">
+        <div class="currency-toggle">
+          <button data-currency="PYG">Gs</button>
+          <button data-currency="USD">US$</button>
+          <button data-currency="BRL">R$</button>
+        </div>
+        <div class="user-chip">
+          <div class="avatar" data-user-avatar></div>
+          <div class="info"><b data-user-name></b><small data-user-role></small></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="content">
+      <div class="caja-layout" id="cajaCards">
+        <!-- se llena con JS -->
+      </div>
+      <div class="total-box" id="totalBox">
+        <!-- se llena con JS -->
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== MODAL DE CIERRE DE SESIÓN ===== -->
+<div class="modal-overlay" id="modalCierreSesion">
+  <div class="modal modal-confirm">
+    <div class="modal-head">
+      <h3>Confirmar cierre</h3>
+      <button class="modal-close" onclick="cerrarModalCierre()">✕</button>
+    </div>
+    <div class="modal-body">
+      <p>¿Está seguro de que desea cerrar sesión? Se perderán los cambios no guardados.</p>
+    </div>
+    <div class="modal-foot">
+      <button class="btn-cancel" onclick="cerrarModalCierre()">Cancelar</button>
+      <button class="btn-danger" id="btnConfirmarCierre">Cerrar sesión</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== MODAL GENÉRICO ===== -->
+<div class="modal-overlay" id="modalGenerico">
+  <div class="modal">
+    <div class="modal-head">
+      <h3>Mensaje</h3>
+      <button class="modal-close" onclick="cerrarModal()">✕</button>
+    </div>
+    <div class="modal-body" id="modalMensaje">
+      <p>Mensaje</p>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-primary" onclick="cerrarModal()">Aceptar</button>
+    </div>
+  </div>
+</div>
+
+<script src="assets/app.js"></script>
+<script>
+  (function() {
+    // ---- Obtener sucursal activa ----
+    const suc = getSucursalActual();
+
+    // ---- Datos de caja diferentes según sucursal ----
+    function getCajaData(sucId) {
+      if (sucId === 'centro') {
+        return {
+          efectivo: {
+            hoy: { ingreso: 0, egreso: 0 },
+            mes: { ingreso: 735000, egreso: 196600 },
+            abierta: false
+          },
+          transferencia: {
+            hoy: { ingreso: 0, egreso: 0 },
+            mes: { ingreso: 640000, egreso: 0 },
+            abierta: false
+          }
+        };
+      } else { // 'este'
+        return {
+          efectivo: {
+            hoy: { ingreso: 150000, egreso: 50000 },
+            mes: { ingreso: 520000, egreso: 120000 },
+            abierta: false
+          },
+          transferencia: {
+            hoy: { ingreso: 80000, egreso: 0 },
+            mes: { ingreso: 410000, egreso: 0 },
+            abierta: false
+          }
+        };
+      }
+    }
+
+    let data = getCajaData(suc.id);
+    const TIPO_CAMBIO = { USD: 7500, BRL: 1400 };
+
+    // ---- Actualizar sidebar dinámicamente ----
+    const direcciones = {
+      centro: 'Palma c/ 14 de Mayo, Asunción',
+      este: 'Av. Monseñor Rodríguez, Ciudad del Este'
+    };
+    document.getElementById('sucursalNombre').textContent = suc.corto || 'Sucursal';
+    document.getElementById('sucursalDireccion').textContent = direcciones[suc.id] || '';
+
+    // ---- Subtítulo ----
+    document.getElementById('subCaja').textContent = suc.corto + ' · Resumen de caja';
+
+    // ---- Íconos SVG ----
+    const iconEfectivo = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="6" width="20" height="14" rx="2"/><path d="M2 10h20"/><circle cx="8" cy="13" r="1.5"/><circle cx="16" cy="13" r="1.5"/></svg>`;
+    const iconTransferencia = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="10" width="18" height="12" rx="1.5"/><path d="M6 10V6l6-4 6 4v4"/><path d="M9 14h.01M12 14h.01M15 14h.01"/></svg>`;
+
+    // ---- Renderizar tarjetas ----
+    function renderCards() {
+      const container = document.getElementById('cajaCards');
+      container.innerHTML = '';
+
+      function crearCard(titulo, iconoSVG, datos, key) {
+        const card = document.createElement('div');
+        card.className = 'caja-card';
+        const estadoClase = datos.abierta ? 'abierta' : 'cerrada';
+        const estadoTexto = datos.abierta ? 'Abierta' : 'Cerrada';
+        card.innerHTML = `
+          <div class="card-title">
+            <div class="left">${iconoSVG} ${titulo}</div>
+            <span class="estado ${estadoClase}">${estadoTexto}</span>
+          </div>
+          <div class="period-label"><span>Hoy</span> <span></span></div>
+          <div class="row-item"><span class="label">Ingreso</span><span class="value ingreso">Gs. ${datos.hoy.ingreso.toLocaleString()}</span></div>
+          <div class="row-item"><span class="label">Egreso</span><span class="value egreso">Gs. ${datos.hoy.egreso.toLocaleString()}</span></div>
+          <div class="period-label" style="margin-top:0.8rem;"><span>Mes</span> <span></span></div>
+          <div class="row-item"><span class="label">Ingreso</span><span class="value ingreso">Gs. ${datos.mes.ingreso.toLocaleString()}</span></div>
+          <div class="row-item"><span class="label">Egreso</span><span class="value egreso">Gs. ${datos.mes.egreso.toLocaleString()}</span></div>
+          <div class="caja-actions">
+            <button class="btn-abrir" data-key="${key}" ${datos.abierta ? 'disabled' : ''}>Abrir caja</button>
+            <button class="btn-cerrar" data-key="${key}" ${!datos.abierta ? 'disabled' : ''}>Cerrar caja</button>
+          </div>
+        `;
+        container.appendChild(card);
+
+        card.querySelector('.btn-abrir').addEventListener('click', function() {
+          const k = this.dataset.key;
+          data[k].abierta = true;
+          renderCards();
+          mostrarMensaje(`Caja de ${titulo} abierta correctamente.`);
+        });
+
+        card.querySelector('.btn-cerrar').addEventListener('click', function() {
+          const k = this.dataset.key;
+          data[k].abierta = false;
+          renderCards();
+          mostrarMensaje(`Caja de ${titulo} cerrada.`);
+        });
+      }
+
+      crearCard('Efectivo', iconEfectivo, data.efectivo, 'efectivo');
+      crearCard('Transferencia', iconTransferencia, data.transferencia, 'transferencia');
+    }
+
+    // ---- Renderizar total ----
+    function renderTotal() {
+      const box = document.getElementById('totalBox');
+      const totalIngresos = data.efectivo.mes.ingreso + data.transferencia.mes.ingreso;
+      const totalEgresos = data.efectivo.mes.egreso + data.transferencia.mes.egreso;
+      const saldoGs = totalIngresos - totalEgresos;
+      const saldoUsd = saldoGs / TIPO_CAMBIO.USD;
+      const saldoBrl = saldoGs / TIPO_CAMBIO.BRL;
+
+      box.innerHTML = `
+        <div class="total-title">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M3 9h18"/></svg>
+          Total general · Mes
+        </div>
+        <div class="total-row"><span class="label">Ingresos</span><span class="value ingreso">Gs. ${totalIngresos.toLocaleString()}</span></div>
+        <div class="total-row"><span class="label">Egresos</span><span class="value egreso">Gs. ${totalEgresos.toLocaleString()}</span></div>
+        <div class="saldo-multimoneda">
+          <span class="saldo-label">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+            Saldo
+          </span>
+          <div class="monedas">
+            <span><span class="moneda">Gs</span> ${saldoGs.toLocaleString()}</span>
+            <span><span class="moneda">USD</span> ${saldoUsd.toFixed(2)}</span>
+            <span><span class="moneda">BRL</span> ${saldoBrl.toFixed(2)}</span>
+          </div>
+        </div>
+      `;
+    }
+
+    // ---- Mostrar mensaje ----
+    function mostrarMensaje(msg) {
+      document.getElementById('modalMensaje').querySelector('p').textContent = msg;
+      document.getElementById('modalGenerico').classList.add('open');
+    }
+    window.cerrarModal = function() {
+      document.getElementById('modalGenerico').classList.remove('open');
+    };
+
+    // ---- Inicializar ----
+    renderCards();
+    renderTotal();
+
+    window.addEventListener('currencychange', function() {
+      renderTotal();
+    });
+
+    // ---- Cargar usuario en topbar ----
+    const auth = JSON.parse(localStorage.getItem('hoteleria_auth') || '{}');
+    if (auth.nombre) {
+      document.querySelector('[data-user-name]').textContent = auth.nombre;
+      document.querySelector('[data-user-role]').textContent = auth.rol || 'Recepción';
+      const avatar = document.querySelector('[data-user-avatar]');
+      if (avatar) {
+        avatar.textContent = auth.nombre.split(' ').map(w => w[0]).slice(0,2).join('');
+      }
+    }
+
+    // ============================================================
+    //   MODAL DE CIERRE DE SESIÓN
+    // ============================================================
+
+    const modalCierre = document.getElementById('modalCierreSesion');
+    const btnConfirmar = document.getElementById('btnConfirmarCierre');
+
+    window.abrirModalCierre = function() {
+      modalCierre.classList.add('open');
+    };
+
+    window.cerrarModalCierre = function() {
+      modalCierre.classList.remove('open');
+    };
+
+    btnConfirmar.addEventListener('click', function() {
+      if (typeof logout === 'function') {
+        logout();
+      } else {
+        localStorage.removeItem('hoteleria_auth');
+        localStorage.removeItem('hoteleria_sucursal');
+        window.location.href = 'index.html';
+      }
+      modalCierre.classList.remove('open');
+    });
+
+    modalCierre.addEventListener('click', function(e) {
+      if (e.target === modalCierre) {
+        modalCierre.classList.remove('open');
+      }
+    });
+
+  })();
+</script>
+</body>
+</html>

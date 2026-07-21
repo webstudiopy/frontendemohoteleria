@@ -5,6 +5,185 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Hotelería — Huéspedes</title>
 <link rel="stylesheet" href="assets/styles.css">
+<style>
+  /* ===== SIDEBAR CON SCROLL ===== */
+  .sidebar {
+    overflow-y: auto;
+    max-height: 100vh;
+    scrollbar-width: thin;
+  }
+  .sidebar::-webkit-scrollbar {
+    width: 4px;
+  }
+  .sidebar::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 4px;
+  }
+  .sidebar::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  /* ===== SUCURSAL EN SIDEBAR ===== */
+  .sidebar-footer {
+    background: transparent;
+  }
+  .sucursal-info {
+    padding: 0.5rem 0.8rem;
+    font-size: 0.8rem;
+    color: #ffffff;
+    line-height: 1.5;
+  }
+  .sucursal-info .nombre {
+    font-weight: 600;
+    color: #ffffff;
+    display: block;
+  }
+  .sucursal-info .direccion {
+    font-size: 0.7rem;
+    color: rgba(255, 255, 255, 0.6);
+    display: block;
+  }
+  .logout-link {
+    color: #ffffff !important;
+  }
+  .logout-link:hover {
+    color: rgba(255, 255, 255, 0.7) !important;
+  }
+
+  /* ===== MODALES DE CONFIRMACIÓN ===== */
+  .modal-confirm {
+    max-width: 400px;
+    width: 90%;
+  }
+  .modal-confirm .modal-body p {
+    font-size: 1rem;
+    color: #1e293b;
+    margin: 0.5rem 0 1.2rem;
+    line-height: 1.6;
+  }
+  .modal-confirm .modal-foot {
+    display: flex;
+    gap: 0.8rem;
+    justify-content: center;
+    padding-top: 0.5rem;
+  }
+  .modal-confirm .btn-cancel {
+    background: #e2e8f0;
+    color: #1e293b;
+    border: none;
+    padding: 0.5rem 1.5rem;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: background 0.2s;
+    min-width: 100px;
+  }
+  .modal-confirm .btn-cancel:hover {
+    background: #cbd5e1;
+  }
+  .modal-confirm .btn-danger {
+    background: #dc2626;
+    color: #fff;
+    border: none;
+    padding: 0.5rem 1.5rem;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: background 0.2s;
+    min-width: 100px;
+  }
+  .modal-confirm .btn-danger:hover {
+    background: #b91c1c;
+  }
+
+  /* ===== BOTONES DE ACCIÓN CON ÍCONOS ===== */
+  .action-btns {
+    display: flex;
+    gap: 0.4rem;
+    justify-content: flex-end;
+  }
+  .action-btns .btn-icon {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 0.2rem 0.3rem;
+    border-radius: 6px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.15s;
+    color: #64748b;
+  }
+  .action-btns .btn-icon:hover {
+    background: #f1f5f9;
+  }
+  .action-btns .btn-icon.view:hover {
+    color: #2563eb;
+  }
+  .action-btns .btn-icon.edit:hover {
+    color: #2563eb;
+  }
+  .action-btns .btn-icon.delete:hover {
+    color: #dc2626;
+  }
+  .action-btns .btn-icon svg {
+    width: 18px;
+    height: 18px;
+    stroke: currentColor;
+    stroke-width: 1.8;
+    fill: none;
+  }
+
+  /* ===== AVATAR EN TABLA ===== */
+  .avatar-sm {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: #e2e8f0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    font-size: 0.75rem;
+    color: #1e293b;
+    flex-shrink: 0;
+  }
+
+  /* ===== MODAL DE DETALLES ===== */
+  .modal-detail .field-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+  }
+  .modal-detail .field-row .field {
+    margin-bottom: 0.2rem;
+  }
+  .modal-detail .field label {
+    font-weight: 600;
+    color: #475569;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  .modal-detail .field .value {
+    font-size: 1rem;
+    color: #0f172a;
+    font-weight: 500;
+    padding: 0.25rem 0;
+  }
+
+  .flex {
+    display: flex;
+  }
+  .items-center {
+    align-items: center;
+  }
+  .gap-12 {
+    gap: 0.75rem;
+  }
+</style>
 </head>
 <body>
 <div class="mobile-topbar">
@@ -16,6 +195,7 @@
 <div class="sidebar-overlay" onclick="closeSidebar()"></div>
 <div class="app-shell">
 
+  <!-- ===== SIDEBAR ACTUALIZADA ===== -->
   <aside class="sidebar">
     <div class="sidebar-brand">
       <div class="mark">H</div>
@@ -41,6 +221,11 @@
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="8" r="3.5"/><path d="M4.5 20.5c1.6-3.6 4.4-5.5 7.5-5.5s5.9 1.9 7.5 5.5"/></svg>
       Huéspedes
     </a>
+    <!-- ===== NUEVO ENLACE AL MAPA DE HABITACIONES ===== -->
+    <a class="nav-link" href="mapa.html">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M3 15h18M9 3v18M15 3v18"/></svg>
+      Mapa de habitaciones
+    </a>
 
     <div class="nav-group-label">Administración</div>
     <a class="nav-link" href="facturacion.html">
@@ -51,19 +236,38 @@
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 20V10M12 20V4M20 20v-7"/></svg>
       Reportes
     </a>
+    <a class="nav-link" href="usuarios.html">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="8" r="3.5"/><path d="M4.5 20.5c1.6-3.6 4.4-5.5 7.5-5.5s5.9 1.9 7.5 5.5"/><path d="M16.5 16.5c1.6-1.6 2.5-3.8 2.5-6.5"/></svg>
+      Usuarios
+    </a>
+
+    <div class="nav-group-label">Finanzas</div>
+    <a class="nav-link" href="formas.html">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+        <rect x="2" y="6" width="20" height="14" rx="2"/><path d="M2 10h20"/>
+      </svg>
+      Formas de pago
+    </a>
+    <a class="nav-link" href="caja.html">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+        <circle cx="12" cy="12" r="3"/><path d="M20 12h-4M8 12H4"/><path d="M12 8V4M12 20v-4"/>
+      </svg>
+      Caja
+    </a>
 
     <div class="sidebar-footer">
-      <div class="sucursal-pill">
-        <span class="dot"></span>
-        <span class="txt" data-sucursal-pill></span>
+      <div class="sucursal-info">
+        <span class="nombre" id="sucursalNombre">Sucursal Centro</span>
+        <span class="direccion" id="sucursalDireccion">Palma c/ 14 de Mayo, Asunción</span>
       </div>
-      <a class="logout-link" href="#" onclick="logout(); return false;">
+      <a class="logout-link" href="#" onclick="abrirModalCierre(); return false;">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4M16 17l5-5-5-5M21 12H9"/></svg>
         Cerrar sesión
       </a>
     </div>
   </aside>
 
+  <!-- ===== MAIN ===== -->
   <div class="main">
     <div class="topbar">
       <div>
@@ -90,7 +294,7 @@
           <input type="text" id="buscador" placeholder="Buscar por nombre o documento...">
         </div>
         <div class="filters">
-          <button class="btn btn-accent btn-sm" onclick="abrirModal()">
+          <button class="btn btn-accent btn-sm" onclick="abrirModalNuevo()">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>
             Nuevo huésped
           </button>
@@ -113,61 +317,265 @@
   </div>
 </div>
 
-<!-- Modal nuevo huésped -->
-<div class="modal-overlay" id="modalHuesped">
-  <div class="modal">
+<!-- ===== MODAL DE CIERRE DE SESIÓN ===== -->
+<div class="modal-overlay" id="modalCierreSesion">
+  <div class="modal modal-confirm">
     <div class="modal-head">
-      <h3>Nuevo huésped</h3>
-      <button class="modal-close" onclick="cerrarModal()">✕</button>
+      <h3>Confirmar cierre</h3>
+      <button class="modal-close" onclick="cerrarModalCierre()">✕</button>
     </div>
     <div class="modal-body">
-      <div class="field">
-        <label>Nombre completo <span class="req">*</span></label>
-        <input type="text" placeholder="Nombre y apellido">
-      </div>
+      <p>¿Está seguro de que desea cerrar sesión? Se perderán los cambios no guardados.</p>
+    </div>
+    <div class="modal-foot">
+      <button class="btn-cancel" onclick="cerrarModalCierre()">Cancelar</button>
+      <button class="btn-danger" id="btnConfirmarCierre">Cerrar sesión</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== MODAL DE CONFIRMACIÓN PARA ELIMINAR HUÉSPED ===== -->
+<div class="modal-overlay" id="modalEliminarHuesped">
+  <div class="modal modal-confirm">
+    <div class="modal-head">
+      <h3>Confirmar eliminación</h3>
+      <button class="modal-close" onclick="cerrarModalEliminar()">✕</button>
+    </div>
+    <div class="modal-body">
+      <p id="modalEliminarTexto">¿Está seguro de eliminar al huésped <strong>Nombre</strong>? Esta acción no se puede deshacer.</p>
+    </div>
+    <div class="modal-foot">
+      <button class="btn-cancel" onclick="cerrarModalEliminar()">Cancelar</button>
+      <button class="btn-danger" id="btnConfirmarEliminarHuesped">Eliminar</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== MODAL DETALLES DEL HUÉSPED ===== -->
+<div class="modal-overlay" id="modalDetalleHuesped">
+  <div class="modal modal-detail">
+    <div class="modal-head">
+      <h3 id="detalleTitulo">Detalles del huésped</h3>
+      <button class="modal-close" onclick="cerrarModalDetalle()">✕</button>
+    </div>
+    <div class="modal-body">
       <div class="field-row">
         <div class="field">
-          <label>Tipo de documento</label>
-          <select>
-            <option>CI</option><option>DNI</option><option>CPF</option><option>Pasaporte</option>
-          </select>
+          <label>Nombre completo</label>
+          <div class="value" id="detalleNombre">—</div>
         </div>
         <div class="field">
-          <label>N.º de documento <span class="req">*</span></label>
-          <input type="text" placeholder="0000000">
+          <label>Documento</label>
+          <div class="value" id="detalleDocumento">—</div>
         </div>
       </div>
       <div class="field-row">
         <div class="field">
           <label>País</label>
-          <input type="text" placeholder="Paraguay">
+          <div class="value" id="detallePais">—</div>
         </div>
         <div class="field">
           <label>Teléfono</label>
-          <input type="text" placeholder="+595 9xx xxx xxx">
+          <div class="value" id="detalleTelefono">—</div>
         </div>
       </div>
-      <div class="field mb-0">
+      <div class="field">
         <label>Correo electrónico</label>
-        <input type="email" placeholder="correo@ejemplo.com">
+        <div class="value" id="detalleEmail">—</div>
+      </div>
+      <div class="field-row">
+        <div class="field">
+          <label>Estadías totales</label>
+          <div class="value" id="detalleEstadias">—</div>
+        </div>
+        <div class="field">
+          <label>Última visita</label>
+          <div class="value" id="detalleUltimaVisita">—</div>
+        </div>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-ghost" onclick="cerrarModalDetalle()">Cerrar</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== MODAL NUEVO / EDICIÓN HUÉSPED ===== -->
+<div class="modal-overlay" id="modalHuesped">
+  <div class="modal">
+    <div class="modal-head">
+      <h3 id="modalHuespedTitulo">Nuevo huésped</h3>
+      <button class="modal-close" onclick="cerrarModal()">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="field">
+        <label>Nombre completo <span class="req">*</span></label>
+        <input type="text" placeholder="Nombre y apellido" id="hNombre">
+      </div>
+      <div class="field-row">
+        <div class="field">
+          <label>Tipo de documento</label>
+          <select id="hTipoDoc">
+            <option>CI</option><option>DNI</option><option>CPF</option><option>Pasaporte</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>N.º de documento <span class="req">*</span></label>
+          <input type="text" placeholder="0000000" id="hDocumento">
+        </div>
+      </div>
+      <div class="field-row">
+        <div class="field">
+          <label>País</label>
+          <input type="text" placeholder="Paraguay" id="hPais">
+        </div>
+        <div class="field">
+          <label>Teléfono</label>
+          <input type="text" placeholder="+595 9xx xxx xxx" id="hTelefono">
+        </div>
+      </div>
+      <div class="field">
+        <label>Correo electrónico</label>
+        <input type="email" placeholder="correo@ejemplo.com" id="hEmail">
+      </div>
+      <div class="field mb-0">
+        <label>Estadías (automático)</label>
+        <input type="number" id="hEstadias" value="0" readonly>
       </div>
     </div>
     <div class="modal-foot">
       <button class="btn btn-ghost" onclick="cerrarModal()">Cancelar</button>
-      <button class="btn btn-primary" onclick="cerrarModal()">Guardar huésped</button>
+      <button class="btn btn-primary" id="guardarHuespedBtn">Guardar huésped</button>
     </div>
   </div>
 </div>
 
 <script src="assets/app.js"></script>
 <script>
+  // ---- Lista de huéspedes con datos realistas ----
+  const listaHuespedes = [
+    { nombre: 'Julia Souza', documento: 'CI 1392124', pais: 'Uruguay', telefono: '+595 974101332', email: 'julia.souza@correo.com', estadias: 5, ultimaVisita: '2026-05-14' },
+    { nombre: 'Pedro Duarte', documento: 'CI 1489655', pais: 'Paraguay', telefono: '+595 975101665', email: 'pedro.duarte@correo.com', estadias: 1, ultimaVisita: '2026-06-15' },
+    { nombre: 'Camila Ríos', documento: 'CPF 1587186', pais: 'Brasil', telefono: '+595 976101998', email: 'camila.rios@correo.com', estadias: 2, ultimaVisita: '2026-07-16' },
+    { nombre: 'Hugo Martínez', documento: 'CI 1684717', pais: 'Paraguay', telefono: '+595 977102331', email: 'hugo.martinez@correo.com', estadias: 3, ultimaVisita: '2026-01-17' },
+    { nombre: 'Rosa Cáceres', documento: 'RUT 1782248', pais: 'Chile', telefono: '+595 978102664', email: 'rosa.caceres@correo.com', estadias: 4, ultimaVisita: '2026-02-18' },
+    { nombre: 'Iván Gómez', documento: 'CI 1879779', pais: 'Paraguay', telefono: '+595 979102997', email: 'ivan.gomez@correo.com', estadias: 5, ultimaVisita: '2026-03-10' },
+    { nombre: 'Nadia López', documento: 'CPF 1977310', pais: 'Brasil', telefono: '+595 980103330', email: 'nadia.lopez@correo.com', estadias: 1, ultimaVisita: '2026-04-11' },
+    { nombre: 'Sergio Aquino', documento: 'CI 2074843', pais: 'Paraguay', telefono: '+595 981103663', email: 'sergio.aquino@correo.com', estadias: 2, ultimaVisita: '2026-05-12' }
+  ];
+
+  // ---- Modal de cierre de sesión (sin cambios) ----
+  (function() {
+    const modalCierre = document.getElementById('modalCierreSesion');
+    const btnConfirmar = document.getElementById('btnConfirmarCierre');
+
+    window.abrirModalCierre = function() {
+      modalCierre.classList.add('open');
+    };
+    window.cerrarModalCierre = function() {
+      modalCierre.classList.remove('open');
+    };
+    btnConfirmar.addEventListener('click', function() {
+      if (typeof logout === 'function') {
+        logout();
+      } else {
+        localStorage.removeItem('hoteleria_auth');
+        localStorage.removeItem('hoteleria_sucursal');
+        window.location.href = 'index.html';
+      }
+      modalCierre.classList.remove('open');
+    });
+    modalCierre.addEventListener('click', function(e) {
+      if (e.target === modalCierre) modalCierre.classList.remove('open');
+    });
+  })();
+
+  // ---- Modal de confirmación de eliminación ----
+  (function() {
+    const modalEliminar = document.getElementById('modalEliminarHuesped');
+    const btnConfirmar = document.getElementById('btnConfirmarEliminarHuesped');
+    let nombreAEliminar = null;
+
+    window.abrirModalEliminar = function(nombre) {
+      nombreAEliminar = nombre;
+      document.getElementById('modalEliminarTexto').innerHTML =
+        `¿Está seguro de eliminar al huésped <strong>${nombre}</strong>? Esta acción no se puede deshacer.`;
+      modalEliminar.classList.add('open');
+    };
+
+    window.cerrarModalEliminar = function() {
+      modalEliminar.classList.remove('open');
+      nombreAEliminar = null;
+    };
+
+    btnConfirmar.addEventListener('click', function() {
+      if (nombreAEliminar) {
+        const idx = huespedes.findIndex(h => h.nombre === nombreAEliminar);
+        if (idx !== -1) {
+          huespedes.splice(idx, 1);
+          render();
+        }
+        cerrarModalEliminar();
+      }
+    });
+
+    modalEliminar.addEventListener('click', function(e) {
+      if (e.target === modalEliminar) cerrarModalEliminar();
+    });
+  })();
+
+  // ---- Modal de detalles ----
+  (function() {
+    const modalDetalle = document.getElementById('modalDetalleHuesped');
+
+    window.abrirModalDetalle = function(nombre) {
+      const h = huespedes.find(h => h.nombre === nombre);
+      if (!h) return;
+      document.getElementById('detalleTitulo').textContent = `Detalles de ${h.nombre}`;
+      document.getElementById('detalleNombre').textContent = h.nombre;
+      document.getElementById('detalleDocumento').textContent = h.documento;
+      document.getElementById('detallePais').textContent = h.pais;
+      document.getElementById('detalleTelefono').textContent = h.telefono;
+      document.getElementById('detalleEmail').textContent = h.email;
+      document.getElementById('detalleEstadias').textContent = h.estadias;
+      document.getElementById('detalleUltimaVisita').textContent = h.ultimaVisita;
+      modalDetalle.classList.add('open');
+    };
+
+    window.cerrarModalDetalle = function() {
+      modalDetalle.classList.remove('open');
+    };
+
+    modalDetalle.addEventListener('click', function(e) {
+      if (e.target === modalDetalle) cerrarModalDetalle();
+    });
+  })();
+
+  // ---- Código principal ----
   requireAuth();
   const suc = getSucursalActual();
-  const huespedes = generarHuespedes(suc);
+
+  // Actualizar sidebar con la sucursal
+  const direcciones = {
+    centro: 'Palma c/ 14 de Mayo, Asunción',
+    este: 'Av. Monseñor Rodríguez, Ciudad del Este'
+  };
+  document.getElementById('sucursalNombre').textContent = suc.corto || 'Sucursal';
+  document.getElementById('sucursalDireccion').textContent = direcciones[suc.id] || '';
+
+  // Si la sucursal es "Este", filtramos algunos huéspedes para que se vea diferente
+  let huespedes = [...listaHuespedes];
+  if (suc.id === 'este') {
+    // Tomamos solo los últimos 4 para que haya diferencia
+    huespedes = listaHuespedes.slice(4);
+  }
 
   document.getElementById('subHuespedes').textContent = `${suc.corto} · ${huespedes.length} huéspedes registrados`;
 
-  function render(){
+  let editandoNombre = null; // nombre del huésped en edición
+
+  // ---- Renderizado de la tabla ----
+  function render() {
     const texto = document.getElementById('buscador').value.toLowerCase();
     const filtrados = huespedes.filter(h =>
       h.nombre.toLowerCase().includes(texto) || h.documento.toLowerCase().includes(texto)
@@ -184,16 +592,102 @@
         <td class="cell-muted">${h.telefono}<br>${h.email}</td>
         <td>${h.estadias}</td>
         <td class="cell-muted">${h.ultimaVisita}</td>
-        <td class="text-right"><button class="btn btn-ghost btn-sm" onclick="abrirModal()">Ver ficha</button></td>
+        <td>
+          <div class="action-btns">
+            <button class="btn-icon view" onclick="abrirModalDetalle('${h.nombre}')" title="Ver detalles">
+              <svg viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+            </button>
+            <button class="btn-icon edit" onclick="abrirModalEditar('${h.nombre}')" title="Editar">
+              <svg viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+            </button>
+            <button class="btn-icon delete" onclick="abrirModalEliminar('${h.nombre}')" title="Eliminar">
+              <svg viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg>
+            </button>
+          </div>
+        </td>
       </tr>
     `).join('');
   }
 
+  // ---- Abrir modal para nuevo huésped ----
+  window.abrirModalNuevo = function() {
+    document.getElementById('modalHuespedTitulo').textContent = 'Nuevo huésped';
+    document.getElementById('guardarHuespedBtn').textContent = 'Guardar huésped';
+    editandoNombre = null;
+    // Limpiar campos
+    document.getElementById('hNombre').value = '';
+    document.getElementById('hTipoDoc').value = 'CI';
+    document.getElementById('hDocumento').value = '';
+    document.getElementById('hPais').value = '';
+    document.getElementById('hTelefono').value = '';
+    document.getElementById('hEmail').value = '';
+    document.getElementById('hEstadias').value = '0';
+    document.getElementById('modalHuesped').classList.add('open');
+  };
+
+  // ---- Abrir modal para editar ----
+  window.abrirModalEditar = function(nombre) {
+    const h = huespedes.find(h => h.nombre === nombre);
+    if (!h) return;
+    document.getElementById('modalHuespedTitulo').textContent = `Editar ${h.nombre}`;
+    document.getElementById('guardarHuespedBtn').textContent = 'Actualizar huésped';
+    editandoNombre = nombre;
+    // Cargar datos
+    document.getElementById('hNombre').value = h.nombre;
+    document.getElementById('hTipoDoc').value = h.documento.split(' ')[0] || 'CI';
+    document.getElementById('hDocumento').value = h.documento.split(' ')[1] || '';
+    document.getElementById('hPais').value = h.pais;
+    document.getElementById('hTelefono').value = h.telefono;
+    document.getElementById('hEmail').value = h.email;
+    document.getElementById('hEstadias').value = h.estadias;
+    document.getElementById('modalHuesped').classList.add('open');
+  };
+
+  window.cerrarModal = function() {
+    document.getElementById('modalHuesped').classList.remove('open');
+    editandoNombre = null;
+  };
+
+  // ---- Guardar (nuevo o edición) ----
+  document.getElementById('guardarHuespedBtn').addEventListener('click', function() {
+    const nombre = document.getElementById('hNombre').value.trim();
+    const tipoDoc = document.getElementById('hTipoDoc').value;
+    const numDoc = document.getElementById('hDocumento').value.trim();
+    const pais = document.getElementById('hPais').value.trim();
+    const telefono = document.getElementById('hTelefono').value.trim();
+    const email = document.getElementById('hEmail').value.trim();
+    const estadias = parseInt(document.getElementById('hEstadias').value) || 0;
+
+    if (!nombre || !numDoc) {
+      alert('Nombre y documento son obligatorios.');
+      return;
+    }
+
+    const documento = `${tipoDoc} ${numDoc}`;
+
+    if (editandoNombre) {
+      // Editar
+      const idx = huespedes.findIndex(h => h.nombre === editandoNombre);
+      if (idx === -1) return;
+      huespedes[idx] = { nombre, documento, pais, telefono, email, estadias, ultimaVisita: huespedes[idx].ultimaVisita };
+    } else {
+      // Nuevo: verificar duplicado
+      if (huespedes.some(h => h.nombre === nombre)) {
+        alert('Ya existe un huésped con ese nombre.');
+        return;
+      }
+      const hoy = new Date().toISOString().slice(0,10);
+      huespedes.push({ nombre, documento, pais, telefono, email, estadias, ultimaVisita: hoy });
+    }
+
+    render();
+    cerrarModal();
+  });
+
+  // ---- Búsqueda ----
   document.getElementById('buscador').addEventListener('input', render);
 
-  function abrirModal(){ document.getElementById('modalHuesped').classList.add('open'); }
-  function cerrarModal(){ document.getElementById('modalHuesped').classList.remove('open'); }
-
+  // ---- Inicializar ----
   render();
 </script>
 </body>

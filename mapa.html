@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Hotelería — Panel principal</title>
+<title>Hotelería — Mapa de habitaciones</title>
 <link rel="stylesheet" href="assets/styles.css">
 <style>
   /* ===== SIDEBAR CON SCROLL ===== */
@@ -97,6 +97,52 @@
   .modal-confirm .btn-danger:hover {
     background: #b91c1c;
   }
+
+  /* ===== MAPA DE HABITACIONES ===== */
+  .room-map {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+    gap: 10px;
+  }
+  .room-tile {
+    background: #fff;
+    border-radius: 10px;
+    padding: 0.6rem 0.4rem;
+    text-align: center;
+    border: 1px solid #e5e7eb;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.03);
+    transition: border-color 0.15s, box-shadow 0.15s;
+  }
+  .room-tile:hover {
+    border-color: #94a3b8;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+  }
+  .room-tile .num {
+    font-weight: 700;
+    font-size: 0.95rem;
+    color: #0f172a;
+    font-family: 'JetBrains Mono', 'Fira Code', monospace;
+  }
+  .room-tile .type {
+    font-size: 0.7rem;
+    color: #64748b;
+    margin-top: 0.1rem;
+  }
+  .room-tile .state {
+    display: block;
+    font-size: 0.65rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    margin-top: 0.2rem;
+    background: transparent !important;
+    border: none !important;
+    padding: 0 !important;
+  }
+  .room-tile.disponible .state { color: #16a34a; }
+  .room-tile.ocupada .state { color: #f59e0b; }
+  .room-tile.limpieza .state { color: #64748b; }
+  .room-tile.mantenimiento .state { color: #dc2626; }
 </style>
 </head>
 <body>
@@ -117,7 +163,7 @@
     </div>
 
     <div class="nav-group-label">General</div>
-    <a class="nav-link active" href="dashboard.html">
+    <a class="nav-link" href="dashboard.html">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="7" height="9" rx="1.5"/><rect x="14" y="3" width="7" height="5" rx="1.5"/><rect x="14" y="12" width="7" height="9" rx="1.5"/><rect x="3" y="16" width="7" height="5" rx="1.5"/></svg>
       Panel principal
     </a>
@@ -135,8 +181,7 @@
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="8" r="3.5"/><path d="M4.5 20.5c1.6-3.6 4.4-5.5 7.5-5.5s5.9 1.9 7.5 5.5"/></svg>
       Huéspedes
     </a>
-    <!-- NUEVO: Enlace al mapa de habitaciones -->
-    <a class="nav-link" href="mapa.html">
+    <a class="nav-link active" href="mapa.html">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M3 15h18M9 3v18M15 3v18"/></svg>
       Mapa de habitaciones
     </a>
@@ -185,7 +230,7 @@
   <div class="main">
     <div class="topbar">
       <div>
-        <h1>Panel principal</h1>
+        <h1>Mapa de habitaciones</h1>
         <div class="subtitle" id="fechaHoy"></div>
       </div>
       <div class="topbar-right">
@@ -206,60 +251,22 @@
 
     <div class="content">
 
-      <!-- ===== ESTADÍSTICAS ===== -->
-      <div class="grid grid-4" style="margin-bottom:22px;">
-        <div class="stat-card">
-          <div class="stat-top">
-            <div class="icon-box"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 21V8l8-5 8 5v13"/><path d="M9 21v-6h6v6"/></svg></div>
-            <span class="delta up">+4.2%</span>
-          </div>
-          <div class="value" id="statOcupacion">—</div>
-          <div class="label">Ocupación de hoy</div>
-        </div>
-
-        <div class="stat-card">
-          <div class="stat-top">
-            <div class="icon-box"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4" width="18" height="17" rx="2"/><path d="M3 9h18"/></svg></div>
-            <span class="delta up">+2</span>
-          </div>
-          <div class="value" id="statCheckins">—</div>
-          <div class="label">Check-ins de hoy</div>
-        </div>
-
-        <div class="stat-card">
-          <div class="stat-top">
-            <div class="icon-box"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="8" r="3.5"/><path d="M4.5 20.5c1.6-3.6 4.4-5.5 7.5-5.5s5.9 1.9 7.5 5.5"/></svg></div>
-            <span class="delta down">-1</span>
-          </div>
-          <div class="value" id="statHuespedes">—</div>
-          <div class="label">Huéspedes hospedados</div>
-        </div>
-
-        <div class="stat-card accent">
-          <div class="stat-top">
-            <div class="icon-box"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 1v22M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg></div>
-            <span class="delta up">+8.1%</span>
-          </div>
-          <div class="value" id="statIngresos">—</div>
-          <div class="label">Ingresos del mes</div>
-        </div>
-      </div>
-
-      <!-- ===== RESERVAS RECIENTES ===== -->
+      <!-- ===== MAPA DE HABITACIONES ===== -->
       <div class="card">
         <div class="card-header">
-          <h3>Reservas recientes</h3>
-          <a href="reservas.html" class="btn btn-outline btn-sm">Ver todas</a>
+          <div>
+            <h3>Estado en tiempo real</h3>
+            <div class="hint" id="hintSucursal">Estado en tiempo real</div>
+          </div>
+          <div class="legend">
+            <span class="item"><span class="dot" style="background:#16a34a;"></span>Disponible</span>
+            <span class="item"><span class="dot" style="background:#f59e0b;"></span>Ocupada</span>
+            <span class="item"><span class="dot" style="background:#64748b;"></span>Limpieza</span>
+            <span class="item"><span class="dot" style="background:#dc2626;"></span>Mantenimiento</span>
+          </div>
         </div>
-        <div class="table-wrap">
-          <table>
-            <thead>
-              <tr>
-                <th>Código</th><th>Huésped</th><th>Habitación</th><th>Check-in</th><th>Check-out</th><th>Total</th><th>Estado</th>
-              </tr>
-            </thead>
-            <tbody id="tablaReservasRecientes"></tbody>
-          </table>
+        <div class="card-body">
+          <div class="room-map" id="roomMap"></div>
         </div>
       </div>
 
@@ -312,7 +319,7 @@
     });
   })();
 
-  // ---- Código del dashboard con datos diferenciados (sin mapa) ----
+  // ---- Código del mapa con datos diferenciados ----
   requireAuth();
   const suc = getSucursalActual();
 
@@ -324,60 +331,10 @@
   document.getElementById('sucursalNombre').textContent = suc.corto || 'Sucursal';
   document.getElementById('sucursalDireccion').textContent = direcciones[suc.id] || '';
 
-  // ---- Generar habitaciones (necesarias para estadísticas) ----
+  // ---- Generar habitaciones ----
   let habitaciones = generarHabitaciones(suc);
 
-  // ---- Huéspedes ----
-  const nombresHuespedes = [
-    'Ana Pérez', 'Luis Gómez', 'María Rodríguez', 'Carlos López',
-    'Laura Fernández', 'Jorge Martínez', 'Sofía González', 'Miguel Sánchez',
-    'Elena Ruiz', 'Pablo Díaz', 'Martín Ferreira', 'Lucía Acosta',
-    'Roberto Silva', 'Carla Méndez', 'Diego Benítez'
-  ];
-  const paises = ['Paraguay', 'Argentina', 'Brasil', 'Uruguay', 'Chile'];
-
-  const cantidadHuespedes = suc.id === 'centro' ? 28 : 16;
-  const huespedes = [];
-  for (let i = 0; i < cantidadHuespedes; i++) {
-    const nombre = nombresHuespedes[i % nombresHuespedes.length];
-    const documento = `${Math.floor(Math.random() * 10000000)}`;
-    const pais = paises[i % paises.length];
-    const telefono = `+595 9${Math.floor(Math.random() * 10000000)}`;
-    const email = `${nombre.toLowerCase().replace(' ', '.')}@ejemplo.com`;
-    const estadias = Math.floor(Math.random() * 8) + 1;
-    const ultimaVisita = `2026-07-${String(10 + i % 15).padStart(2, '0')}`;
-    huespedes.push({ nombre, documento, pais, telefono, email, estadias, ultimaVisita });
-  }
-
-  // ---- Reservas ----
-  const nombres = ['Ana Pérez', 'Luis Gómez', 'María Rodríguez', 'Carlos López', 'Laura Fernández', 'Jorge Martínez', 'Sofía González', 'Miguel Sánchez', 'Elena Ruiz', 'Pablo Díaz'];
-  const tipos = ['Individual', 'Doble', 'Suite'];
-  const estados = ['confirmada', 'pendiente', 'cancelada'];
-  const cantidadReservas = suc.id === 'centro' ? 32 : 18;
-  const reservas = [];
-  for (let i = 0; i < cantidadReservas; i++) {
-    const huesped = nombres[i % nombres.length];
-    const habitacion = `${suc.prefijoHabitacion || 1}${100 + i}`;
-    const checkin = `2026-07-${String(15 + i % 10).padStart(2, '0')}`;
-    const checkout = `2026-07-${String(20 + i % 10).padStart(2, '0')}`;
-    const noches = Math.floor(Math.random() * 4) + 1;
-    const totalPYG = (Math.floor(Math.random() * 500000) + 300000) * noches;
-    const estado = estados[i % estados.length];
-    const tipo = tipos[i % tipos.length];
-    reservas.push({
-      id: `RES-${1000 + i}`,
-      huesped,
-      habitacion,
-      tipo,
-      checkin,
-      checkout,
-      noches,
-      totalPYG,
-      estado
-    });
-  }
-
-  // ---- Distribución de estados (solo para estadísticas) ----
+  // ---- Forzar distribución de estados ----
   const distribucionCentro = [
     'ocupada','ocupada','disponible','ocupada','limpieza','mantenimiento','ocupada','disponible',
     'ocupada','limpieza','ocupada','disponible','ocupada','ocupada','limpieza','mantenimiento',
@@ -400,47 +357,25 @@
     return h;
   });
 
-  // ---- Actualizar subtítulo ----
+  // ---- Actualizar subtítulos ----
   document.getElementById('fechaHoy').textContent =
     new Date().toLocaleDateString('es-PY', { weekday:'long', day:'numeric', month:'long', year:'numeric' }) + ' · ' + suc.corto;
+  document.getElementById('hintSucursal').textContent = `${suc.totalHabitaciones} habitaciones · ${suc.corto}`;
 
-  // ---- Renderizar estadísticas ----
-  function pintarStats(){
-    const cur = getCurrentCurrency();
-    const ocupadas = habitaciones.filter(h=>h.estado==='ocupada').length;
-    const total = habitaciones.length;
-    const pct = total ? Math.round((ocupadas/total)*100) : 0;
-    document.getElementById('statOcupacion').textContent = pct + '%';
-    document.getElementById('statCheckins').textContent = reservas.filter(r=>r.estado==='confirmada').length;
-    document.getElementById('statHuespedes').textContent = huespedes.length;
-    const ingresos = reservas.reduce((a,r)=>a + (r.estado !== 'cancelada' ? r.totalPYG : 0), 0);
-    document.getElementById('statIngresos').textContent = formatMoney(ingresos, cur);
-  }
-
-  function pintarTablaReservas(){
-    const cur = getCurrentCurrency();
-    const tbody = document.getElementById('tablaReservasRecientes');
-    tbody.innerHTML = reservas.slice(0,6).map(r => `
-      <tr>
-        <td class="cell-strong mono">${r.id}</td>
-        <td>${r.huesped}</td>
-        <td>${r.habitacion}</td>
-        <td class="cell-muted">${r.checkin}</td>
-        <td class="cell-muted">${r.checkout}</td>
-        <td class="mono cell-strong">${formatMoney(r.totalPYG, cur)}</td>
-        <td><span class="badge badge-${r.estado}">${r.estado.charAt(0).toUpperCase()+r.estado.slice(1)}</span></td>
-      </tr>
+  // ---- Pintar mapa ----
+  function pintarRoomMap() {
+    const map = document.getElementById('roomMap');
+    map.innerHTML = habitaciones.slice(0, 24).map(h => `
+      <div class="room-tile ${h.estado}">
+        <div class="num">${h.numero}</div>
+        <div class="type">${h.tipo}</div>
+        <span class="state">${h.estado}</span>
+      </div>
     `).join('');
   }
 
-  function pintarTodo(){
-    pintarStats();
-    pintarTablaReservas();
-  }
-
-  // ---- Inicializar ----
-  pintarTodo();
-  window.addEventListener('currencychange', pintarTodo);
+  pintarRoomMap();
+  window.addEventListener('currencychange', pintarRoomMap);
 </script>
 </body>
 </html>

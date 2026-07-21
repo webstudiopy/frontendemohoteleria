@@ -5,6 +5,141 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Hotelería — Reservas</title>
 <link rel="stylesheet" href="assets/styles.css">
+<style>
+  /* ===== SIDEBAR CON SCROLL ===== */
+  .sidebar {
+    overflow-y: auto;
+    max-height: 100vh;
+    scrollbar-width: thin;
+  }
+  .sidebar::-webkit-scrollbar {
+    width: 4px;
+  }
+  .sidebar::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 4px;
+  }
+  .sidebar::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  /* ===== SUCURSAL EN SIDEBAR ===== */
+  .sidebar-footer {
+    background: transparent;
+  }
+  .sucursal-info {
+    padding: 0.5rem 0.8rem;
+    font-size: 0.8rem;
+    color: #ffffff;
+    line-height: 1.5;
+  }
+  .sucursal-info .nombre {
+    font-weight: 600;
+    color: #ffffff;
+    display: block;
+  }
+  .sucursal-info .direccion {
+    font-size: 0.7rem;
+    color: rgba(255, 255, 255, 0.6);
+    display: block;
+  }
+  .logout-link {
+    color: #ffffff !important;
+  }
+  .logout-link:hover {
+    color: rgba(255, 255, 255, 0.7) !important;
+  }
+
+  /* ===== MODALES DE CONFIRMACIÓN ===== */
+  .modal-confirm {
+    max-width: 400px;
+    width: 90%;
+  }
+  .modal-confirm .modal-body p {
+    font-size: 1rem;
+    color: #1e293b;
+    margin: 0.5rem 0 1.2rem;
+    line-height: 1.6;
+  }
+  .modal-confirm .modal-foot {
+    display: flex;
+    gap: 0.8rem;
+    justify-content: center;
+    padding-top: 0.5rem;
+  }
+  .modal-confirm .btn-cancel {
+    background: #e2e8f0;
+    color: #1e293b;
+    border: none;
+    padding: 0.5rem 1.5rem;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: background 0.2s;
+    min-width: 100px;
+  }
+  .modal-confirm .btn-cancel:hover {
+    background: #cbd5e1;
+  }
+  .modal-confirm .btn-danger {
+    background: #dc2626;
+    color: #fff;
+    border: none;
+    padding: 0.5rem 1.5rem;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: background 0.2s;
+    min-width: 100px;
+  }
+  .modal-confirm .btn-danger:hover {
+    background: #b91c1c;
+  }
+
+  /* ===== BOTONES DE ACCIÓN CON ÍCONOS ===== */
+  .action-btns {
+    display: flex;
+    gap: 0.4rem;
+    justify-content: flex-end;
+  }
+  .action-btns .btn-icon {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 0.2rem 0.3rem;
+    border-radius: 6px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.15s;
+    color: #64748b;
+  }
+  .action-btns .btn-icon:hover {
+    background: #f1f5f9;
+  }
+  .action-btns .btn-icon.edit:hover {
+    color: #2563eb;
+  }
+  .action-btns .btn-icon.delete:hover {
+    color: #dc2626;
+  }
+  .action-btns .btn-icon svg {
+    width: 18px;
+    height: 18px;
+    stroke: currentColor;
+    stroke-width: 1.8;
+    fill: none;
+  }
+
+  /* ===== AJUSTE PARA EL SUBTÍTULO ===== */
+  .subtitle {
+    font-size: 0.9rem;
+    color: #64748b;
+    margin-top: 0.15rem;
+  }
+</style>
 </head>
 <body>
 <div class="mobile-topbar">
@@ -16,6 +151,7 @@
 <div class="sidebar-overlay" onclick="closeSidebar()"></div>
 <div class="app-shell">
 
+  <!-- ===== SIDEBAR ACTUALIZADA ===== -->
   <aside class="sidebar">
     <div class="sidebar-brand">
       <div class="mark">H</div>
@@ -41,6 +177,11 @@
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="8" r="3.5"/><path d="M4.5 20.5c1.6-3.6 4.4-5.5 7.5-5.5s5.9 1.9 7.5 5.5"/></svg>
       Huéspedes
     </a>
+    <!-- ===== NUEVO ENLACE AL MAPA DE HABITACIONES ===== -->
+    <a class="nav-link" href="mapa.html">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M3 15h18M9 3v18M15 3v18"/></svg>
+      Mapa de habitaciones
+    </a>
 
     <div class="nav-group-label">Administración</div>
     <a class="nav-link" href="facturacion.html">
@@ -51,19 +192,38 @@
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 20V10M12 20V4M20 20v-7"/></svg>
       Reportes
     </a>
+    <a class="nav-link" href="usuarios.html">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="8" r="3.5"/><path d="M4.5 20.5c1.6-3.6 4.4-5.5 7.5-5.5s5.9 1.9 7.5 5.5"/><path d="M16.5 16.5c1.6-1.6 2.5-3.8 2.5-6.5"/></svg>
+      Usuarios
+    </a>
+
+    <div class="nav-group-label">Finanzas</div>
+    <a class="nav-link" href="formas.html">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+        <rect x="2" y="6" width="20" height="14" rx="2"/><path d="M2 10h20"/>
+      </svg>
+      Formas de pago
+    </a>
+    <a class="nav-link" href="caja.html">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+        <circle cx="12" cy="12" r="3"/><path d="M20 12h-4M8 12H4"/><path d="M12 8V4M12 20v-4"/>
+      </svg>
+      Caja
+    </a>
 
     <div class="sidebar-footer">
-      <div class="sucursal-pill">
-        <span class="dot"></span>
-        <span class="txt" data-sucursal-pill></span>
+      <div class="sucursal-info">
+        <span class="nombre" id="sucursalNombre">Sucursal Centro</span>
+        <span class="direccion" id="sucursalDireccion">Palma c/ 14 de Mayo, Asunción</span>
       </div>
-      <a class="logout-link" href="#" onclick="logout(); return false;">
+      <a class="logout-link" href="#" onclick="abrirModalCierre(); return false;">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4M16 17l5-5-5-5M21 12H9"/></svg>
         Cerrar sesión
       </a>
     </div>
   </aside>
 
+  <!-- ===== MAIN ===== -->
   <div class="main">
     <div class="topbar">
       <div>
@@ -119,17 +279,53 @@
   </div>
 </div>
 
-<!-- Modal nueva reserva -->
+<!-- ===== MODAL DE CIERRE DE SESIÓN ===== -->
+<div class="modal-overlay" id="modalCierreSesion">
+  <div class="modal modal-confirm">
+    <div class="modal-head">
+      <h3>Confirmar cierre</h3>
+      <button class="modal-close" onclick="cerrarModalCierre()">✕</button>
+    </div>
+    <div class="modal-body">
+      <p>¿Está seguro de que desea cerrar sesión? Se perderán los cambios no guardados.</p>
+    </div>
+    <div class="modal-foot">
+      <button class="btn-cancel" onclick="cerrarModalCierre()">Cancelar</button>
+      <button class="btn-danger" id="btnConfirmarCierre">Cerrar sesión</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== MODAL DE CONFIRMACIÓN PARA ELIMINAR RESERVA ===== -->
+<div class="modal-overlay" id="modalEliminarReserva">
+  <div class="modal modal-confirm">
+    <div class="modal-head">
+      <h3>Confirmar eliminación</h3>
+      <button class="modal-close" onclick="cerrarModalEliminar()">✕</button>
+    </div>
+    <div class="modal-body">
+      <p id="modalEliminarTexto">¿Está seguro de eliminar la reserva <strong>R-001</strong>? Esta acción no se puede deshacer.</p>
+    </div>
+    <div class="modal-foot">
+      <button class="btn-cancel" onclick="cerrarModalEliminar()">Cancelar</button>
+      <button class="btn-danger" id="btnConfirmarEliminarReserva">Eliminar</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== MODAL NUEVA / EDICIÓN RESERVA ===== -->
 <div class="modal-overlay" id="modalReserva">
   <div class="modal">
     <div class="modal-head">
-      <h3>Nueva reserva</h3>
+      <h3 id="modalReservaTitulo">Nueva reserva</h3>
       <button class="modal-close" onclick="cerrarModal()">✕</button>
     </div>
     <div class="modal-body">
       <div class="field">
         <label>Huésped <span class="req">*</span></label>
-        <input type="text" placeholder="Nombre y apellido" id="rHuesped">
+        <select id="rHuesped">
+          <option value="">— Seleccionar —</option>
+        </select>
       </div>
       <div class="field-row">
         <div class="field">
@@ -137,7 +333,7 @@
           <select id="rHabitacion"></select>
         </div>
         <div class="field">
-          <label>Moneda de la reserva</label>
+          <label>Moneda</label>
           <select id="rMoneda">
             <option value="PYG">Guaraníes (Gs)</option>
             <option value="USD">Dólares (US$)</option>
@@ -155,34 +351,233 @@
           <input type="date" id="rCheckout">
         </div>
       </div>
+      <div class="field">
+        <label>Estado</label>
+        <select id="rEstado">
+          <option value="pendiente">Pendiente</option>
+          <option value="confirmada">Confirmada</option>
+          <option value="cancelada">Cancelada</option>
+        </select>
+      </div>
       <div class="field mb-0">
         <label>Notas</label>
-        <textarea rows="3" placeholder="Pedidos especiales, observaciones..."></textarea>
+        <textarea rows="3" id="rNotas" placeholder="Pedidos especiales, observaciones..."></textarea>
       </div>
     </div>
     <div class="modal-foot">
       <button class="btn btn-ghost" onclick="cerrarModal()">Cancelar</button>
-      <button class="btn btn-primary" onclick="cerrarModal()">Crear reserva</button>
+      <button class="btn btn-primary" id="guardarReservaBtn">Guardar reserva</button>
     </div>
   </div>
 </div>
 
 <script src="assets/app.js"></script>
 <script>
+  // ---- Lista completa de huéspedes ----
+  const listaHuespedes = [
+    'Julia Souza',
+    'Pedro Duarte',
+    'Camila Ríos',
+    'Hugo Martínez',
+    'Rosa Cáceres',
+    'Iván Gómez',
+    'Nadia López',
+    'Sergio Aquino'
+  ];
+
+  // ---- Mapeo de direcciones según sucursal ----
+  const direcciones = {
+    centro: 'Palma c/ 14 de Mayo, Asunción',
+    este: 'Av. Monseñor Rodríguez, Ciudad del Este'
+  };
+
+  // ---- Modal de cierre de sesión ----
+  (function() {
+    const modalCierre = document.getElementById('modalCierreSesion');
+    const btnConfirmar = document.getElementById('btnConfirmarCierre');
+
+    window.abrirModalCierre = function() {
+      modalCierre.classList.add('open');
+    };
+    window.cerrarModalCierre = function() {
+      modalCierre.classList.remove('open');
+    };
+    btnConfirmar.addEventListener('click', function() {
+      if (typeof logout === 'function') {
+        logout();
+      } else {
+        localStorage.removeItem('hoteleria_auth');
+        localStorage.removeItem('hoteleria_sucursal');
+        window.location.href = 'index.html';
+      }
+      modalCierre.classList.remove('open');
+    });
+    modalCierre.addEventListener('click', function(e) {
+      if (e.target === modalCierre) modalCierre.classList.remove('open');
+    });
+  })();
+
+  // ---- Modal de confirmación de eliminación ----
+  (function() {
+    const modalEliminar = document.getElementById('modalEliminarReserva');
+    const btnConfirmar = document.getElementById('btnConfirmarEliminarReserva');
+    let idAEliminar = null;
+
+    window.abrirModalEliminarReserva = function(id) {
+      idAEliminar = id;
+      document.getElementById('modalEliminarTexto').innerHTML =
+        `¿Está seguro de eliminar la reserva <strong>${id}</strong>? Esta acción no se puede deshacer.`;
+      modalEliminar.classList.add('open');
+    };
+
+    window.cerrarModalEliminar = function() {
+      modalEliminar.classList.remove('open');
+      idAEliminar = null;
+    };
+
+    btnConfirmar.addEventListener('click', function() {
+      if (idAEliminar) {
+        reservas = reservas.filter(r => r.id !== idAEliminar);
+        render();
+        cerrarModalEliminar();
+      }
+    });
+
+    modalEliminar.addEventListener('click', function(e) {
+      if (e.target === modalEliminar) cerrarModalEliminar();
+    });
+  })();
+
+  // ---- Código principal de reservas ----
   requireAuth();
   const suc = getSucursalActual();
-  let reservas = generarReservas(suc);
-  let habitaciones = generarHabitaciones(suc);
 
-  document.getElementById('subReservas').textContent = `${suc.corto} · ${reservas.length} reservas registradas`;
-  document.getElementById('rHabitacion').innerHTML = habitaciones.map(h=>`<option>${h.numero} — ${h.tipo}</option>`).join('');
+  // ---- Actualizar sidebar con la sucursal actual ----
+  document.getElementById('sucursalNombre').textContent = suc.corto || 'Sucursal';
+  document.getElementById('sucursalDireccion').textContent = direcciones[suc.id] || '';
 
-  function render(){
+  // ---- Generar habitaciones según sucursal ----
+  function generarHabitaciones(sucId) {
+    const tipos = ['Individual', 'Doble', 'Suite'];
+    const precios = { Individual: 320000, Doble: 450000, Suite: 780000 };
+    const habitaciones = [];
+    let total, prefijo;
+    if (sucId === 'centro') {
+      total = 30;
+      prefijo = 1;
+    } else {
+      total = 22;
+      prefijo = 2;
+    }
+    const pisos = 3;
+    const habPorPiso = Math.ceil(total / pisos);
+    let count = 0;
+    for (let piso = 1; piso <= pisos; piso++) {
+      for (let i = 1; i <= habPorPiso; i++) {
+        if (count >= total) break;
+        const numero = `${prefijo}${piso}${String(i).padStart(2, '0')}`;
+        const tipo = tipos[count % tipos.length];
+        habitaciones.push({
+          numero,
+          piso,
+          tipo,
+          precioPYG: precios[tipo] || 450000
+        });
+        count++;
+      }
+    }
+    return habitaciones;
+  }
+
+  // ---- Generar reservas diferenciadas por sucursal ----
+  function generarReservas(sucId, habitaciones) {
+    const reservas = [];
+    const hoy = new Date();
+    let cantidad, offsetDias, huespedesSubset, distribucionEstados;
+
+    if (sucId === 'centro') {
+      cantidad = 15;
+      offsetDias = 1;                          // fechas cercanas
+      huespedesSubset = listaHuespedes.slice(0, 4); // Julia, Pedro, Camila, Hugo
+      distribucionEstados = ['confirmada', 'confirmada', 'pendiente', 'pendiente', 'cancelada'];
+    } else {
+      cantidad = 10;
+      offsetDias = 10;                         // fechas más lejanas
+      huespedesSubset = listaHuespedes.slice(4);  // Rosa, Iván, Nadia, Sergio
+      distribucionEstados = ['pendiente', 'pendiente', 'pendiente', 'cancelada', 'cancelada'];
+    }
+
+    for (let i = 0; i < cantidad; i++) {
+      const huesped = huespedesSubset[i % huespedesSubset.length];
+      // Para hacer diferente la asignación de habitaciones entre sucursales
+      const offsetHab = sucId === 'centro' ? 0 : 3;
+      const hab = habitaciones[(i + offsetHab) % habitaciones.length];
+
+      const checkin = new Date(hoy);
+      checkin.setDate(hoy.getDate() + i * 2 + offsetDias);
+      const checkout = new Date(checkin);
+      const noches = Math.floor(Math.random() * 5) + 1;
+      checkout.setDate(checkin.getDate() + noches);
+      const total = hab.precioPYG * noches;
+      const estado = distribucionEstados[i % distribucionEstados.length];
+
+      reservas.push({
+        id: `R-${String(i+1).padStart(3, '0')}`,
+        huesped,
+        habitacion: hab.numero,
+        tipo: hab.tipo,
+        checkin: checkin.toISOString().slice(0,10),
+        checkout: checkout.toISOString().slice(0,10),
+        noches,
+        totalPYG: total,
+        estado,
+        moneda: 'PYG',
+        notas: ''
+      });
+    }
+    return reservas;
+  }
+
+  let habitaciones = generarHabitaciones(suc.id);
+  let reservas = generarReservas(suc.id, habitaciones);
+  let editandoId = null;
+
+  // ---- Subtítulo con datos de la sucursal ----
+  document.getElementById('subReservas').textContent =
+    `${suc.corto} · ${reservas.length} reservas registradas`;
+
+  // ---- Llenar selects ----
+  function llenarSelectHabitaciones() {
+    const select = document.getElementById('rHabitacion');
+    select.innerHTML = '';
+    habitaciones.forEach(h => {
+      const opt = document.createElement('option');
+      opt.value = h.numero;
+      opt.textContent = `${h.numero} — ${h.tipo} (Gs ${h.precioPYG.toLocaleString()})`;
+      select.appendChild(opt);
+    });
+  }
+  llenarSelectHabitaciones();
+
+  function llenarSelectHuespedes() {
+    const select = document.getElementById('rHuesped');
+    select.innerHTML = '<option value="">— Seleccionar —</option>';
+    listaHuespedes.forEach(nombre => {
+      const opt = document.createElement('option');
+      opt.value = nombre;
+      opt.textContent = nombre;
+      select.appendChild(opt);
+    });
+  }
+  llenarSelectHuespedes();
+
+  // ---- Renderizado de la tabla ----
+  function render() {
     const cur = getCurrentCurrency();
     const texto = document.getElementById('buscador').value.toLowerCase();
     const estado = document.getElementById('filtroEstado').value;
 
-    const filtradas = reservas.filter(r=>{
+    const filtradas = reservas.filter(r => {
       return (r.huesped.toLowerCase().includes(texto) || r.id.toLowerCase().includes(texto))
         && (estado === '' || r.estado === estado);
     });
@@ -198,18 +593,152 @@
         <td>${r.noches}</td>
         <td class="mono cell-strong">${formatMoney(r.totalPYG, cur)}</td>
         <td><span class="badge badge-${r.estado}">${r.estado.charAt(0).toUpperCase()+r.estado.slice(1)}</span></td>
-        <td class="text-right"><button class="btn btn-ghost btn-sm" onclick="abrirModal()">Ver</button></td>
+        <td>
+          <div class="action-btns">
+            <button class="btn-icon edit" onclick="abrirModal('${r.id}')" title="Editar">
+              <svg viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+            </button>
+            <button class="btn-icon delete" onclick="abrirModalEliminarReserva('${r.id}')" title="Eliminar">
+              <svg viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg>
+            </button>
+          </div>
+        </td>
       </tr>
     `).join('');
   }
 
+  // ---- Abrir modal para nueva o edición ----
+  window.abrirModal = function(id) {
+    const modal = document.getElementById('modalReserva');
+    const titulo = document.getElementById('modalReservaTitulo');
+    const btnGuardar = document.getElementById('guardarReservaBtn');
+
+    // Resetear campos
+    document.getElementById('rHuesped').value = '';
+    document.getElementById('rHabitacion').value = '';
+    document.getElementById('rMoneda').value = 'PYG';
+    document.getElementById('rCheckin').value = '';
+    document.getElementById('rCheckout').value = '';
+    document.getElementById('rEstado').value = 'pendiente';
+    document.getElementById('rNotas').value = '';
+
+    if (id) {
+      // Edición
+      const reserva = reservas.find(r => r.id === id);
+      if (!reserva) return;
+      editandoId = id;
+      titulo.textContent = `Editar reserva ${reserva.id}`;
+      btnGuardar.textContent = 'Actualizar reserva';
+      document.getElementById('rHuesped').value = reserva.huesped;
+      document.getElementById('rHabitacion').value = reserva.habitacion;
+      document.getElementById('rMoneda').value = reserva.moneda || 'PYG';
+      document.getElementById('rCheckin').value = reserva.checkin;
+      document.getElementById('rCheckout').value = reserva.checkout;
+      document.getElementById('rEstado').value = reserva.estado;
+      document.getElementById('rNotas').value = reserva.notas || '';
+    } else {
+      // Nueva
+      editandoId = null;
+      titulo.textContent = 'Nueva reserva';
+      btnGuardar.textContent = 'Guardar reserva';
+      const hoy = new Date();
+      const manana = new Date(hoy);
+      manana.setDate(hoy.getDate() + 1);
+      const pasadomanana = new Date(hoy);
+      pasadomanana.setDate(hoy.getDate() + 3);
+      document.getElementById('rCheckin').value = manana.toISOString().slice(0,10);
+      document.getElementById('rCheckout').value = pasadomanana.toISOString().slice(0,10);
+    }
+
+    modal.classList.add('open');
+  };
+
+  window.cerrarModal = function() {
+    document.getElementById('modalReserva').classList.remove('open');
+    editandoId = null;
+  };
+
+  // ---- Guardar reserva ----
+  document.getElementById('guardarReservaBtn').addEventListener('click', function() {
+    const huesped = document.getElementById('rHuesped').value;
+    const habitacion = document.getElementById('rHabitacion').value;
+    const moneda = document.getElementById('rMoneda').value;
+    const checkin = document.getElementById('rCheckin').value;
+    const checkout = document.getElementById('rCheckout').value;
+    const estado = document.getElementById('rEstado').value;
+    const notas = document.getElementById('rNotas').value;
+
+    if (!huesped || !habitacion || !checkin || !checkout) {
+      alert('Complete todos los campos obligatorios.');
+      return;
+    }
+
+    const inicio = new Date(checkin);
+    const fin = new Date(checkout);
+    if (fin <= inicio) {
+      alert('La fecha de check-out debe ser posterior al check-in.');
+      return;
+    }
+    const noches = Math.ceil((fin - inicio) / (1000 * 60 * 60 * 24));
+    if (noches < 1) {
+      alert('Debe haber al menos una noche de estancia.');
+      return;
+    }
+
+    const hab = habitaciones.find(h => h.numero === habitacion);
+    if (!hab) {
+      alert('Habitación no encontrada.');
+      return;
+    }
+    const total = hab.precioPYG * noches;
+
+    if (editandoId) {
+      // Editar
+      const idx = reservas.findIndex(r => r.id === editandoId);
+      if (idx === -1) return;
+      reservas[idx] = {
+        id: editandoId,
+        huesped,
+        habitacion,
+        tipo: hab.tipo,
+        checkin,
+        checkout,
+        noches,
+        totalPYG: total,
+        estado,
+        moneda,
+        notas
+      };
+    } else {
+      // Nueva: generar ID
+      const ids = reservas.map(r => parseInt(r.id.replace('R-','')));
+      const maxId = ids.length ? Math.max(...ids) : 0;
+      const nuevoId = `R-${String(maxId + 1).padStart(3, '0')}`;
+      reservas.push({
+        id: nuevoId,
+        huesped,
+        habitacion,
+        tipo: hab.tipo,
+        checkin,
+        checkout,
+        noches,
+        totalPYG: total,
+        estado,
+        moneda,
+        notas
+      });
+    }
+
+    render();
+    cerrarModal();
+  });
+
+  // ---- Eventos de filtro y búsqueda ----
   document.getElementById('buscador').addEventListener('input', render);
   document.getElementById('filtroEstado').addEventListener('change', render);
   window.addEventListener('currencychange', render);
 
-  function abrirModal(){ document.getElementById('modalReserva').classList.add('open'); }
-  function cerrarModal(){ document.getElementById('modalReserva').classList.remove('open'); }
-
+  // ---- Inicializar ----
   render();
 </script>
 </body>

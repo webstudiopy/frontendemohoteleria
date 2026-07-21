@@ -5,6 +5,305 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Hotelería — Facturación</title>
 <link rel="stylesheet" href="assets/styles.css">
+<style>
+  /* ===== SIDEBAR CON SCROLL ===== */
+  .sidebar {
+    overflow-y: auto;
+    max-height: 100vh;
+    scrollbar-width: thin;
+  }
+  .sidebar::-webkit-scrollbar {
+    width: 4px;
+  }
+  .sidebar::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 4px;
+  }
+  .sidebar::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  /* ===== SUCURSAL EN SIDEBAR ===== */
+  .sidebar-footer {
+    background: transparent;
+  }
+  .sucursal-info {
+    padding: 0.5rem 0.8rem;
+    font-size: 0.8rem;
+    color: #ffffff;
+    line-height: 1.5;
+  }
+  .sucursal-info .nombre {
+    font-weight: 600;
+    color: #ffffff;
+    display: block;
+  }
+  .sucursal-info .direccion {
+    font-size: 0.7rem;
+    color: rgba(255, 255, 255, 0.6);
+    display: block;
+  }
+  .logout-link {
+    color: #ffffff !important;
+  }
+  .logout-link:hover {
+    color: rgba(255, 255, 255, 0.7) !important;
+  }
+
+  /* ===== MODAL DE CIERRE DE SESIÓN ===== */
+  .modal-confirm {
+    max-width: 400px;
+    width: 90%;
+  }
+  .modal-confirm .modal-body p {
+    font-size: 1rem;
+    color: #1e293b;
+    margin: 0.5rem 0 1.2rem;
+    line-height: 1.6;
+  }
+  .modal-confirm .modal-foot {
+    display: flex;
+    gap: 0.8rem;
+    justify-content: center;
+    padding-top: 0.5rem;
+  }
+  .modal-confirm .btn-cancel {
+    background: #e2e8f0;
+    color: #1e293b;
+    border: none;
+    padding: 0.5rem 1.5rem;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: background 0.2s;
+    min-width: 100px;
+  }
+  .modal-confirm .btn-cancel:hover {
+    background: #cbd5e1;
+  }
+  .modal-confirm .btn-danger {
+    background: #dc2626;
+    color: #fff;
+    border: none;
+    padding: 0.5rem 1.5rem;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: background 0.2s;
+    min-width: 100px;
+  }
+  .modal-confirm .btn-danger:hover {
+    background: #b91c1c;
+  }
+
+  /* ===== ESTILOS PARA IMPRESIÓN ===== */
+  .print-modal .modal {
+    max-width: 640px;
+  }
+  .print-modal .modal-body {
+    padding: 0.5rem 1.5rem 1.5rem;
+  }
+
+  .print-toggle {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 1.2rem;
+    justify-content: center;
+  }
+  .print-toggle button {
+    padding: 0.4rem 1.5rem;
+    border-radius: 30px;
+    border: 1px solid #d1d5db;
+    background: #fff;
+    font-weight: 600;
+    font-size: 0.8rem;
+    cursor: pointer;
+    transition: all 0.15s;
+    color: #374151;
+  }
+  .print-toggle button.active {
+    background: #1e293b;
+    color: #fff;
+    border-color: #1e293b;
+  }
+  .print-toggle button:hover:not(.active) {
+    background: #f1f5f9;
+  }
+
+  /* ===== VISTA PREVIA PROFESIONAL ===== */
+  .print-preview {
+    background: #fff;
+    padding: 1.5rem 2rem;
+    border-radius: 4px;
+    border: 1px solid #d1d5db;
+    font-size: 0.85rem;
+    line-height: 1.6;
+    color: #1e293b;
+    font-family: 'Courier New', monospace;
+  }
+  .print-preview .empresa {
+    text-align: center;
+    border-bottom: 2px solid #1e293b;
+    padding-bottom: 0.5rem;
+    margin-bottom: 1rem;
+  }
+  .print-preview .empresa .nombre {
+    font-size: 1.3rem;
+    font-weight: 700;
+    letter-spacing: 1px;
+  }
+  .print-preview .empresa .datos {
+    font-size: 0.7rem;
+    color: #475569;
+  }
+  .print-preview .titulo-factura {
+    text-align: center;
+    font-size: 1.1rem;
+    font-weight: 700;
+    margin: 0.3rem 0 0.6rem;
+    letter-spacing: 2px;
+  }
+  .print-preview .info-cliente {
+    display: flex;
+    justify-content: space-between;
+    margin: 0.4rem 0 0.8rem;
+    font-size: 0.8rem;
+  }
+  .print-preview .info-cliente span {
+    font-weight: 600;
+  }
+  .print-preview table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 0.6rem 0;
+    font-size: 0.8rem;
+  }
+  .print-preview table th {
+    text-align: left;
+    border-bottom: 1px solid #94a3b8;
+    padding: 0.2rem 0.1rem;
+    font-weight: 700;
+    color: #1e293b;
+  }
+  .print-preview table td {
+    padding: 0.2rem 0.1rem;
+    border-bottom: 1px dashed #e2e8f0;
+  }
+  .print-preview table td:last-child,
+  .print-preview table th:last-child {
+    text-align: right;
+  }
+  .print-preview .totales {
+    margin-top: 0.6rem;
+    text-align: right;
+    border-top: 2px solid #1e293b;
+    padding-top: 0.4rem;
+  }
+  .print-preview .totales .linea {
+    display: flex;
+    justify-content: flex-end;
+    gap: 2rem;
+    font-weight: 500;
+  }
+  .print-preview .totales .total {
+    font-size: 1.1rem;
+    font-weight: 700;
+  }
+  .print-preview .metodo {
+    margin-top: 0.4rem;
+    text-align: right;
+    font-size: 0.8rem;
+    color: #475569;
+  }
+  .print-preview .footer-legal {
+    border-top: 1px solid #d1d5db;
+    margin-top: 0.8rem;
+    padding-top: 0.4rem;
+    text-align: center;
+    font-size: 0.65rem;
+    color: #64748b;
+  }
+
+  /* ===== TICKET (resumido) ===== */
+  .print-preview.ticket .empresa .nombre {
+    font-size: 1.1rem;
+  }
+  .print-preview.ticket table {
+    font-size: 0.75rem;
+  }
+  .print-preview.ticket .totales .total {
+    font-size: 1rem;
+  }
+
+  .print-actions {
+    display: flex;
+    gap: 0.8rem;
+    justify-content: center;
+    margin-top: 1.5rem;
+  }
+
+  /* ===== BOTÓN IMPRIMIR EN TABLA ===== */
+  .btn-print {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #64748b;
+    padding: 0.2rem 0.4rem;
+    transition: color 0.15s;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 0.75rem;
+    font-weight: 500;
+  }
+  .btn-print:hover {
+    color: #1e293b;
+  }
+  .btn-print svg {
+    width: 18px;
+    height: 18px;
+    stroke: currentColor;
+    stroke-width: 1.8;
+    fill: none;
+  }
+
+  /* ===== MEDIA PRINT ===== */
+  @media print {
+    body * {
+      visibility: hidden;
+    }
+    #printContent, #printContent * {
+      visibility: visible;
+    }
+    #printContent {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 100%;
+      padding: 0.3in;
+      background: #fff;
+    }
+    .print-toggle, .print-actions, .modal-close {
+      display: none !important;
+    }
+    .print-preview {
+      border: none !important;
+      padding: 0 !important;
+      box-shadow: none !important;
+    }
+    .modal-overlay {
+      background: none !important;
+      position: static !important;
+      display: block !important;
+    }
+    .modal {
+      box-shadow: none !important;
+      max-width: 100% !important;
+    }
+  }
+</style>
 </head>
 <body>
 <div class="mobile-topbar">
@@ -16,6 +315,7 @@
 <div class="sidebar-overlay" onclick="closeSidebar()"></div>
 <div class="app-shell">
 
+  <!-- ===== SIDEBAR ACTUALIZADA ===== -->
   <aside class="sidebar">
     <div class="sidebar-brand">
       <div class="mark">H</div>
@@ -41,6 +341,10 @@
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="8" r="3.5"/><path d="M4.5 20.5c1.6-3.6 4.4-5.5 7.5-5.5s5.9 1.9 7.5 5.5"/></svg>
       Huéspedes
     </a>
+    <a class="nav-link" href="mapa.html">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M3 15h18M9 3v18M15 3v18"/></svg>
+      Mapa de habitaciones
+    </a>
 
     <div class="nav-group-label">Administración</div>
     <a class="nav-link active" href="facturacion.html">
@@ -51,19 +355,38 @@
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 20V10M12 20V4M20 20v-7"/></svg>
       Reportes
     </a>
+    <a class="nav-link" href="usuarios.html">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="8" r="3.5"/><path d="M4.5 20.5c1.6-3.6 4.4-5.5 7.5-5.5s5.9 1.9 7.5 5.5"/><path d="M16.5 16.5c1.6-1.6 2.5-3.8 2.5-6.5"/></svg>
+      Usuarios
+    </a>
+
+    <div class="nav-group-label">Finanzas</div>
+    <a class="nav-link" href="formas.html">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+        <rect x="2" y="6" width="20" height="14" rx="2"/><path d="M2 10h20"/>
+      </svg>
+      Formas de pago
+    </a>
+    <a class="nav-link" href="caja.html">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+        <circle cx="12" cy="12" r="3"/><path d="M20 12h-4M8 12H4"/><path d="M12 8V4M12 20v-4"/>
+      </svg>
+      Caja
+    </a>
 
     <div class="sidebar-footer">
-      <div class="sucursal-pill">
-        <span class="dot"></span>
-        <span class="txt" data-sucursal-pill></span>
+      <div class="sucursal-info" id="sucursalSidebar">
+        <span class="nombre" id="sucursalNombre">Sucursal Centro</span>
+        <span class="direccion" id="sucursalDireccion">Palma c/ 14 de Mayo, Asunción</span>
       </div>
-      <a class="logout-link" href="#" onclick="logout(); return false;">
+      <a class="logout-link" href="#" onclick="abrirModalCierre(); return false;">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4M16 17l5-5-5-5M21 12H9"/></svg>
         Cerrar sesión
       </a>
     </div>
   </aside>
 
+  <!-- ===== MAIN ===== -->
   <div class="main">
     <div class="topbar">
       <div>
@@ -132,7 +455,15 @@
           <table>
             <thead>
               <tr>
-                <th>Factura</th><th>Huésped</th><th>Concepto</th><th>Subtotal</th><th>IVA (10%)</th><th>Total</th><th>Método</th><th>Estado</th><th></th>
+                <th>Factura</th>
+                <th>Huésped</th>
+                <th>Concepto</th>
+                <th>Subtotal</th>
+                <th>IVA</th>
+                <th>Total</th>
+                <th>Método</th>
+                <th>Estado</th>
+                <th style="text-align:center;">Imprimir</th>
               </tr>
             </thead>
             <tbody id="tablaFacturas"></tbody>
@@ -150,7 +481,24 @@
   </div>
 </div>
 
-<!-- Modal nueva factura -->
+<!-- ===== MODAL DE CIERRE DE SESIÓN ===== -->
+<div class="modal-overlay" id="modalCierreSesion">
+  <div class="modal modal-confirm">
+    <div class="modal-head">
+      <h3>Confirmar cierre</h3>
+      <button class="modal-close" onclick="cerrarModalCierre()">✕</button>
+    </div>
+    <div class="modal-body">
+      <p>¿Está seguro de que desea cerrar sesión? Se perderán los cambios no guardados.</p>
+    </div>
+    <div class="modal-foot">
+      <button class="btn-cancel" onclick="cerrarModalCierre()">Cancelar</button>
+      <button class="btn-danger" id="btnConfirmarCierre">Cerrar sesión</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== MODAL NUEVA FACTURA ===== -->
 <div class="modal-overlay" id="modalFactura">
   <div class="modal">
     <div class="modal-head">
@@ -199,23 +547,129 @@
   </div>
 </div>
 
+<!-- ===== MODAL DE IMPRESIÓN ===== -->
+<div class="modal-overlay print-modal" id="modalImprimir">
+  <div class="modal">
+    <div class="modal-head">
+      <h3>Comprobante</h3>
+      <button class="modal-close" onclick="cerrarModalImprimir()">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="print-toggle">
+        <button class="active" data-type="ticket" onclick="cambiarTipo('ticket')">Ticket</button>
+        <button data-type="factura" onclick="cambiarTipo('factura')">Factura</button>
+      </div>
+      <div id="printContent">
+        <div class="print-preview" id="previewContent"></div>
+      </div>
+      <div class="print-actions">
+        <button class="btn btn-primary" onclick="imprimirComprobante()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:18px;height:18px;"><path d="M6 9V3h12v6"/><path d="M6 21h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2z"/><path d="M18 15h-4"/></svg>
+          Imprimir
+        </button>
+        <button class="btn btn-ghost" onclick="cerrarModalImprimir()">Cancelar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <script src="assets/app.js"></script>
 <script>
+  // ---- Modal de cierre de sesión ----
+  (function() {
+    const modalCierre = document.getElementById('modalCierreSesion');
+    const btnConfirmar = document.getElementById('btnConfirmarCierre');
+
+    window.abrirModalCierre = function() {
+      modalCierre.classList.add('open');
+    };
+    window.cerrarModalCierre = function() {
+      modalCierre.classList.remove('open');
+    };
+    btnConfirmar.addEventListener('click', function() {
+      if (typeof logout === 'function') {
+        logout();
+      } else {
+        localStorage.removeItem('hoteleria_auth');
+        localStorage.removeItem('hoteleria_sucursal');
+        window.location.href = 'index.html';
+      }
+      modalCierre.classList.remove('open');
+    });
+    modalCierre.addEventListener('click', function(e) {
+      if (e.target === modalCierre) modalCierre.classList.remove('open');
+    });
+  })();
+
+  // ---- Código de facturación con datos diferenciados ----
   requireAuth();
   const suc = getSucursalActual();
-  const facturas = generarFacturas(suc);
+
+  // ---- Sidebar dinámico ----
+  const direcciones = {
+    centro: 'Palma c/ 14 de Mayo, Asunción',
+    este: 'Av. Monseñor Rodríguez, Ciudad del Este'
+  };
+  document.getElementById('sucursalNombre').textContent = suc.corto || 'Sucursal';
+  document.getElementById('sucursalDireccion').textContent = direcciones[suc.id] || '';
+
+  // ---- Datos fiscales por sucursal ----
+  const empresaData = {
+    centro: {
+      razonSocial: 'Hoteles del Centro S.A.',
+      ruc: '800-123456-7',
+      direccion: 'Palma c/ 14 de Mayo, Asunción',
+      telefono: '+595 21 123 456'
+    },
+    este: {
+      razonSocial: 'Hoteles del Este S.A.',
+      ruc: '800-654321-0',
+      direccion: 'Av. Monseñor Rodríguez, Ciudad del Este',
+      telefono: '+595 61 234 567'
+    }
+  };
+
+  const empresa = empresaData[suc.id] || empresaData.centro;
+
+  // ---- Generar facturas diferenciadas ----
+  const conceptos = ['Hospedaje Individual 3 noches', 'Hospedaje Doble 2 noches', 'Suite 1 noche', 'Hospedaje Doble 4 noches', 'Suite 2 noches', 'Hospedaje Individual 2 noches'];
+  const metodos = ['Efectivo', 'Tarjeta', 'Transferencia'];
+  const huespedes = ['Ana Pérez', 'Luis Gómez', 'María Rodríguez', 'Carlos López', 'Laura Fernández', 'Jorge Martínez', 'Sofía González', 'Miguel Sánchez', 'Elena Ruiz', 'Pablo Díaz', 'Martín Ferreira', 'Lucía Acosta'];
+
+  const cantidadFacturas = suc.id === 'centro' ? 42 : 22;
+  const facturas = [];
+
+  for (let i = 0; i < cantidadFacturas; i++) {
+    const subtotal = Math.floor(Math.random() * 800000) + 200000;
+    const impuesto = Math.round(subtotal * 0.1);
+    const total = subtotal + impuesto;
+    const estado = i % 3 === 0 ? 'pendiente' : 'pagada';
+    facturas.push({
+      id: `FAC-${1000 + i}`,
+      huesped: huespedes[i % huespedes.length],
+      concepto: conceptos[i % conceptos.length],
+      subtotalPYG: subtotal,
+      impuestoPYG: impuesto,
+      totalPYG: total,
+      metodo: metodos[i % metodos.length],
+      estado
+    });
+  }
 
   document.getElementById('subFacturacion').textContent = `${suc.corto} · ${facturas.length} facturas`;
 
-  function render(){
+  // ---- Render tabla ----
+  function render() {
     const cur = getCurrentCurrency();
     const texto = document.getElementById('buscador').value.toLowerCase();
     const estado = document.getElementById('filtroEstado').value;
 
     const filtradas = facturas.filter(f =>
-      (f.huesped.toLowerCase().includes(texto) || f.id.toLowerCase().includes(texto))
-      && (estado === '' || f.estado === estado)
+      (f.huesped.toLowerCase().includes(texto) || f.id.toLowerCase().includes(texto)) &&
+      (estado === '' || f.estado === estado)
     );
+
+    const printIcon = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 9V3h12v6"/><path d="M6 21h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2z"/><path d="M18 15h-4"/></svg>`;
 
     document.getElementById('tablaFacturas').innerHTML = filtradas.map(f => `
       <tr>
@@ -227,21 +681,146 @@
         <td class="mono cell-strong">${formatMoney(f.totalPYG, cur)}</td>
         <td class="cell-muted">${f.metodo}</td>
         <td><span class="badge badge-${f.estado === 'pagada' ? 'confirmada' : 'pendiente'}">${f.estado.charAt(0).toUpperCase()+f.estado.slice(1)}</span></td>
-        <td class="text-right"><button class="btn btn-ghost btn-sm" onclick="abrirModal()">Ver</button></td>
+        <td style="text-align:center;">
+          <button class="btn-print" onclick="abrirModalImprimir('${f.id}')" title="Imprimir comprobante">
+            ${printIcon}
+          </button>
+        </td>
       </tr>
     `).join('');
 
-    document.getElementById('statTotal').textContent = formatMoney(facturas.reduce((a,f)=>a+f.totalPYG,0), cur);
-    document.getElementById('statPagadas').textContent = facturas.filter(f=>f.estado==='pagada').length;
-    document.getElementById('statPendientes').textContent = facturas.filter(f=>f.estado==='pendiente').length;
+    // Estadísticas
+    const totalFacturado = facturas.reduce((a, f) => a + f.totalPYG, 0);
+    const pagadas = facturas.filter(f => f.estado === 'pagada').length;
+    const pendientes = facturas.filter(f => f.estado === 'pendiente').length;
+
+    document.getElementById('statTotal').textContent = formatMoney(totalFacturado, cur);
+    document.getElementById('statPagadas').textContent = pagadas;
+    document.getElementById('statPendientes').textContent = pendientes;
   }
 
   document.getElementById('buscador').addEventListener('input', render);
   document.getElementById('filtroEstado').addEventListener('change', render);
   window.addEventListener('currencychange', render);
 
-  function abrirModal(){ document.getElementById('modalFactura').classList.add('open'); }
-  function cerrarModal(){ document.getElementById('modalFactura').classList.remove('open'); }
+  function abrirModal() { document.getElementById('modalFactura').classList.add('open'); }
+  function cerrarModal() { document.getElementById('modalFactura').classList.remove('open'); }
+
+  // ============================================================
+  //   IMPRESIÓN
+  // ============================================================
+
+  let currentFacturaId = null;
+  let currentTipo = 'ticket';
+
+  function abrirModalImprimir(id) {
+    currentFacturaId = id;
+    const f = facturas.find(f => f.id === id);
+    if (!f) return;
+    document.getElementById('modalImprimir').classList.add('open');
+    currentTipo = 'ticket';
+    document.querySelectorAll('.print-toggle button').forEach(b => b.classList.remove('active'));
+    document.querySelector('.print-toggle button[data-type="ticket"]').classList.add('active');
+    actualizarVistaPrevia(f);
+  }
+
+  function cerrarModalImprimir() {
+    document.getElementById('modalImprimir').classList.remove('open');
+    currentFacturaId = null;
+  }
+
+  function cambiarTipo(tipo) {
+    currentTipo = tipo;
+    document.querySelectorAll('.print-toggle button').forEach(b => b.classList.remove('active'));
+    document.querySelector(`.print-toggle button[data-type="${tipo}"]`).classList.add('active');
+    const f = facturas.find(f => f.id === currentFacturaId);
+    if (f) actualizarVistaPrevia(f);
+  }
+
+  function actualizarVistaPrevia(f) {
+    const cur = getCurrentCurrency();
+    const totalFormateado = formatMoney(f.totalPYG, cur);
+    const subtotalFormateado = formatMoney(f.subtotalPYG, cur);
+    const impuestoFormateado = formatMoney(f.impuestoPYG, cur);
+
+    const fecha = new Date().toLocaleDateString('es-PY', { day:'2-digit', month:'2-digit', year:'numeric' });
+    const hora = new Date().toLocaleTimeString('es-PY', { hour:'2-digit', minute:'2-digit' });
+
+    const preview = document.getElementById('previewContent');
+    preview.className = 'print-preview' + (currentTipo === 'ticket' ? ' ticket' : '');
+
+    let html = '';
+
+    if (currentTipo === 'ticket') {
+      html = `
+        <div class="empresa">
+          <div class="nombre">${empresa.razonSocial}</div>
+          <div class="datos">${empresa.direccion} · Tel. ${empresa.telefono}</div>
+          <div class="datos">RUC: ${empresa.ruc}</div>
+        </div>
+        <div style="text-align:center; font-weight:700; margin-bottom:0.4rem;">TICKET DE VENTA</div>
+        <div class="info-cliente">
+          <span>N° ${f.id}</span>
+          <span>${fecha} ${hora}</span>
+        </div>
+        <div><strong>Cliente:</strong> ${f.huesped}</div>
+        <div><strong>Concepto:</strong> ${f.concepto}</div>
+        <div style="border-top:1px dashed #94a3b8; margin:0.4rem 0;"></div>
+        <div style="display:flex; justify-content:space-between;"><span>Subtotal</span><span>${subtotalFormateado}</span></div>
+        <div style="display:flex; justify-content:space-between;"><span>IVA 10%</span><span>${impuestoFormateado}</span></div>
+        <div style="display:flex; justify-content:space-between; font-weight:700; font-size:1.1rem; border-top:2px solid #1e293b; padding-top:0.2rem; margin-top:0.2rem;">
+          <span>TOTAL</span><span>${totalFormateado}</span>
+        </div>
+        <div style="margin-top:0.3rem;"><strong>Método pago:</strong> ${f.metodo}</div>
+        <div class="footer-legal">Gracias por su compra · Ticket no válido como factura</div>
+      `;
+    } else {
+      html = `
+        <div class="empresa">
+          <div class="nombre">${empresa.razonSocial}</div>
+          <div class="datos">${empresa.direccion} · Tel. ${empresa.telefono}</div>
+          <div class="datos">RUC: ${empresa.ruc}</div>
+        </div>
+        <div class="titulo-factura">FACTURA</div>
+        <div class="info-cliente">
+          <span>N° ${f.id}</span>
+          <span>Fecha: ${fecha}</span>
+        </div>
+        <div><strong>Cliente:</strong> ${f.huesped}</div>
+        <div><strong>Concepto:</strong> ${f.concepto}</div>
+        <table>
+          <thead>
+            <tr><th>Cant.</th><th>Descripción</th><th>Precio Unit.</th><th>Subtotal</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>1</td>
+              <td>${f.concepto}</td>
+              <td>${subtotalFormateado}</td>
+              <td>${subtotalFormateado}</td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="totales">
+          <div class="linea"><span>Subtotal</span><span>${subtotalFormateado}</span></div>
+          <div class="linea"><span>IVA 10%</span><span>${impuestoFormateado}</span></div>
+          <div class="linea total"><span>TOTAL</span><span>${totalFormateado}</span></div>
+        </div>
+        <div class="metodo"><strong>Método de pago:</strong> ${f.metodo}</div>
+        <div class="footer-legal">Documento válido como factura · ${empresa.razonSocial} · RUC ${empresa.ruc}</div>
+      `;
+    }
+
+    preview.innerHTML = html;
+  }
+
+  function imprimirComprobante() {
+    window.print();
+  }
+
+  document.getElementById('modalImprimir').addEventListener('click', function(e) {
+    if (e.target === this) cerrarModalImprimir();
+  });
 
   render();
 </script>
