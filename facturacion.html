@@ -100,7 +100,7 @@
 
   /* ===== ESTILOS PARA IMPRESIÓN ===== */
   .print-modal .modal {
-    max-width: 640px;
+    max-width: 720px;
   }
   .print-modal .modal-body {
     padding: 0.5rem 1.5rem 1.5rem;
@@ -178,11 +178,11 @@
     width: 100%;
     border-collapse: collapse;
     margin: 0.6rem 0;
-    font-size: 0.8rem;
+    font-size: 0.75rem;
   }
   .print-preview table th {
     text-align: left;
-    border-bottom: 1px solid #94a3b8;
+    border-bottom: 2px solid #1e293b;
     padding: 0.2rem 0.1rem;
     font-weight: 700;
     color: #1e293b;
@@ -226,7 +226,7 @@
     color: #64748b;
   }
 
-  /* ===== TICKET (resumido) ===== */
+  /* ===== TICKET (resumido pero con todos los items) ===== */
   .print-preview.ticket .empresa .nombre {
     font-size: 1.1rem;
   }
@@ -236,12 +236,26 @@
   .print-preview.ticket .totales .total {
     font-size: 1rem;
   }
+  .print-preview.ticket .items-list {
+    font-size: 0.75rem;
+    margin: 0.3rem 0;
+  }
+  .print-preview.ticket .items-list .item {
+    display: flex;
+    justify-content: space-between;
+    padding: 0.1rem 0;
+    border-bottom: 1px dotted #e2e8f0;
+  }
+  .print-preview.ticket .items-list .item:last-child {
+    border-bottom: none;
+  }
 
   .print-actions {
     display: flex;
     gap: 0.8rem;
     justify-content: center;
     margin-top: 1.5rem;
+    flex-wrap: wrap;
   }
 
   /* ===== BOTÓN IMPRIMIR EN TABLA ===== */
@@ -267,6 +281,372 @@
     stroke: currentColor;
     stroke-width: 1.8;
     fill: none;
+  }
+
+  /* ===== BOTÓN REGISTRAR PAGO (en tabla) ===== */
+  .btn-pagar {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #16a34a;
+    padding: 0.2rem 0.4rem;
+    transition: color 0.15s;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 0.75rem;
+    font-weight: 500;
+  }
+  .btn-pagar:hover {
+    color: #15803d;
+  }
+  .btn-pagar svg {
+    width: 18px;
+    height: 18px;
+    stroke: currentColor;
+    stroke-width: 1.8;
+    fill: none;
+  }
+  .btn-pagar.pagado {
+    color: #94a3b8;
+    cursor: default;
+    pointer-events: none;
+  }
+
+  /* ===== BOTÓN ENVIAR CORREO ===== */
+  .btn-email {
+    background: #0ea5e9;
+    color: #fff;
+    border: none;
+    padding: 0.5rem 1.5rem;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: background 0.2s;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .btn-email:hover {
+    background: #0284c7;
+  }
+  .btn-email svg {
+    width: 18px;
+    height: 18px;
+    stroke: currentColor;
+    stroke-width: 2;
+    fill: none;
+  }
+
+  /* ===== NOTIFICACIÓN TOAST ===== */
+  .toast {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    background: #1e293b;
+    color: #fff;
+    padding: 1rem 1.8rem;
+    border-radius: 12px;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.3);
+    font-size: 0.95rem;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    z-index: 9999;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.3s, transform 0.3s;
+    pointer-events: none;
+  }
+  .toast.visible {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+  }
+  .toast .icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+  }
+  .toast .icon svg {
+    width: 20px;
+    height: 20px;
+    stroke: #fff;
+    stroke-width: 2;
+    fill: none;
+  }
+
+  /* ===== PAGINACIÓN ===== */
+  .pagination {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 0.5rem;
+    margin-top: 0.6rem;
+    font-size: 0.8rem;
+    color: #64748b;
+  }
+  .pagination button {
+    background: #e2e8f0;
+    border: none;
+    padding: 0.2rem 0.8rem;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: background 0.15s;
+  }
+  .pagination button:hover {
+    background: #cbd5e1;
+  }
+  .pagination button:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+  }
+  .pagination .page-info {
+    margin: 0 0.3rem;
+  }
+
+  /* ===== MODAL NUEVA FACTURA ===== */
+  .modal-factura .modal {
+    max-width: 560px;
+  }
+  .modal-factura .modal-body {
+    padding: 0.5rem 1.5rem 1.5rem;
+  }
+  .modal-factura .field-group {
+    margin-bottom: 1rem;
+  }
+  .modal-factura .field-group label {
+    display: block;
+    font-weight: 600;
+    font-size: 0.85rem;
+    color: #334155;
+    margin-bottom: 0.25rem;
+  }
+  .modal-factura .field-group label .req {
+    color: #dc2626;
+  }
+  .modal-factura .field-group input,
+  .modal-factura .field-group select {
+    width: 100%;
+    padding: 0.5rem 0.75rem;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    background: #fff;
+    transition: border 0.15s;
+  }
+  .modal-factura .field-group input:focus,
+  .modal-factura .field-group select:focus {
+    outline: none;
+    border-color: #2563eb;
+    box-shadow: 0 0 0 3px rgba(37,99,235,0.1);
+  }
+  .modal-factura .field-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+  }
+  .modal-factura .servicios-check {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.4rem 1rem;
+    margin-top: 0.3rem;
+  }
+  .modal-factura .servicios-check label {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.8rem;
+    font-weight: 400;
+    color: #1e293b;
+    cursor: pointer;
+  }
+  .modal-factura .servicios-check input[type="checkbox"] {
+    width: 16px;
+    height: 16px;
+    accent-color: #2563eb;
+  }
+  .modal-factura .info-note {
+    font-size: 0.75rem;
+    color: #64748b;
+    margin-top: 0.3rem;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .modal-factura .info-note svg {
+    width: 14px;
+    height: 14px;
+    stroke: currentColor;
+    stroke-width: 1.8;
+    fill: none;
+    flex-shrink: 0;
+  }
+
+  /* ===== BADGE CON ÍCONO SVG ===== */
+  .badge-estado {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 0.2rem 0.6rem 0.2rem 0.4rem;
+    border-radius: 20px;
+    font-size: 0.7rem;
+    font-weight: 600;
+    text-transform: capitalize;
+  }
+  .badge-estado svg {
+    width: 14px;
+    height: 14px;
+    stroke-width: 2.5;
+    fill: none;
+  }
+  .badge-estado.pagada {
+    background: #dcfce7;
+    color: #166534;
+  }
+  .badge-estado.pagada svg {
+    stroke: #166534;
+  }
+  .badge-estado.pendiente {
+    background: #fef3c7;
+    color: #92400e;
+  }
+  .badge-estado.pendiente svg {
+    stroke: #92400e;
+  }
+
+  /* ===== MODAL DE CONFIRMACIÓN DE PAGO (con servicios) ===== */
+  .modal-pago .modal {
+    max-width: 480px;
+  }
+  .modal-pago .modal-body {
+    padding: 0.5rem 1.5rem 1.5rem;
+  }
+  .modal-pago .detalle {
+    background: #f8fafc;
+    border-radius: 8px;
+    padding: 0.8rem 1rem;
+    margin: 0.6rem 0;
+  }
+  .modal-pago .detalle .linea {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.85rem;
+    padding: 0.15rem 0;
+  }
+  .modal-pago .detalle .linea .label {
+    color: #64748b;
+  }
+  .modal-pago .detalle .linea .valor {
+    font-weight: 600;
+    color: #1e293b;
+  }
+  .modal-pago .detalle .subtotal {
+    border-top: 1px dashed #d1d5db;
+    margin-top: 0.3rem;
+    padding-top: 0.3rem;
+  }
+  .modal-pago .detalle .total {
+    border-top: 2px solid #e2e8f0;
+    margin-top: 0.3rem;
+    padding-top: 0.3rem;
+    font-size: 1rem;
+  }
+  .modal-pago .detalle .total .valor {
+    font-size: 1.1rem;
+    color: #0b63e5;
+  }
+  .modal-pago .detalle .item-row {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.8rem;
+    padding: 0.1rem 0;
+    color: #1e293b;
+  }
+  .modal-pago .detalle .item-row .desc {
+    flex: 1;
+  }
+  .modal-pago .detalle .item-row .precio {
+    font-weight: 500;
+    margin-left: 1rem;
+  }
+  .modal-pago .field-group {
+    margin: 0.8rem 0 0.2rem;
+  }
+  .modal-pago .field-group label {
+    display: block;
+    font-weight: 600;
+    font-size: 0.8rem;
+    color: #334155;
+    margin-bottom: 0.2rem;
+  }
+  .modal-pago .field-group select {
+    width: 100%;
+    padding: 0.4rem 0.6rem;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    font-size: 0.85rem;
+    background: #fff;
+  }
+
+  /* ===== MODAL DE ÉXITO ===== */
+  .modal-exito .modal {
+    max-width: 400px;
+  }
+  .modal-exito .modal-body {
+    text-align: center;
+    padding: 1.5rem;
+  }
+  .modal-exito .modal-body .icon-check {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 0.8rem;
+  }
+  .modal-exito .modal-body .icon-check svg {
+    width: 48px;
+    height: 48px;
+    stroke: #16a34a;
+    stroke-width: 2.5;
+    fill: none;
+  }
+  .modal-exito .modal-body .titulo {
+    font-size: 1rem;
+    color: #1e293b;
+    font-weight: 600;
+    margin: 0;
+  }
+  .modal-exito .modal-body .subtitulo {
+    font-size: 0.85rem;
+    color: #64748b;
+    margin-top: 0.3rem;
+  }
+  .modal-exito .modal-foot {
+    justify-content: center;
+  }
+
+  .info-note {
+    margin-top: 16px;
+    padding: 12px 16px;
+    background: #f1f5f9;
+    border-radius: 8px;
+    font-size: 0.8rem;
+    color: #475569;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .info-note svg {
+    width: 20px;
+    height: 20px;
+    stroke: currentColor;
+    stroke-width: 1.8;
+    fill: none;
+    flex-shrink: 0;
   }
 
   /* ===== MEDIA PRINT ===== */
@@ -315,7 +695,7 @@
 <div class="sidebar-overlay" onclick="closeSidebar()"></div>
 <div class="app-shell">
 
-  <!-- ===== SIDEBAR ACTUALIZADA ===== -->
+  <!-- ===== SIDEBAR ===== -->
   <aside class="sidebar">
     <div class="sidebar-brand">
       <div class="mark">H</div>
@@ -351,6 +731,10 @@
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 8h8M8 12h8M8 16h5"/></svg>
       Facturación
     </a>
+    <a class="nav-link" href="servicios.html">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="3"/><path d="M19 12h2M3 12h2M12 3v2M12 19v2M5.6 5.6l1.4 1.4M17 17l1.4 1.4M17 7l1.4-1.4M5.6 18.4l1.4-1.4"/></svg>
+      Servicios
+    </a>
     <a class="nav-link" href="reportes.html">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 20V10M12 20V4M20 20v-7"/></svg>
       Reportes
@@ -362,15 +746,11 @@
 
     <div class="nav-group-label">Finanzas</div>
     <a class="nav-link" href="formas.html">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
-        <rect x="2" y="6" width="20" height="14" rx="2"/><path d="M2 10h20"/>
-      </svg>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="6" width="20" height="14" rx="2"/><path d="M2 10h20"/></svg>
       Formas de pago
     </a>
     <a class="nav-link" href="caja.html">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
-        <circle cx="12" cy="12" r="3"/><path d="M20 12h-4M8 12H4"/><path d="M12 8V4M12 20v-4"/>
-      </svg>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="3"/><path d="M20 12h-4M8 12H4"/><path d="M12 8V4M12 20v-4"/></svg>
       Caja
     </a>
 
@@ -459,15 +839,20 @@
                 <th>Huésped</th>
                 <th>Concepto</th>
                 <th>Subtotal</th>
-                <th>IVA</th>
-                <th>Total</th>
+                <th>Servicios adicionales</th>
+                <th>Total+IVA</th>
                 <th>Método</th>
                 <th>Estado</th>
-                <th style="text-align:center;">Imprimir</th>
+                <th style="text-align:center;">Acciones</th>
               </tr>
             </thead>
             <tbody id="tablaFacturas"></tbody>
           </table>
+        </div>
+        <div class="pagination" id="paginacionFacturas">
+          <button id="factPrev" disabled>‹</button>
+          <span class="page-info" id="factPaginaInfo">Página 1 de 1</span>
+          <button id="factNext" disabled>›</button>
         </div>
       </div>
 
@@ -479,6 +864,14 @@
       </div>
     </div>
   </div>
+</div>
+
+<!-- ===== TOAST NOTIFICACIÓN ===== -->
+<div id="toastNotificacion" class="toast">
+  <span class="icon">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><path d="M22 6l-10 7L2 6"/></svg>
+  </span>
+  <span id="toastMensaje">Factura enviada correctamente</span>
 </div>
 
 <!-- ===== MODAL DE CIERRE DE SESIÓN ===== -->
@@ -499,50 +892,114 @@
 </div>
 
 <!-- ===== MODAL NUEVA FACTURA ===== -->
-<div class="modal-overlay" id="modalFactura">
+<div class="modal-overlay modal-factura" id="modalFactura">
   <div class="modal">
     <div class="modal-head">
       <h3>Nueva factura</h3>
       <button class="modal-close" onclick="cerrarModal()">✕</button>
     </div>
     <div class="modal-body">
-      <div class="field">
+      <div class="field-group">
         <label>Huésped <span class="req">*</span></label>
-        <input type="text" placeholder="Nombre y apellido">
+        <input type="text" id="nuevoHuesped" placeholder="Nombre completo del huésped" value="Ana María Pérez Gómez">
       </div>
-      <div class="field">
-        <label>Concepto <span class="req">*</span></label>
-        <input type="text" placeholder="Ej. Hospedaje Doble · 3 noches">
+
+      <div class="field-group">
+        <label>Concepto principal <span class="req">*</span></label>
+        <select id="nuevoConcepto">
+          <option value="Hospedaje Individual 1 noche">Hospedaje Individual 1 noche</option>
+          <option value="Hospedaje Individual 2 noches">Hospedaje Individual 2 noches</option>
+          <option value="Hospedaje Individual 3 noches" selected>Hospedaje Individual 3 noches</option>
+          <option value="Hospedaje Doble 1 noche">Hospedaje Doble 1 noche</option>
+          <option value="Hospedaje Doble 2 noches">Hospedaje Doble 2 noches</option>
+          <option value="Hospedaje Doble 3 noches">Hospedaje Doble 3 noches</option>
+          <option value="Hospedaje Doble 4 noches">Hospedaje Doble 4 noches</option>
+          <option value="Suite 1 noche">Suite 1 noche</option>
+          <option value="Suite 2 noches">Suite 2 noches</option>
+          <option value="Suite 3 noches">Suite 3 noches</option>
+        </select>
       </div>
+
+      <div class="field-group">
+        <label>Servicios adicionales</label>
+        <div class="servicios-check" id="serviciosCheck"></div>
+        <div class="info-note">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16h.01"/></svg>
+          <span>Selecciona los servicios que deseas incluir en la factura.</span>
+        </div>
+      </div>
+
       <div class="field-row">
-        <div class="field">
-          <label>Moneda de cobro</label>
-          <select>
-            <option>Guaraníes (Gs)</option>
-            <option>Dólares (US$)</option>
-            <option>Reales (R$)</option>
+        <div class="field-group">
+          <label>Método de pago <span class="req">*</span></label>
+          <select id="nuevoMetodo">
+            <option value="Efectivo">Efectivo</option>
+            <option value="Tarjeta" selected>Tarjeta</option>
+            <option value="Transferencia">Transferencia</option>
           </select>
         </div>
-        <div class="field">
-          <label>Método de pago</label>
-          <select>
-            <option>Efectivo</option>
-            <option>Tarjeta</option>
-            <option>Transferencia</option>
-          </select>
+        <div class="field-group">
+          <label>Precio base (Gs) <span class="req">*</span></label>
+          <input type="number" id="nuevoPrecioBase" placeholder="Precio del hospedaje" value="763886">
         </div>
       </div>
-      <div class="field mb-0">
-        <label>Subtotal <span class="req">*</span></label>
-        <div class="prefix-input">
-          <span>Gs</span>
-          <input type="text" placeholder="450.000">
-        </div>
+
+      <div class="info-note" style="margin-top:0.5rem; font-size:0.75rem; color:#64748b;">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" style="width:14px;height:14px;"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16h.01"/></svg>
+        <span>El precio base corresponde al concepto principal. Los servicios adicionales se suman automáticamente. Desliza abajo para emitir factura.</span>
       </div>
     </div>
     <div class="modal-foot">
       <button class="btn btn-ghost" onclick="cerrarModal()">Cancelar</button>
-      <button class="btn btn-primary" onclick="cerrarModal()">Emitir factura</button>
+      <button class="btn btn-primary" id="btnEmitirFactura">Emitir factura</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== MODAL DE CONFIRMACIÓN DE PAGO (con lista de servicios) ===== -->
+<div class="modal-overlay modal-pago" id="modalConfirmarPago">
+  <div class="modal">
+    <div class="modal-head">
+      <h3>Registrar pago</h3>
+      <button class="modal-close" onclick="cerrarModalConfirmarPago()">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="detalle" id="detallePago"></div>
+      <div class="field-group">
+        <label>Método de pago</label>
+        <select id="metodoPagoSelect">
+          <option value="Efectivo">Efectivo</option>
+          <option value="Tarjeta">Tarjeta</option>
+          <option value="Transferencia">Transferencia</option>
+        </select>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-ghost" onclick="cerrarModalConfirmarPago()">Cancelar</button>
+      <button class="btn btn-primary" id="btnConfirmarPago">Confirmar pago</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== MODAL DE ÉXITO ===== -->
+<div class="modal-overlay modal-exito" id="modalExito">
+  <div class="modal">
+    <div class="modal-head">
+      <h3>Confirmación</h3>
+      <button class="modal-close" onclick="cerrarModalExito()">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="icon-check">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <circle cx="12" cy="12" r="9"/>
+          <path d="M9 12l2 2 4-4"/>
+        </svg>
+      </div>
+      <p class="titulo" id="mensajeExito">Pago registrado exitosamente</p>
+      <p class="subtitulo" id="subtituloExito">La factura ha sido marcada como pagada.</p>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-primary" onclick="cerrarModalExito()">Aceptar</button>
     </div>
   </div>
 </div>
@@ -567,6 +1024,10 @@
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:18px;height:18px;"><path d="M6 9V3h12v6"/><path d="M6 21h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2z"/><path d="M18 15h-4"/></svg>
           Imprimir
         </button>
+        <button class="btn-email" onclick="enviarPorCorreo()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><path d="M22 6l-10 7L2 6"/></svg>
+          Enviar por correo
+        </button>
         <button class="btn btn-ghost" onclick="cerrarModalImprimir()">Cancelar</button>
       </div>
     </div>
@@ -575,6 +1036,24 @@
 
 <script src="assets/app.js"></script>
 <script>
+  // ---- Inicialización de servicios por defecto ----
+  function inicializarServicios() {
+    const serviciosGuardados = localStorage.getItem('hoteleria_servicios');
+    if (!serviciosGuardados) {
+      const serviciosPorDefecto = [
+        { nombre: "Desayuno buffet", precio: 85000, exento: false },
+        { nombre: "Estacionamiento cubierto", precio: 45000, exento: false },
+        { nombre: "Servicio de lavandería", precio: 60000, exento: false },
+        { nombre: "Cena especial", precio: 120000, exento: true },
+        { nombre: "Traslado al aeropuerto", precio: 150000, exento: false },
+        { nombre: "Minibar", precio: 35000, exento: false },
+        { nombre: "Llamadas telefónicas", precio: 20000, exento: true },
+        { nombre: "Mascota (cargo extra)", precio: 50000, exento: false }
+      ];
+      localStorage.setItem('hoteleria_servicios', JSON.stringify(serviciosPorDefecto));
+    }
+  }
+
   // ---- Modal de cierre de sesión ----
   (function() {
     const modalCierre = document.getElementById('modalCierreSesion');
@@ -601,9 +1080,12 @@
     });
   })();
 
-  // ---- Código de facturación con datos diferenciados ----
+  // ---- Código de facturación ----
   requireAuth();
   const suc = getSucursalActual();
+
+  // ---- Inicializar servicios (si no existen) ----
+  inicializarServicios();
 
   // ---- Sidebar dinámico ----
   const direcciones = {
@@ -631,23 +1113,106 @@
 
   const empresa = empresaData[suc.id] || empresaData.centro;
 
-  // ---- Generar facturas diferenciadas ----
-  const conceptos = ['Hospedaje Individual 3 noches', 'Hospedaje Doble 2 noches', 'Suite 1 noche', 'Hospedaje Doble 4 noches', 'Suite 2 noches', 'Hospedaje Individual 2 noches'];
-  const metodos = ['Efectivo', 'Tarjeta', 'Transferencia'];
-  const huespedes = ['Ana Pérez', 'Luis Gómez', 'María Rodríguez', 'Carlos López', 'Laura Fernández', 'Jorge Martínez', 'Sofía González', 'Miguel Sánchez', 'Elena Ruiz', 'Pablo Díaz', 'Martín Ferreira', 'Lucía Acosta'];
+  // ---- Obtener servicios desde localStorage ----
+  function getServicios() {
+    try {
+      const data = localStorage.getItem('hoteleria_servicios');
+      return data ? JSON.parse(data) : [];
+    } catch {
+      return [];
+    }
+  }
 
+  // ---- HUÉSPEDES EXCLUSIVOS POR SUCURSAL (coinciden con la página de huéspedes) ----
+  const huespedesCentro = [
+    'Julia Souza',
+    'Pedro Duarte',
+    'Camila Ríos',
+    'Hugo Martínez'
+  ];
+
+  const huespedesEste = [
+    'Rosa Cáceres',
+    'Iván Gómez',
+    'Nadia López',
+    'Sergio Aquino'
+  ];
+
+  // Conceptos diferenciados
+  const conceptosCentro = [
+    'Hospedaje Individual 3 noches',
+    'Hospedaje Doble 2 noches',
+    'Suite 1 noche',
+    'Hospedaje Doble 4 noches',
+    'Suite 2 noches',
+    'Hospedaje Individual 2 noches'
+  ];
+  const conceptosEste = [
+    'Hospedaje Individual 2 noches',
+    'Hospedaje Doble 3 noches',
+    'Suite 2 noches',
+    'Hospedaje Doble 1 noche',
+    'Suite 3 noches',
+    'Hospedaje Individual 4 noches'
+  ];
+
+  // Métodos (comunes)
+  const metodos = ['Efectivo', 'Tarjeta', 'Transferencia'];
+
+  // ---- Generar facturas según sucursal ----
   const cantidadFacturas = suc.id === 'centro' ? 42 : 22;
   const facturas = [];
+  const huespedes = suc.id === 'centro' ? huespedesCentro : huespedesEste;
+  const conceptos = suc.id === 'centro' ? conceptosCentro : conceptosEste;
+
+  // Rango de precios base
+  const precioMin = suc.id === 'centro' ? 200000 : 250000;
+  const precioMax = suc.id === 'centro' ? 600000 : 650000;
 
   for (let i = 0; i < cantidadFacturas; i++) {
-    const subtotal = Math.floor(Math.random() * 800000) + 200000;
-    const impuesto = Math.round(subtotal * 0.1);
-    const total = subtotal + impuesto;
+    const concepto = conceptos[i % conceptos.length];
+    const precioBase = Math.floor(Math.random() * (precioMax - precioMin + 1)) + precioMin;
+
+    const serviciosDisponibles = getServicios();
+    const items = [];
+    items.push({
+      codigo: '001',
+      descripcion: concepto,
+      cantidad: 1,
+      precioUnitario: precioBase,
+      descuento: 0,
+      exento: false
+    });
+
+    if (serviciosDisponibles.length > 0) {
+      const numExtras = Math.min(Math.floor(Math.random() * 3) + 1, serviciosDisponibles.length);
+      const shuffled = [...serviciosDisponibles].sort(() => Math.random() - 0.5);
+      for (let j = 0; j < numExtras; j++) {
+        const extra = shuffled[j];
+        const precio = extra.precio + Math.floor(Math.random() * 20000) - 10000;
+        items.push({
+          codigo: String(100 + j + 1),
+          descripcion: extra.nombre,
+          cantidad: 1,
+          precioUnitario: Math.max(5000, precio),
+          descuento: 0,
+          exento: extra.exento || false
+        });
+      }
+    }
+
+    let subtotal = items.reduce((sum, it) => sum + it.precioUnitario * it.cantidad, 0);
+    let ivaItems = items.filter(it => !it.exento);
+    let baseIVA = ivaItems.reduce((sum, it) => sum + it.precioUnitario * it.cantidad, 0);
+    let impuesto = Math.round(baseIVA * 0.10);
+    let total = subtotal + impuesto;
+
     const estado = i % 3 === 0 ? 'pendiente' : 'pagada';
     facturas.push({
       id: `FAC-${1000 + i}`,
       huesped: huespedes[i % huespedes.length],
-      concepto: conceptos[i % conceptos.length],
+      concepto: concepto,
+      items: items,
       subtotalPYG: subtotal,
       impuestoPYG: impuesto,
       totalPYG: total,
@@ -657,6 +1222,86 @@
   }
 
   document.getElementById('subFacturacion').textContent = `${suc.corto} · ${facturas.length} facturas`;
+
+  // ---- Variables de paginación ----
+  let factPage = 0;
+  const factPageSize = 5;
+
+  // ---- Variables para el modal de pago ----
+  let facturaPendienteId = null;
+
+  // ---- Función para abrir modal de confirmación de pago ----
+  function abrirModalConfirmarPago(id) {
+    const factura = facturas.find(f => f.id === id);
+    if (!factura || factura.estado === 'pagada') return;
+
+    facturaPendienteId = id;
+    const cur = getCurrentCurrency();
+    const totalFormateado = formatMoney(factura.totalPYG, cur);
+
+    let itemsHtml = '';
+    factura.items.forEach((it) => {
+      const subtotalItem = formatMoney(it.precioUnitario * it.cantidad, cur);
+      itemsHtml += `
+        <div class="item-row">
+          <span class="desc">${it.cantidad} x ${it.descripcion}</span>
+          <span class="precio">${subtotalItem}</span>
+        </div>
+      `;
+    });
+
+    const detalle = document.getElementById('detallePago');
+    detalle.innerHTML = `
+      <div class="linea"><span class="label">Factura</span><span class="valor">${factura.id}</span></div>
+      <div class="linea"><span class="label">Huésped</span><span class="valor">${factura.huesped}</span></div>
+      <div style="border-top:1px dashed #d1d5db; margin:0.3rem 0;"></div>
+      ${itemsHtml}
+      <div class="subtotal">
+        <div class="linea"><span class="label">Subtotal</span><span class="valor">${formatMoney(factura.subtotalPYG, cur)}</span></div>
+        <div class="linea"><span class="label">IVA 10%</span><span class="valor">${formatMoney(factura.impuestoPYG, cur)}</span></div>
+      </div>
+      <div class="total">
+        <div class="linea"><span class="label">TOTAL A PAGAR</span><span class="valor">${totalFormateado}</span></div>
+      </div>
+    `;
+
+    document.getElementById('metodoPagoSelect').value = factura.metodo;
+    document.getElementById('modalConfirmarPago').classList.add('open');
+  }
+
+  function cerrarModalConfirmarPago() {
+    document.getElementById('modalConfirmarPago').classList.remove('open');
+    facturaPendienteId = null;
+  }
+
+  document.getElementById('btnConfirmarPago').addEventListener('click', function() {
+    if (!facturaPendienteId) return;
+    const factura = facturas.find(f => f.id === facturaPendienteId);
+    if (!factura) return;
+
+    const nuevoMetodo = document.getElementById('metodoPagoSelect').value;
+    factura.metodo = nuevoMetodo;
+    factura.estado = 'pagada';
+
+    cerrarModalConfirmarPago();
+    render();
+    abrirModalExito(`Pago registrado para ${factura.id}`, 'La factura ha sido marcada como pagada.');
+  });
+
+  // ---- Modal de éxito ----
+  function abrirModalExito(titulo, subtitulo) {
+    document.getElementById('mensajeExito').textContent = titulo || 'Operación exitosa';
+    document.getElementById('subtituloExito').textContent = subtitulo || '';
+    document.getElementById('modalExito').classList.add('open');
+  }
+
+  function cerrarModalExito() {
+    document.getElementById('modalExito').classList.remove('open');
+  }
+
+  document.getElementById('modalExito').addEventListener('click', function(e) {
+    if (e.target === this) cerrarModalExito();
+  });
 
   // ---- Render tabla ----
   function render() {
@@ -669,27 +1314,56 @@
       (estado === '' || f.estado === estado)
     );
 
+    const totalPages = Math.ceil(filtradas.length / factPageSize) || 1;
+    if (factPage >= totalPages) factPage = totalPages - 1;
+    if (factPage < 0) factPage = 0;
+    const start = factPage * factPageSize;
+    const end = Math.min(start + factPageSize, filtradas.length);
+    const pageItems = filtradas.slice(start, end);
+
     const printIcon = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 9V3h12v6"/><path d="M6 21h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2z"/><path d="M18 15h-4"/></svg>`;
+    const iconCheck = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12l5 5L20 7"/></svg>`;
+    const iconClock = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>`;
+    const iconPagar = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="6" width="20" height="12" rx="2"/><circle cx="12" cy="12" r="3"/><path d="M16 9h.01M8 15h.01"/></svg>`;
 
-    document.getElementById('tablaFacturas').innerHTML = filtradas.map(f => `
-      <tr>
-        <td class="cell-strong mono">${f.id}</td>
-        <td>${f.huesped}</td>
-        <td class="cell-muted">${f.concepto}</td>
-        <td class="mono">${formatMoney(f.subtotalPYG, cur)}</td>
-        <td class="mono cell-muted">${formatMoney(f.impuestoPYG, cur)}</td>
-        <td class="mono cell-strong">${formatMoney(f.totalPYG, cur)}</td>
-        <td class="cell-muted">${f.metodo}</td>
-        <td><span class="badge badge-${f.estado === 'pagada' ? 'confirmada' : 'pendiente'}">${f.estado.charAt(0).toUpperCase()+f.estado.slice(1)}</span></td>
-        <td style="text-align:center;">
-          <button class="btn-print" onclick="abrirModalImprimir('${f.id}')" title="Imprimir comprobante">
-            ${printIcon}
-          </button>
-        </td>
-      </tr>
-    `).join('');
+    document.getElementById('tablaFacturas').innerHTML = pageItems.map(f => {
+      const estadoClass = f.estado === 'pagada' ? 'pagada' : 'pendiente';
+      const estadoIcon = f.estado === 'pagada' ? iconCheck : iconClock;
 
-    // Estadísticas
+      const botonPago = f.estado === 'pendiente'
+        ? `<button class="btn-pagar" onclick="abrirModalConfirmarPago('${f.id}')" title="Registrar pago">${iconPagar}</button>`
+        : `<span class="btn-pagar pagado" title="Ya pagada">${iconPagar}</span>`;
+
+      const serviciosAdicionales = f.items
+        .filter(it => it.codigo !== '001')
+        .map(it => it.descripcion)
+        .join(', ');
+      const displayServicios = serviciosAdicionales || '—';
+
+      return `
+        <tr>
+          <td class="cell-strong mono">${f.id}</td>
+          <td>${f.huesped}</td>
+          <td class="cell-muted">${f.concepto}</td>
+          <td class="mono">${formatMoney(f.subtotalPYG, cur)}</td>
+          <td class="cell-muted">${displayServicios}</td>
+          <td class="mono cell-strong">${formatMoney(f.totalPYG, cur)}</td>
+          <td class="cell-muted">${f.metodo}</td>
+          <td><span class="badge-estado ${estadoClass}">${estadoIcon} ${f.estado.charAt(0).toUpperCase()+f.estado.slice(1)}</span></td>
+          <td style="text-align:center; display:flex; gap:4px; justify-content:center; align-items:center;">
+            <button class="btn-print" onclick="abrirModalImprimir('${f.id}')" title="Imprimir comprobante">
+              ${printIcon}
+            </button>
+            ${botonPago}
+          </td>
+        </tr>
+      `;
+    }).join('');
+
+    document.getElementById('factPaginaInfo').textContent = `Página ${factPage+1} de ${totalPages}`;
+    document.getElementById('factPrev').disabled = factPage === 0;
+    document.getElementById('factNext').disabled = factPage >= totalPages - 1;
+
     const totalFacturado = facturas.reduce((a, f) => a + f.totalPYG, 0);
     const pagadas = facturas.filter(f => f.estado === 'pagada').length;
     const pendientes = facturas.filter(f => f.estado === 'pendiente').length;
@@ -703,11 +1377,135 @@
   document.getElementById('filtroEstado').addEventListener('change', render);
   window.addEventListener('currencychange', render);
 
-  function abrirModal() { document.getElementById('modalFactura').classList.add('open'); }
-  function cerrarModal() { document.getElementById('modalFactura').classList.remove('open'); }
+  document.getElementById('factPrev').addEventListener('click', function() {
+    if (factPage > 0) { factPage--; render(); }
+  });
+  document.getElementById('factNext').addEventListener('click', function() {
+    const filtradas = facturas.filter(f => {
+      const texto = document.getElementById('buscador').value.toLowerCase();
+      const estado = document.getElementById('filtroEstado').value;
+      return (f.huesped.toLowerCase().includes(texto) || f.id.toLowerCase().includes(texto)) &&
+             (estado === '' || f.estado === estado);
+    });
+    const totalPages = Math.ceil(filtradas.length / factPageSize) || 1;
+    if (factPage < totalPages - 1) { factPage++; render(); }
+  });
 
   // ============================================================
-  //   IMPRESIÓN
+  //   MODAL NUEVA FACTURA
+  // ============================================================
+
+  function cargarServiciosEnModal() {
+    const servicios = getServicios();
+    const container = document.getElementById('serviciosCheck');
+    if (servicios.length === 0) {
+      container.innerHTML = `<span style="font-size:0.8rem; color:#94a3b8; grid-column:1/-1;">No hay servicios disponibles. Ve a "Servicios" para agregar.</span>`;
+      return;
+    }
+    container.innerHTML = servicios.map((s, idx) => `
+      <label>
+        <input type="checkbox" value="${idx}" ${idx < 2 ? 'checked' : ''}>
+        ${s.nombre} (Gs ${Number(s.precio).toLocaleString('es-PY')}${s.exento ? ' · Exento' : ''})
+      </label>
+    `).join('');
+  }
+
+  function abrirModal() {
+    document.getElementById('modalFactura').classList.add('open');
+    document.getElementById('nuevoHuesped').value = 'Ana María Pérez Gómez';
+    document.getElementById('nuevoConcepto').value = 'Hospedaje Individual 3 noches';
+    document.getElementById('nuevoMetodo').value = 'Tarjeta';
+    document.getElementById('nuevoPrecioBase').value = '763886';
+    cargarServiciosEnModal();
+  }
+
+  function cerrarModal() {
+    document.getElementById('modalFactura').classList.remove('open');
+  }
+
+  document.getElementById('btnEmitirFactura').addEventListener('click', function() {
+    const huesped = document.getElementById('nuevoHuesped').value.trim();
+    const concepto = document.getElementById('nuevoConcepto').value;
+    const metodo = document.getElementById('nuevoMetodo').value;
+    const precioBase = parseInt(document.getElementById('nuevoPrecioBase').value) || 500000;
+
+    if (!huesped) {
+      mostrarToast('El nombre del huésped es obligatorio');
+      return;
+    }
+
+    const checkboxes = document.querySelectorAll('#serviciosCheck input[type="checkbox"]:checked');
+    const serviciosSeleccionados = [];
+    const todosServicios = getServicios();
+    checkboxes.forEach(cb => {
+      const idx = parseInt(cb.value);
+      if (todosServicios[idx]) {
+        serviciosSeleccionados.push(todosServicios[idx]);
+      }
+    });
+
+    const items = [];
+    items.push({
+      codigo: '001',
+      descripcion: concepto,
+      cantidad: 1,
+      precioUnitario: precioBase,
+      descuento: 0,
+      exento: false
+    });
+
+    serviciosSeleccionados.forEach((s, j) => {
+      const precio = s.precio + Math.floor(Math.random() * 10000) - 5000;
+      items.push({
+        codigo: String(100 + j + 1),
+        descripcion: s.nombre,
+        cantidad: 1,
+        precioUnitario: Math.max(5000, precio),
+        descuento: 0,
+        exento: s.exento || false
+      });
+    });
+
+    let subtotal = items.reduce((sum, it) => sum + it.precioUnitario * it.cantidad, 0);
+    let ivaItems = items.filter(it => !it.exento);
+    let baseIVA = ivaItems.reduce((sum, it) => sum + it.precioUnitario * it.cantidad, 0);
+    let impuesto = Math.round(baseIVA * 0.10);
+    let total = subtotal + impuesto;
+
+    const nuevaFactura = {
+      id: `FAC-${1000 + facturas.length}`,
+      huesped: huesped,
+      concepto: concepto,
+      items: items,
+      subtotalPYG: subtotal,
+      impuestoPYG: impuesto,
+      totalPYG: total,
+      metodo: metodo,
+      estado: 'pendiente'
+    };
+
+    facturas.push(nuevaFactura);
+    cerrarModal();
+    render();
+    abrirModalExito(`Factura ${nuevaFactura.id} creada correctamente`, 'La factura ha sido registrada como pendiente de pago.');
+  });
+
+  // ============================================================
+  //   TOAST
+  // ============================================================
+  function mostrarToast(mensaje) {
+    const toast = document.getElementById('toastNotificacion');
+    const msg = document.getElementById('toastMensaje');
+    msg.textContent = mensaje;
+    toast.classList.add('visible');
+    clearTimeout(window.toastTimeout);
+    window.toastTimeout = setTimeout(() => {
+      toast.classList.remove('visible');
+    }, 4000);
+  }
+
+  // ============================================================
+  //   IMPRESIÓN Y CORREO
   // ============================================================
 
   let currentFacturaId = null;
@@ -752,6 +1550,17 @@
     let html = '';
 
     if (currentTipo === 'ticket') {
+      let itemsHtml = '';
+      f.items.forEach((it) => {
+        const subtotalItem = formatMoney(it.precioUnitario * it.cantidad, cur);
+        itemsHtml += `
+          <div class="item">
+            <span>${it.cantidad} x ${it.descripcion}</span>
+            <span>${subtotalItem}</span>
+          </div>
+        `;
+      });
+
       html = `
         <div class="empresa">
           <div class="nombre">${empresa.razonSocial}</div>
@@ -764,7 +1573,8 @@
           <span>${fecha} ${hora}</span>
         </div>
         <div><strong>Cliente:</strong> ${f.huesped}</div>
-        <div><strong>Concepto:</strong> ${f.concepto}</div>
+        <div style="border-top:1px dashed #94a3b8; margin:0.4rem 0;"></div>
+        <div class="items-list">${itemsHtml}</div>
         <div style="border-top:1px dashed #94a3b8; margin:0.4rem 0;"></div>
         <div style="display:flex; justify-content:space-between;"><span>Subtotal</span><span>${subtotalFormateado}</span></div>
         <div style="display:flex; justify-content:space-between;"><span>IVA 10%</span><span>${impuestoFormateado}</span></div>
@@ -775,39 +1585,93 @@
         <div class="footer-legal">Gracias por su compra · Ticket no válido como factura</div>
       `;
     } else {
+      const items = f.items;
+      const subtotal = f.subtotalPYG;
+      const ivaCalculado = f.impuestoPYG;
+      const total = f.totalPYG;
+
+      const timbrado = '12557904';
+      const cdc = `0180 0005 1980 0100 2800 0915 1202 0102 2110 3069 8874`;
+
+      let filas = '';
+      items.forEach((it, idx) => {
+        const precio = formatMoney(it.precioUnitario, cur);
+        const exento = it.exento ? 'Sí' : 'No';
+        const iva = it.exento ? '0%' : '10%';
+        filas += `
+          <tr>
+            <td>${String(idx+1).padStart(3,'0')}</td>
+            <td>${it.descripcion}</td>
+            <td>Unidad</td>
+            <td style="text-align:right;">${it.cantidad}</td>
+            <td style="text-align:right;">${precio}</td>
+            <td style="text-align:right;">0</td>
+            <td style="text-align:right;">${exento}</td>
+            <td style="text-align:right;">${iva}</td>
+          </tr>
+        `;
+      });
+
       html = `
-        <div class="empresa">
-          <div class="nombre">${empresa.razonSocial}</div>
-          <div class="datos">${empresa.direccion} · Tel. ${empresa.telefono}</div>
-          <div class="datos">RUC: ${empresa.ruc}</div>
+        <div style="text-align:center; border-bottom:2px solid #1e293b; padding-bottom:0.5rem; margin-bottom:0.8rem;">
+          <div style="font-size:1.5rem; font-weight:700; letter-spacing:1px; color:#1e293b;">Hotelería</div>
+          <div style="font-size:0.7rem; color:#475569; font-weight:500;">KüDE de Factura electrónica</div>
+          <div style="font-size:0.6rem; color:#64748b;">DE generado en ambiente de prueba - sin valor comercial ni fiscal</div>
+          <div style="font-size:0.75rem; font-weight:600; color:#1e293b;">${empresa.razonSocial}</div>
+          <div style="font-size:0.7rem; color:#475569;">${empresa.direccion}</div>
+          <div style="font-size:0.7rem; color:#475569;">Tel. ${empresa.telefono}</div>
+          <div style="font-size:0.7rem; color:#475569;"><strong>RUC:</strong> ${empresa.ruc}</div>
+          <div style="font-size:0.7rem; color:#475569;"><strong>Timbrado N°:</strong> ${timbrado}</div>
+          <div style="font-size:0.7rem; color:#475569;"><strong>Inicio de vigencia:</strong> 12/11/2019</div>
+          <div style="font-size:1.1rem; font-weight:700; letter-spacing:2px; margin-top:0.2rem;">FACTURA ELECTRÓNICA</div>
+          <div style="font-size:0.9rem; font-weight:600; color:#1e293b;">N° ${f.id}</div>
         </div>
-        <div class="titulo-factura">FACTURA</div>
-        <div class="info-cliente">
-          <span>N° ${f.id}</span>
-          <span>Fecha: ${fecha}</span>
+
+        <div style="display:flex; justify-content:space-between; margin:0.4rem 0 0.8rem; font-size:0.75rem;">
+          <div><strong>Nombre o Razón Social:</strong> ${f.huesped}</div>
+          <div><strong>RUC / Documento:</strong> ${(f.huesped === 'Ana María Pérez Gómez' ? '1234567-8' : '8765432-1')}</div>
         </div>
-        <div><strong>Cliente:</strong> ${f.huesped}</div>
-        <div><strong>Concepto:</strong> ${f.concepto}</div>
+        <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:0.3rem; font-size:0.7rem; color:#1e293b; margin-bottom:0.6rem;">
+          <div><strong>Fecha y hora:</strong> ${fecha} ${hora}</div>
+          <div><strong>Cond. de venta:</strong> Contado</div>
+          <div><strong>Cond. vencimiento:</strong> Contado</div>
+          <div><strong>Moneda:</strong> Guaraníes</div>
+          <div><strong>Tipo de operación:</strong> Mono (Venta de mercadería y servicios)</div>
+          <div><strong>Teléfono:</strong> ${empresa.telefono}</div>
+        </div>
+
         <table>
           <thead>
-            <tr><th>Cant.</th><th>Descripción</th><th>Precio Unit.</th><th>Subtotal</th></tr>
-          </thead>
-          <tbody>
             <tr>
-              <td>1</td>
-              <td>${f.concepto}</td>
-              <td>${subtotalFormateado}</td>
-              <td>${subtotalFormateado}</td>
+              <th>Código</th>
+              <th>Descripción</th>
+              <th>Unitario</th>
+              <th style="text-align:right;">Cant.</th>
+              <th style="text-align:right;">Precio unit.</th>
+              <th style="text-align:right;">Descuento</th>
+              <th style="text-align:right;">Exento</th>
+              <th style="text-align:right;">10%</th>
             </tr>
-          </tbody>
+          </thead>
+          <tbody>${filas}</tbody>
         </table>
-        <div class="totales">
-          <div class="linea"><span>Subtotal</span><span>${subtotalFormateado}</span></div>
-          <div class="linea"><span>IVA 10%</span><span>${impuestoFormateado}</span></div>
-          <div class="linea total"><span>TOTAL</span><span>${totalFormateado}</span></div>
+
+        <div style="display:flex; justify-content:space-between; font-size:0.75rem; margin-top:0.4rem; border-top:2px solid #1e293b; padding-top:0.3rem;">
+          <div>
+            <div><strong>SUBTOTAL</strong></div>
+            <div><strong>TOTAL DE LA OPERACIÓN:</strong></div>
+            <div><strong>TOTAL EN GUARANÍES:</strong></div>
+            <div><strong>LIQUIDACIÓN IVA:</strong></div>
+          </div>
+          <div style="text-align:right;">
+            <div>${formatMoney(subtotal, cur)}</div>
+            <div>${formatMoney(total, cur)}</div>
+            <div>${formatMoney(total, cur)}</div>
+            <div>10%  ${formatMoney(ivaCalculado, cur)}</div>
+          </div>
         </div>
-        <div class="metodo"><strong>Método de pago:</strong> ${f.metodo}</div>
-        <div class="footer-legal">Documento válido como factura · ${empresa.razonSocial} · RUC ${empresa.ruc}</div>
+
+        
       `;
     }
 
@@ -816,6 +1680,13 @@
 
   function imprimirComprobante() {
     window.print();
+  }
+
+  function enviarPorCorreo() {
+    const f = facturas.find(f => f.id === currentFacturaId);
+    if (!f) return;
+    const correoDestino = 'lopezyessica824@gmail.com';
+    mostrarToast(`Factura ${f.id} enviada a ${correoDestino}`);
   }
 
   document.getElementById('modalImprimir').addEventListener('click', function(e) {

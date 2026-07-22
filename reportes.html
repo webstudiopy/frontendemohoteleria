@@ -6,6 +6,7 @@
 <title>Hotelería — Reportes</title>
 <link rel="stylesheet" href="assets/styles.css">
 <style>
+  /* ===== ESTILOS EXISTENTES ===== */
   .bar-chart{display:flex; align-items:flex-end; gap:14px; height:220px; padding:10px 6px 0;}
   .bar-chart .col{flex:1; display:flex; flex-direction:column; align-items:center; gap:8px; height:100%; justify-content:flex-end;}
   .bar-chart .bar{width:100%; max-width:34px; border-radius:6px 6px 0 0; background:var(--blue-600); position:relative; transition:height .4s ease;}
@@ -17,7 +18,7 @@
   .donut-legend .sw{width:10px; height:10px; border-radius:3px;}
   .donut-legend b{margin-left:auto; font-family:var(--font-display);}
 
-  /* ===== SIDEBAR CON SCROLL ===== */
+  /* ===== SIDEBAR ===== */
   .sidebar {
     overflow-y: auto;
     max-height: 100vh;
@@ -33,8 +34,6 @@
   .sidebar::-webkit-scrollbar-track {
     background: transparent;
   }
-
-  /* ===== SUCURSAL EN SIDEBAR (TEXTO BLANCO) ===== */
   .sidebar-footer {
     background: transparent;
   }
@@ -61,7 +60,7 @@
     color: rgba(255, 255, 255, 0.7) !important;
   }
 
-  /* ===== MODAL DE CIERRE DE SESIÓN ===== */
+  /* ===== MODAL DE CIERRE ===== */
   .modal-confirm {
     max-width: 400px;
     width: 90%;
@@ -108,6 +107,144 @@
   .modal-confirm .btn-danger:hover {
     background: #b91c1c;
   }
+
+  /* ===== NUEVOS ESTILOS PARA MOVIMIENTOS (RANGO DE FECHAS) ===== */
+  .mov-filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.8rem;
+    align-items: center;
+    margin-bottom: 1.2rem;
+    background: #f8fafc;
+    padding: 0.8rem 1rem;
+    border-radius: 10px;
+  }
+  .mov-filters label {
+    font-weight: 500;
+    color: #475569;
+    font-size: 0.9rem;
+  }
+  .mov-filters input[type="date"] {
+    padding: 0.3rem 0.8rem;
+    border-radius: 8px;
+    border: 1px solid #e2e8f0;
+    background: white;
+    font-size: 0.9rem;
+    color: #1e293b;
+  }
+  .mov-filters .btn-sm {
+    padding: 0.3rem 1rem;
+    font-size: 0.85rem;
+  }
+
+  /* Tarjetas de estadísticas */
+  .mov-stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 0.8rem;
+    margin-bottom: 1.2rem;
+  }
+  .mov-stat-card {
+    background: white;
+    border-radius: 10px;
+    padding: 0.8rem 1rem;
+    border: 1px solid #eef2f6;
+    text-align: center;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.04);
+  }
+  .mov-stat-card .num {
+    font-size: 2rem;
+    font-weight: 700;
+    line-height: 1.2;
+  }
+  .mov-stat-card .label {
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    color: #64748b;
+    font-weight: 600;
+    margin-top: 0.1rem;
+  }
+  .mov-stat-card .sub {
+    font-size: 0.75rem;
+    color: #475569;
+    margin-top: 0.2rem;
+  }
+  .mov-stat-card.entradas .num { color: #1e40af; }
+  .mov-stat-card.salidas .num { color: #92400e; }
+  .mov-stat-card.total .num { color: #0f172a; }
+  .mov-stat-card.pico .num { font-size: 1.2rem; color: #2563eb; }
+
+  /* Gráfico */
+  .chart-mov-container {
+    background: #ffffff;
+    border-radius: 10px;
+    padding: 0.8rem;
+    border: 1px solid #eef2f6;
+    margin-bottom: 1rem;
+  }
+  .chart-mov-container h4 {
+    margin: 0 0 0.5rem 0;
+    font-size: 0.9rem;
+    color: #1e293b;
+  }
+  .chart-mov-wrapper {
+    width: 100%;
+    height: 180px;
+    position: relative;
+  }
+  .chart-mov-wrapper canvas {
+    width: 100% !important;
+    height: 100% !important;
+    display: block;
+  }
+
+  .badge-mov {
+    display: inline-block;
+    padding: 0.2rem 0.7rem;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 600;
+  }
+  .badge-mov.checkin { background: #dbeafe; color: #1e40af; }
+  .badge-mov.checkout { background: #fef3c7; color: #92400e; }
+
+  .pagination-mov {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    justify-content: flex-end;
+    margin-top: 0.8rem;
+  }
+  .pagination-mov button {
+    background: #f1f5f9;
+    border: 1px solid #e2e8f0;
+    color: #1e293b;
+    padding: 0.2rem 0.8rem;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.8rem;
+    transition: background 0.15s;
+  }
+  .pagination-mov button:hover:not(:disabled) {
+    background: #e2e8f0;
+  }
+  .pagination-mov button:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+  }
+  .pagination-mov span {
+    font-size: 0.85rem;
+    color: #475569;
+  }
+
+  /* Rango de fechas en el título */
+  .rango-fechas {
+    font-size: 0.8rem;
+    color: #475569;
+    font-weight: 400;
+    margin-left: 0.5rem;
+  }
 </style>
 </head>
 <body>
@@ -120,7 +257,7 @@
 <div class="sidebar-overlay" onclick="closeSidebar()"></div>
 <div class="app-shell">
 
-  <!-- ===== SIDEBAR ACTUALIZADA (dinámica) ===== -->
+  <!-- ===== SIDEBAR ACTUALIZADA ===== -->
   <aside class="sidebar">
     <div class="sidebar-brand">
       <div class="mark">H</div>
@@ -146,16 +283,21 @@
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="8" r="3.5"/><path d="M4.5 20.5c1.6-3.6 4.4-5.5 7.5-5.5s5.9 1.9 7.5 5.5"/></svg>
       Huéspedes
     </a>
-    <!-- ===== NUEVO ENLACE AL MAPA DE HABITACIONES ===== -->
     <a class="nav-link" href="mapa.html">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M3 15h18M9 3v18M15 3v18"/></svg>
       Mapa de habitaciones
     </a>
+    <!-- ===== ELIMINADO: Movimientos (no corresponde en Reportes) ===== -->
 
     <div class="nav-group-label">Administración</div>
     <a class="nav-link" href="facturacion.html">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 8h8M8 12h8M8 16h5"/></svg>
       Facturación
+    </a>
+    <!-- ===== NUEVO ENLACE A SERVICIOS ===== -->
+    <a class="nav-link" href="servicios.html">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="3"/><path d="M19 12h2M3 12h2M12 3v2M12 19v2M5.6 5.6l1.4 1.4M17 17l1.4 1.4M17 7l1.4-1.4M5.6 18.4l1.4-1.4"/></svg>
+      Servicios
     </a>
     <a class="nav-link active" href="reportes.html">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 20V10M12 20V4M20 20v-7"/></svg>
@@ -168,15 +310,11 @@
 
     <div class="nav-group-label">Finanzas</div>
     <a class="nav-link" href="formas.html">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
-        <rect x="2" y="6" width="20" height="14" rx="2"/><path d="M2 10h20"/>
-      </svg>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="6" width="20" height="14" rx="2"/><path d="M2 10h20"/></svg>
       Formas de pago
     </a>
     <a class="nav-link" href="caja.html">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
-        <circle cx="12" cy="12" r="3"/><path d="M20 12h-4M8 12H4"/><path d="M12 8V4M12 20v-4"/>
-      </svg>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="3"/><path d="M20 12h-4M8 12H4"/><path d="M12 8V4M12 20v-4"/></svg>
       Caja
     </a>
 
@@ -213,6 +351,8 @@
     </div>
 
     <div class="content">
+
+      <!-- ===== FILA SUPERIOR: INGRESOS Y DONUT ===== -->
       <div class="grid grid-2" style="align-items:start;">
         <div class="card">
           <div class="card-header">
@@ -225,7 +365,6 @@
             <div class="bar-chart" id="barChart"></div>
           </div>
         </div>
-
         <div class="card">
           <div class="card-header">
             <h3>Distribución por tipo de habitación</h3>
@@ -239,6 +378,72 @@
         </div>
       </div>
 
+      <!-- ===== HISTORIAL DE MOVIMIENTOS CON RANGO DE FECHAS ===== -->
+      <div class="card" style="margin-top:20px;">
+        <div class="card-header">
+          <h3>Historial de movimientos <span class="rango-fechas" id="rangoFechasLabel">(selecciona un rango)</span></h3>
+          <span class="hint">Entradas y salidas de huéspedes</span>
+        </div>
+        <div class="card-body">
+
+          <!-- Filtro de rango de fechas -->
+          <div class="mov-filters">
+            <label for="fechaDesde">Desde:</label>
+            <input type="date" id="fechaDesde">
+            <label for="fechaHasta">Hasta:</label>
+            <input type="date" id="fechaHasta">
+            <button class="btn btn-primary btn-sm" onclick="aplicarFiltrosMov()">Aplicar</button>
+            <button class="btn btn-ghost btn-sm" onclick="resetFiltrosMov()">Últimos 7 días</button>
+          </div>
+
+          <!-- Tarjetas de estadísticas -->
+          <div class="mov-stats-grid" id="movStatsGrid">
+            <div class="mov-stat-card total">
+              <div class="num" id="movTotal">0</div>
+              <div class="label">Total movimientos</div>
+            </div>
+            <div class="mov-stat-card entradas">
+              <div class="num" id="movEntradas">0</div>
+              <div class="label">Entradas (check‑in)</div>
+            </div>
+            <div class="mov-stat-card salidas">
+              <div class="num" id="movSalidas">0</div>
+              <div class="label">Salidas (check‑out)</div>
+            </div>
+            <div class="mov-stat-card pico">
+              <div class="num" id="movDiaPico">—</div>
+              <div class="label">Día con más movimiento</div>
+              <div class="sub" id="movDiaPicoDetalle"></div>
+            </div>
+          </div>
+
+          <!-- Gráfico de barras (celeste claro) -->
+          <div class="chart-mov-container">
+            <h4>Movimientos por día en el rango seleccionado</h4>
+            <div class="chart-mov-wrapper">
+              <canvas id="chartMovReporte"></canvas>
+            </div>
+          </div>
+
+          <!-- Tabla paginada -->
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr><th>Fecha</th><th>Huésped</th><th>Habitación</th><th>Tipo</th><th>Estado</th></tr>
+              </thead>
+              <tbody id="tablaMovimientosReporte"></tbody>
+            </table>
+          </div>
+          <div class="pagination-mov" id="paginacionMovReporte">
+            <button id="btnMovAnt" disabled>‹ Anterior</button>
+            <span id="movPagInfo">Página 1 de 1</span>
+            <button id="btnMovSig">Siguiente ›</button>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- ===== COMPARATIVO DE SUCURSALES ===== -->
       <div class="card" style="margin-top:20px;">
         <div class="card-header">
           <h3>Resumen comparativo de sucursales</h3>
@@ -253,11 +458,12 @@
           </table>
         </div>
       </div>
-    </div>
-  </div>
-</div>
 
-<!-- ===== MODAL DE CONFIRMACIÓN DE CIERRE DE SESIÓN ===== -->
+    </div> <!-- /content -->
+  </div> <!-- /main -->
+</div> <!-- /app-shell -->
+
+<!-- ===== MODAL DE CIERRE ===== -->
 <div class="modal-overlay" id="modalCierreSesion">
   <div class="modal modal-confirm">
     <div class="modal-head">
@@ -276,7 +482,7 @@
 
 <script src="assets/app.js"></script>
 <script>
-  // ---- Agregar modal de cierre de sesión ----
+  // ---- Modal de cierre ----
   (function() {
     const modalCierre = document.getElementById('modalCierreSesion');
     const btnConfirmar = document.getElementById('btnConfirmarCierre');
@@ -284,11 +490,9 @@
     window.abrirModalCierre = function() {
       modalCierre.classList.add('open');
     };
-
     window.cerrarModalCierre = function() {
       modalCierre.classList.remove('open');
     };
-
     btnConfirmar.addEventListener('click', function() {
       if (typeof logout === 'function') {
         logout();
@@ -299,19 +503,16 @@
       }
       modalCierre.classList.remove('open');
     });
-
     modalCierre.addEventListener('click', function(e) {
-      if (e.target === modalCierre) {
-        modalCierre.classList.remove('open');
-      }
+      if (e.target === modalCierre) modalCierre.classList.remove('open');
     });
   })();
 
-  // ---- Código principal de reportes ----
+  // ---- Código principal ----
   requireAuth();
   const suc = getSucursalActual();
 
-  // ---- Actualizar sidebar con la sucursal actual ----
+  // ---- Sidebar dinámico ----
   const direcciones = {
     centro: 'Palma c/ 14 de Mayo, Asunción',
     este: 'Av. Monseñor Rodríguez, Ciudad del Este'
@@ -319,12 +520,117 @@
   document.getElementById('sucursalNombre').textContent = suc.corto || 'Sucursal';
   document.getElementById('sucursalDireccion').textContent = direcciones[suc.id] || '';
 
-  // ---- Generar datos según la sucursal actual ----
-  const reservas = generarReservas(suc);
-  const habitaciones = generarHabitaciones(suc);
+  // ---- DATOS DE HUÉSPEDES POR SUCURSAL (coinciden con huespedes.html) ----
+  const datosHuespedes = {
+    centro: [
+      { nombre: 'Julia Souza', documento: 'CI 1392124', pais: 'Uruguay', telefono: '+595 974101332', email: 'julia.souza@correo.com', estadias: 5, ultimaVisita: '2026-05-14' },
+      { nombre: 'Pedro Duarte', documento: 'CI 1489655', pais: 'Paraguay', telefono: '+595 975101665', email: 'pedro.duarte@correo.com', estadias: 1, ultimaVisita: '2026-06-15' },
+      { nombre: 'Camila Ríos', documento: 'CPF 1587186', pais: 'Brasil', telefono: '+595 976101998', email: 'camila.rios@correo.com', estadias: 2, ultimaVisita: '2026-07-16' },
+      { nombre: 'Hugo Martínez', documento: 'CI 1684717', pais: 'Paraguay', telefono: '+595 977102331', email: 'hugo.martinez@correo.com', estadias: 3, ultimaVisita: '2026-01-17' },
+      { nombre: 'Rosa Cáceres', documento: 'RUT 1782248', pais: 'Chile', telefono: '+595 978102664', email: 'rosa.caceres@correo.com', estadias: 4, ultimaVisita: '2026-02-18' },
+      { nombre: 'Iván Gómez', documento: 'CI 1879779', pais: 'Paraguay', telefono: '+595 979102997', email: 'ivan.gomez@correo.com', estadias: 5, ultimaVisita: '2026-03-10' },
+      { nombre: 'Nadia López', documento: 'CPF 1977310', pais: 'Brasil', telefono: '+595 980103330', email: 'nadia.lopez@correo.com', estadias: 1, ultimaVisita: '2026-04-11' },
+      { nombre: 'Sergio Aquino', documento: 'CI 2074843', pais: 'Paraguay', telefono: '+595 981103663', email: 'sergio.aquino@correo.com', estadias: 3, ultimaVisita: '2026-05-12' }
+    ],
+    este: [
+      { nombre: 'Rosa Cáceres', documento: 'RUT 1782248', pais: 'Chile', telefono: '+595 978102664', email: 'rosa.caceres@correo.com', estadias: 4, ultimaVisita: '2026-02-18' },
+      { nombre: 'Iván Gómez', documento: 'CI 1879779', pais: 'Paraguay', telefono: '+595 979102997', email: 'ivan.gomez@correo.com', estadias: 5, ultimaVisita: '2026-03-10' },
+      { nombre: 'Nadia López', documento: 'CPF 1977310', pais: 'Brasil', telefono: '+595 980103330', email: 'nadia.lopez@correo.com', estadias: 1, ultimaVisita: '2026-04-11' },
+      { nombre: 'Sergio Aquino', documento: 'CI 2074843', pais: 'Paraguay', telefono: '+595 981103663', email: 'sergio.aquino@correo.com', estadias: 2, ultimaVisita: '2026-05-12' }
+    ]
+  };
+
+  const listaHuespedes = datosHuespedes[suc.id] || datosHuespedes.centro;
+
+  // ---- Generar habitaciones según sucursal ----
+  function generarHabitacionesLocal(suc) {
+    const tipos = suc.tiposHabitacion.map(t => t.tipo);
+    const precios = { Individual: 320000, Doble: 450000, Suite: 780000 };
+    const habitaciones = [];
+    let total = suc.id === 'centro' ? 30 : 22;
+    let prefijo = suc.prefijoHabitacion || 1;
+    const pisos = 3;
+    const habPorPiso = Math.ceil(total / pisos);
+    let count = 0;
+    for (let piso = 1; piso <= pisos; piso++) {
+      for (let i = 1; i <= habPorPiso; i++) {
+        if (count >= total) break;
+        const numero = `${prefijo}${piso}${String(i).padStart(2, '0')}`;
+        const tipo = tipos[count % tipos.length];
+        const precio = precios[tipo] || 450000;
+        let estado;
+        const rand = Math.random();
+        if (suc.id === 'centro') {
+          if (rand < 0.25) estado = 'disponible';
+          else if (rand < 0.55) estado = 'ocupada';
+          else if (rand < 0.80) estado = 'limpieza';
+          else estado = 'mantenimiento';
+        } else {
+          if (rand < 0.50) estado = 'disponible';
+          else if (rand < 0.70) estado = 'ocupada';
+          else if (rand < 0.85) estado = 'limpieza';
+          else estado = 'mantenimiento';
+        }
+        let huesped = null;
+        if (estado === 'ocupada') {
+          const idx = Math.floor(Math.random() * listaHuespedes.length);
+          huesped = listaHuespedes[idx].nombre;
+        }
+        habitaciones.push({ numero, piso, tipo, precioPYG: precio, estado, huesped });
+        count++;
+      }
+    }
+    return habitaciones;
+  }
+
+  // ---- Generar reservas usando ÚNICAMENTE los huéspedes de la sucursal ----
+  function generarReservasLocal(suc, huespedes) {
+    const tipos = ['Individual', 'Doble', 'Suite'];
+    const estados = ['confirmada', 'pendiente', 'cancelada'];
+    const reservas = [];
+    // Más reservas para que haya movimiento variado
+    const cantidad = suc.id === 'centro' ? 24 : 18; 
+    for (let i = 0; i < cantidad; i++) {
+      // Seleccionar huésped de la lista (cíclicamente)
+      const huesped = huespedes[i % huespedes.length].nombre;
+      const habitacion = `${suc.prefijoHabitacion || 1}${100 + i}`;
+      // Fechas distribuidas en los últimos 3 meses
+      const diasAtras = Math.floor(Math.random() * 60);
+      const fechaCheckin = new Date();
+      fechaCheckin.setDate(fechaCheckin.getDate() - diasAtras);
+      const checkin = fechaCheckin.toISOString().split('T')[0];
+      const noches = 1 + Math.floor(Math.random() * 4);
+      const fechaCheckout = new Date(fechaCheckin);
+      fechaCheckout.setDate(fechaCheckout.getDate() + noches);
+      const checkout = fechaCheckout.toISOString().split('T')[0];
+      const tipo = tipos[i % tipos.length];
+      const precioBase = tipo === 'Individual' ? 320000 : (tipo === 'Doble' ? 450000 : 780000);
+      const totalPYG = precioBase * noches;
+      const estado = estados[i % estados.length];
+      reservas.push({
+        id: `RES-${1000 + i}`,
+        huesped,
+        habitacion,
+        tipo,
+        checkin,
+        checkout,
+        noches,
+        totalPYG,
+        estado
+      });
+    }
+    // Ordenar por fecha de check-in (más reciente primero)
+    reservas.sort((a,b) => new Date(b.checkin) - new Date(a.checkin));
+    return reservas;
+  }
+
+  // ---- Generar datos ----
+  const habitaciones = generarHabitacionesLocal(suc);
+  const reservas = generarReservasLocal(suc, listaHuespedes);
 
   document.getElementById('subReportes').textContent = `${suc.corto} · Indicadores de desempeño`;
 
+  // ---- Funciones de gráficos originales ----
   function pintarBarras(){
     const cur = getCurrentCurrency();
     const dias = ['Lun','Mar','Mié','Jue','Vie','Sáb','Dom'];
@@ -378,9 +684,246 @@
     }).join('');
   }
 
-  function pintarTodo(){ pintarBarras(); pintarDonut(); pintarComparativo(); }
+  // ---- GENERACIÓN DE MOVIMIENTOS DESDE RESERVAS ----
+  function generarMovimientosDesdeReservas(reservas) {
+    const movs = [];
+    reservas.forEach(r => {
+      movs.push({
+        fecha: new Date(r.checkin + 'T00:00:00'),
+        huesped: r.huesped,
+        habitacion: r.habitacion,
+        tipo: 'checkin',
+        estado: r.estado === 'confirmada' ? 'Activo' : (r.estado === 'cancelada' ? 'Cancelado' : 'Pendiente')
+      });
+      movs.push({
+        fecha: new Date(r.checkout + 'T00:00:00'),
+        huesped: r.huesped,
+        habitacion: r.habitacion,
+        tipo: 'checkout',
+        estado: r.estado === 'confirmada' ? 'Finalizado' : (r.estado === 'cancelada' ? 'Cancelado' : 'Pendiente')
+      });
+    });
+    movs.sort((a,b) => b.fecha - a.fecha);
+    return movs;
+  }
+
+  const movimientos = generarMovimientosDesdeReservas(reservas);
+
+  // ---- FUNCIONES AUXILIARES DE FECHA ----
+  function esMismaFecha(f1, f2) {
+    const a = new Date(f1);
+    const b = new Date(f2);
+    return a.getFullYear() === b.getFullYear() &&
+           a.getMonth() === b.getMonth() &&
+           a.getDate() === b.getDate();
+  }
+
+  // ---- FILTRADO POR RANGO DE FECHAS ----
+  function filtrarPorRango(desde, hasta) {
+    const d = new Date(desde);
+    d.setHours(0,0,0,0);
+    const h = new Date(hasta);
+    h.setHours(23,59,59,999);
+    return movimientos.filter(m => {
+      const mFecha = new Date(m.fecha);
+      return mFecha >= d && mFecha <= h;
+    });
+  }
+
+  // ---- RENDERIZADO PRINCIPAL ----
+  let movPagina = 1;
+  const movPorPagina = 8;
+  let movFiltrados = [];
+
+  function renderizarMovimientos() {
+    const desdeStr = document.getElementById('fechaDesde').value;
+    const hastaStr = document.getElementById('fechaHasta').value;
+
+    if (!desdeStr || !hastaStr) {
+      document.getElementById('rangoFechasLabel').textContent = '(selecciona un rango)';
+      document.getElementById('movTotal').textContent = '—';
+      document.getElementById('movEntradas').textContent = '—';
+      document.getElementById('movSalidas').textContent = '—';
+      document.getElementById('movDiaPico').textContent = '—';
+      document.getElementById('movDiaPicoDetalle').textContent = '';
+      document.getElementById('tablaMovimientosReporte').innerHTML = '<tr><td colspan="5" style="text-align:center;color:#94a3b8;">Selecciona un rango de fechas para ver los movimientos</td></tr>';
+      document.getElementById('movPagInfo').textContent = 'Página 0 de 0';
+      document.getElementById('btnMovAnt').disabled = true;
+      document.getElementById('btnMovSig').disabled = true;
+      const canvas = document.getElementById('chartMovReporte');
+      const ctx = canvas.getContext('2d');
+      const rect = canvas.parentElement.getBoundingClientRect();
+      canvas.width = rect.width || 600;
+      canvas.height = rect.height || 180;
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      return;
+    }
+
+    const desde = new Date(desdeStr + 'T00:00:00');
+    const hasta = new Date(hastaStr + 'T23:59:59');
+    movFiltrados = filtrarPorRango(desde, hasta);
+
+    document.getElementById('rangoFechasLabel').textContent = `(del ${desde.toLocaleDateString('es-ES')} al ${hasta.toLocaleDateString('es-ES')})`;
+
+    const total = movFiltrados.length;
+    const entradas = movFiltrados.filter(m => m.tipo === 'checkin').length;
+    const salidas = movFiltrados.filter(m => m.tipo === 'checkout').length;
+    document.getElementById('movTotal').textContent = total;
+    document.getElementById('movEntradas').textContent = entradas;
+    document.getElementById('movSalidas').textContent = salidas;
+
+    const conteoPorDia = {};
+    movFiltrados.forEach(m => {
+      const key = m.fecha.toISOString().split('T')[0];
+      conteoPorDia[key] = (conteoPorDia[key] || 0) + 1;
+    });
+    let maxDia = null;
+    let maxCount = 0;
+    for (const [fecha, count] of Object.entries(conteoPorDia)) {
+      if (count > maxCount) { maxCount = count; maxDia = fecha; }
+    }
+    if (maxDia) {
+      const fechaObj = new Date(maxDia + 'T00:00:00');
+      document.getElementById('movDiaPico').textContent = fechaObj.toLocaleDateString('es-ES');
+      document.getElementById('movDiaPicoDetalle').textContent = `${maxCount} movimientos`;
+    } else {
+      document.getElementById('movDiaPico').textContent = '—';
+      document.getElementById('movDiaPicoDetalle').textContent = '';
+    }
+
+    const totalPaginas = Math.ceil(total / movPorPagina) || 1;
+    if (movPagina > totalPaginas) movPagina = totalPaginas;
+    if (movPagina < 1) movPagina = 1;
+
+    const inicio = (movPagina - 1) * movPorPagina;
+    const fin = Math.min(inicio + movPorPagina, total);
+    const paginaMovs = movFiltrados.slice(inicio, fin);
+
+    const tbody = document.getElementById('tablaMovimientosReporte');
+    tbody.innerHTML = paginaMovs.map(m => `
+      <tr>
+        <td>${m.fecha.toLocaleDateString('es-ES')}</td>
+        <td>${m.huesped}</td>
+        <td>${m.habitacion}</td>
+        <td><span class="badge-mov ${m.tipo}">${m.tipo === 'checkin' ? 'Check-in' : 'Check-out'}</span></td>
+        <td>${m.estado}</td>
+      </tr>
+    `).join('') || '<tr><td colspan="5" style="text-align:center; color:#64748b;">No hay movimientos en este rango</td></tr>';
+
+    document.getElementById('movPagInfo').textContent = `Página ${movPagina} de ${totalPaginas}`;
+    document.getElementById('btnMovAnt').disabled = (movPagina === 1);
+    document.getElementById('btnMovSig').disabled = (movPagina === totalPaginas || total === 0);
+
+    dibujarGraficoMovimientos(desde, hasta);
+  }
+
+  // ---- GRÁFICO DE MOVIMIENTOS (celeste claro) ----
+  function dibujarGraficoMovimientos(desde, hasta) {
+    const canvas = document.getElementById('chartMovReporte');
+    const ctx = canvas.getContext('2d');
+    const container = canvas.parentElement;
+    const rect = container.getBoundingClientRect();
+    canvas.width = rect.width || 600;
+    canvas.height = rect.height || 180;
+
+    const ancho = canvas.width;
+    const alto = canvas.height;
+    ctx.clearRect(0, 0, ancho, alto);
+
+    const fechas = [];
+    const d = new Date(desde);
+    d.setHours(0,0,0,0);
+    const h = new Date(hasta);
+    h.setHours(0,0,0,0);
+    while (d <= h) {
+      fechas.push(new Date(d));
+      d.setDate(d.getDate() + 1);
+    }
+
+    if (fechas.length === 0) return;
+
+    const data = fechas.map(f => {
+      const count = movFiltrados.filter(m => {
+        const mFecha = new Date(m.fecha);
+        mFecha.setHours(0,0,0,0);
+        return esMismaFecha(mFecha, f);
+      }).length;
+      return { fecha: f, count };
+    });
+
+    const maxVal = Math.max(1, ...data.map(d => d.count));
+    const padding = { top: 10, bottom: 24, left: 24, right: 8 };
+    const graphWidth = ancho - padding.left - padding.right;
+    const graphHeight = alto - padding.top - padding.bottom;
+    const barWidth = Math.min(24, graphWidth / data.length * 0.7);
+    const stepX = graphWidth / data.length;
+
+    ctx.fillStyle = '#93c5fd';
+    data.forEach((item, i) => {
+      const barHeight = (item.count / maxVal) * graphHeight;
+      const x = padding.left + i * stepX + (stepX - barWidth) / 2;
+      const y = padding.top + graphHeight - barHeight;
+      ctx.fillRect(x, y, barWidth, barHeight);
+      ctx.fillStyle = '#64748b';
+      ctx.font = '8px sans-serif';
+      ctx.textAlign = 'center';
+      ctx.fillText(item.fecha.getDate(), x + barWidth/2, padding.top + graphHeight + 14);
+      if (item.count > 0) {
+        ctx.fillStyle = '#0f172a';
+        ctx.font = '8px sans-serif';
+        ctx.fillText(item.count, x + barWidth/2, y - 3);
+      }
+    });
+
+    ctx.fillStyle = '#94a3b8';
+    ctx.font = '8px sans-serif';
+    ctx.textAlign = 'right';
+    ctx.fillText(maxVal, padding.left - 4, padding.top + 4);
+    ctx.fillText('0', padding.left - 4, padding.top + graphHeight + 4);
+  }
+
+  // ---- EVENTOS DE PAGINACIÓN ----
+  document.getElementById('btnMovAnt').addEventListener('click', function() {
+    if (movPagina > 1) { movPagina--; renderizarMovimientos(); }
+  });
+  document.getElementById('btnMovSig').addEventListener('click', function() {
+    const totalPaginas = Math.ceil(movFiltrados.length / movPorPagina);
+    if (movPagina < totalPaginas) { movPagina++; renderizarMovimientos(); }
+  });
+
+  // ---- FUNCIONES DE FILTRO ----
+  window.aplicarFiltrosMov = function() {
+    movPagina = 1;
+    renderizarMovimientos();
+  };
+
+  window.resetFiltrosMov = function() {
+    const hoy = new Date();
+    const desde = new Date(hoy);
+    desde.setDate(desde.getDate() - 7);
+    document.getElementById('fechaDesde').value = desde.toISOString().split('T')[0];
+    document.getElementById('fechaHasta').value = hoy.toISOString().split('T')[0];
+    movPagina = 1;
+    renderizarMovimientos();
+  };
+
+  // ---- INICIALIZACIÓN ----
+  function pintarTodo() {
+    pintarBarras();
+    pintarDonut();
+    pintarComparativo();
+    resetFiltrosMov();
+  }
+
   pintarTodo();
   window.addEventListener('currencychange', pintarTodo);
+
+  // ---- Redibujar gráfico al redimensionar ----
+  let resizeTimer;
+  window.addEventListener('resize', function() {
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(() => renderizarMovimientos(), 200);
+  });
 </script>
 </body>
 </html>

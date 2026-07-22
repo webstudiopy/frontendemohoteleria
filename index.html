@@ -88,10 +88,12 @@
   .sucursal-card.selected{border-color:var(--blue-700); background:var(--blue-50); box-shadow:0 0 0 3px var(--blue-100);}
   .sucursal-card .icon{
     width:38px; height:38px; border-radius:9px; flex-shrink:0;
-    background:var(--blue-100); color:var(--blue-800);
+    /* Fondo eliminado (antes tenía background:var(--blue-100)) */
+    background:transparent;
+    color:var(--gray-500);
     display:flex; align-items:center; justify-content:center;
   }
-  .sucursal-card .icon svg{width:19px; height:19px;}
+  .sucursal-card .icon svg{width:22px; height:22px; stroke:currentColor;}
   .sucursal-card .info b{display:block; font-size:14px; color:var(--blue-950); font-weight:700;}
   .sucursal-card .info small{font-size:12px; color:var(--gray-500); font-weight:500;}
   .sucursal-card .check{
@@ -216,7 +218,7 @@
         <form id="loginForm" onsubmit="return manejarLogin(event)">
           <div class="field">
             <label>Usuario</label>
-            <input type="text" id="usuario" placeholder="p. ej. recepcion.centro" required>
+            <input type="text" id="usuario" placeholder="p. ej. admin" required>
           </div>
           <div class="field">
             <label>Contraseña</label>
@@ -228,8 +230,6 @@
           </div>
           <button type="submit" class="btn btn-primary btn-block">Ingresar</button>
         </form>
-
-        <div class="demo-hint"><b>Credenciales de demo:</b> usuario <b>admin</b> · contraseña <b>admin</b> (cualquier combinación funciona en esta demo).</div>
       </div>
 
     </div>
@@ -243,6 +243,14 @@
     este: 'Sucursal Ciudad del Este'
   };
 
+  // Lista de usuarios válidos (usuario -> contraseña)
+  const USUARIOS_VALIDOS = {
+    'admin': '1234',
+    'Adriana': '12345',
+    'prueba': '123456',
+    'Yessica': '1234567'
+  };
+
   function seleccionarSucursal(id){
     sucursalElegida = id;
     document.querySelectorAll('.sucursal-card').forEach(c=>{
@@ -252,6 +260,8 @@
       document.getElementById('stepSucursal').style.display = 'none';
       document.getElementById('stepLogin').classList.add('visible');
       document.getElementById('tagSucursalNombre').textContent = nombresSucursal[id];
+      // Limpiar errores previos al cambiar
+      document.getElementById('errorMsg').classList.remove('visible');
     }, 180);
   }
 
@@ -265,23 +275,34 @@
     e.preventDefault();
     const usuario = document.getElementById('usuario').value.trim();
     const password = document.getElementById('password').value.trim();
+    const errorMsg = document.getElementById('errorMsg');
 
+    // Validar que los campos no estén vacíos
     if(!usuario || !password){
-      document.getElementById('errorMsg').classList.add('visible');
+      errorMsg.textContent = 'Por favor, completá ambos campos.';
+      errorMsg.classList.add('visible');
       return false;
     }
 
-    localStorage.setItem('hoteleria_sucursal', sucursalElegida);
-    localStorage.setItem('hoteleria_auth', JSON.stringify({
-      nombre: usuario.charAt(0).toUpperCase() + usuario.slice(1),
-      rol: 'Recepción',
-      usuario
-    }));
-    if(!localStorage.getItem('hoteleria_currency')){
-      localStorage.setItem('hoteleria_currency', 'PYG');
+    // Verificar credenciales contra la lista de usuarios
+    if(USUARIOS_VALIDOS.hasOwnProperty(usuario) && USUARIOS_VALIDOS[usuario] === password){
+      // Credenciales correctas
+      localStorage.setItem('hoteleria_sucursal', sucursalElegida);
+      localStorage.setItem('hoteleria_auth', JSON.stringify({
+        nombre: usuario,
+        rol: 'Recepción',
+        usuario: usuario
+      }));
+      if(!localStorage.getItem('hoteleria_currency')){
+        localStorage.setItem('hoteleria_currency', 'PYG');
+      }
+      window.location.href = 'dashboard.html';
+      return false;
+    } else {
+      errorMsg.textContent = 'Usuario o contraseña incorrectos. Probá con las credenciales de demostración.';
+      errorMsg.classList.add('visible');
+      return false;
     }
-    window.location.href = 'dashboard.html';
-    return false;
   }
 </script>
 </body>

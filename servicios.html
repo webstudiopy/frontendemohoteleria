@@ -1,0 +1,672 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hotelería — Servicios</title>
+  <link rel="stylesheet" href="assets/styles.css">
+  <style>
+    /* ===== SIDEBAR CON SCROLL ===== */
+    .sidebar {
+      overflow-y: auto;
+      max-height: 100vh;
+      scrollbar-width: thin;
+    }
+    .sidebar::-webkit-scrollbar {
+      width: 4px;
+    }
+    .sidebar::-webkit-scrollbar-thumb {
+      background: #cbd5e1;
+      border-radius: 4px;
+    }
+    .sidebar::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    /* ===== SUCURSAL EN SIDEBAR ===== */
+    .sidebar-footer {
+      background: transparent;
+    }
+    .sucursal-info {
+      padding: 0.5rem 0.8rem;
+      font-size: 0.8rem;
+      color: #ffffff;
+      line-height: 1.5;
+    }
+    .sucursal-info .nombre {
+      font-weight: 600;
+      color: #ffffff;
+      display: block;
+    }
+    .sucursal-info .direccion {
+      font-size: 0.7rem;
+      color: rgba(255, 255, 255, 0.6);
+      display: block;
+    }
+    .logout-link {
+      color: #ffffff !important;
+    }
+    .logout-link:hover {
+      color: rgba(255, 255, 255, 0.7) !important;
+    }
+
+    /* ===== MODAL DE CIERRE DE SESIÓN ===== */
+    .modal-confirm {
+      max-width: 400px;
+      width: 90%;
+    }
+    .modal-confirm .modal-body p {
+      font-size: 1rem;
+      color: #1e293b;
+      margin: 0.5rem 0 1.2rem;
+      line-height: 1.6;
+    }
+    .modal-confirm .modal-foot {
+      display: flex;
+      gap: 0.8rem;
+      justify-content: center;
+      padding-top: 0.5rem;
+    }
+    .modal-confirm .btn-cancel {
+      background: #e2e8f0;
+      color: #1e293b;
+      border: none;
+      padding: 0.5rem 1.5rem;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: background 0.2s;
+      min-width: 100px;
+    }
+    .modal-confirm .btn-cancel:hover {
+      background: #cbd5e1;
+    }
+    .modal-confirm .btn-danger {
+      background: #dc2626;
+      color: #fff;
+      border: none;
+      padding: 0.5rem 1.5rem;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: background 0.2s;
+      min-width: 100px;
+    }
+    .modal-confirm .btn-danger:hover {
+      background: #b91c1c;
+    }
+
+    /* ===== ESTILOS PARA LISTA DE SERVICIOS ===== */
+    .servicios-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 1rem;
+      margin: 1rem 0;
+    }
+    .servicio-card {
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 12px;
+      padding: 1rem 1.2rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.3rem;
+      transition: box-shadow 0.2s;
+    }
+    .servicio-card:hover {
+      box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    }
+    .servicio-card .nombre {
+      font-weight: 600;
+      font-size: 1rem;
+      color: #1e293b;
+    }
+    .servicio-card .precio {
+      font-size: 0.9rem;
+      color: #0b63e5;
+      font-weight: 600;
+    }
+    .servicio-card .exento {
+      font-size: 0.75rem;
+      color: #64748b;
+      display: inline-block;
+      width: fit-content;
+    }
+    .servicio-card .acciones {
+      display: flex;
+      gap: 0.5rem;
+      margin-top: 0.5rem;
+    }
+    .servicio-card .acciones button {
+      background: none;
+      border: 1px solid #d1d5db;
+      padding: 0.2rem 0.8rem;
+      border-radius: 6px;
+      font-size: 0.7rem;
+      cursor: pointer;
+      transition: all 0.15s;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .servicio-card .acciones button svg {
+      width: 14px;
+      height: 14px;
+      stroke: currentColor;
+      stroke-width: 2;
+      fill: none;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+    .servicio-card .acciones .edit-btn {
+      background: #e2e8f0;
+      color: #1e293b;
+    }
+    .servicio-card .acciones .edit-btn:hover {
+      background: #cbd5e1;
+    }
+    .servicio-card .acciones .del-btn {
+      background: #fee2e2;
+      color: #b91c1c;
+      border-color: #fecaca;
+    }
+    .servicio-card .acciones .del-btn:hover {
+      background: #fecaca;
+    }
+
+    .toolbar-actions {
+      display: flex;
+      gap: 0.8rem;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    /* ===== MODAL DE SERVICIO ===== */
+    .modal-servicio .modal {
+      max-width: 480px;
+    }
+    .modal-servicio .field-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+    }
+    .modal-servicio .field label {
+      font-weight: 600;
+      font-size: 0.85rem;
+      color: #334155;
+    }
+    .modal-servicio .field input,
+    .modal-servicio .field select {
+      width: 100%;
+      padding: 0.5rem 0.75rem;
+      border: 1px solid #d1d5db;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      transition: border 0.15s;
+      background: #fff;
+    }
+    .modal-servicio .field input:focus,
+    .modal-servicio .field select:focus {
+      outline: none;
+      border-color: #2563eb;
+      box-shadow: 0 0 0 3px rgba(37,99,235,0.1);
+    }
+
+    /* ===== TOAST CON SVG ===== */
+    .toast {
+      position: fixed;
+      bottom: 30px;
+      right: 30px;
+      background: #1e293b;
+      color: #fff;
+      padding: 1rem 1.8rem;
+      border-radius: 12px;
+      box-shadow: 0 8px 30px rgba(0,0,0,0.3);
+      font-size: 0.95rem;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      z-index: 9999;
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.3s, transform 0.3s;
+      pointer-events: none;
+    }
+    .toast.visible {
+      opacity: 1;
+      transform: translateY(0);
+      pointer-events: auto;
+    }
+    .toast .icon {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 24px;
+      height: 24px;
+    }
+    .toast .icon svg {
+      width: 20px;
+      height: 20px;
+      stroke: #fff;
+      stroke-width: 2.5;
+      fill: none;
+    }
+  </style>
+</head>
+<body>
+<div class="mobile-topbar">
+  <div class="brandmark"><div class="mark">H</div><span class="brandname">Hotelería</span></div>
+  <button class="hamburger-btn" onclick="toggleSidebar()" aria-label="Abrir menú">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+  </button>
+</div>
+<div class="sidebar-overlay" onclick="closeSidebar()"></div>
+<div class="app-shell">
+
+  <!-- ===== SIDEBAR ===== -->
+  <aside class="sidebar">
+    <div class="sidebar-brand">
+      <div class="mark">H</div>
+      <div class="name">Hotelería<span>Panel administrativo</span></div>
+    </div>
+
+    <div class="nav-group-label">General</div>
+    <a class="nav-link" href="dashboard.html">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="7" height="9" rx="1.5"/><rect x="14" y="3" width="7" height="5" rx="1.5"/><rect x="14" y="12" width="7" height="9" rx="1.5"/><rect x="3" y="16" width="7" height="5" rx="1.5"/></svg>
+      Panel principal
+    </a>
+
+    <div class="nav-group-label">Operación</div>
+    <a class="nav-link" href="habitaciones.html">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 21V8l8-5 8 5v13"/><path d="M9 21v-6h6v6"/></svg>
+      Habitaciones
+    </a>
+    <a class="nav-link" href="reservas.html">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4" width="18" height="17" rx="2"/><path d="M3 9h18M8 2v4M16 2v4"/></svg>
+      Reservas
+    </a>
+    <a class="nav-link" href="huespedes.html">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="8" r="3.5"/><path d="M4.5 20.5c1.6-3.6 4.4-5.5 7.5-5.5s5.9 1.9 7.5 5.5"/></svg>
+      Huéspedes
+    </a>
+    <a class="nav-link" href="mapa.html">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M3 15h18M9 3v18M15 3v18"/></svg>
+      Mapa de habitaciones
+    </a>
+
+    <div class="nav-group-label">Administración</div>
+    <a class="nav-link" href="facturacion.html">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 8h8M8 12h8M8 16h5"/></svg>
+      Facturación
+    </a>
+    <a class="nav-link active" href="servicios.html">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="3"/><path d="M19 12h2M3 12h2M12 3v2M12 19v2M5.6 5.6l1.4 1.4M17 17l1.4 1.4M17 7l1.4-1.4M5.6 18.4l1.4-1.4"/></svg>
+      Servicios
+    </a>
+    <a class="nav-link" href="reportes.html">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 20V10M12 20V4M20 20v-7"/></svg>
+      Reportes
+    </a>
+    <a class="nav-link" href="usuarios.html">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="8" r="3.5"/><path d="M4.5 20.5c1.6-3.6 4.4-5.5 7.5-5.5s5.9 1.9 7.5 5.5"/><path d="M16.5 16.5c1.6-1.6 2.5-3.8 2.5-6.5"/></svg>
+      Usuarios
+    </a>
+
+    <div class="nav-group-label">Finanzas</div>
+    <a class="nav-link" href="formas.html">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="6" width="20" height="14" rx="2"/><path d="M2 10h20"/></svg>
+      Formas de pago
+    </a>
+    <a class="nav-link" href="caja.html">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="3"/><path d="M20 12h-4M8 12H4"/><path d="M12 8V4M12 20v-4"/></svg>
+      Caja
+    </a>
+
+    <div class="sidebar-footer">
+      <div class="sucursal-info" id="sucursalSidebar">
+        <span class="nombre" id="sucursalNombre">Sucursal Centro</span>
+        <span class="direccion" id="sucursalDireccion">Palma c/ 14 de Mayo, Asunción</span>
+      </div>
+      <a class="logout-link" href="#" onclick="abrirModalCierre(); return false;">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4M16 17l5-5-5-5M21 12H9"/></svg>
+        Cerrar sesión
+      </a>
+    </div>
+  </aside>
+
+  <!-- ===== MAIN ===== -->
+  <div class="main">
+    <div class="topbar">
+      <div>
+        <h1>Servicios adicionales</h1>
+        <div class="subtitle">Gestiona los servicios que se pueden agregar a las facturas</div>
+      </div>
+      <div class="topbar-right">
+        <div class="user-chip">
+          <div class="avatar" data-user-avatar></div>
+          <div class="info"><b data-user-name></b><small data-user-role></small></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="content">
+      <div class="toolbar">
+        <div class="toolbar-actions">
+          <button class="btn btn-accent btn-sm" onclick="abrirModalServicio()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:18px;height:18px;"><path d="M12 5v14M5 12h14"/></svg>
+            Nuevo servicio
+          </button>
+          <span style="font-size:0.8rem; color:#64748b;" id="contadorServicios">0 servicios</span>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="servicios-grid" id="listaServicios"></div>
+      </div>
+
+      <div class="card" style="margin-top:16px;">
+        <div class="card-body" style="display:flex; align-items:center; gap:10px; color:var(--gray-500); font-size:12.5px;">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" style="width:16px;height:16px;flex-shrink:0;"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16h.01"/></svg>
+          Los servicios guardados aquí aparecerán como opciones al generar nuevas facturas en el módulo de Facturación.
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== TOAST CON SVG ===== -->
+<div id="toastNotificacion" class="toast">
+  <span class="icon">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+      <circle cx="12" cy="12" r="9"/>
+      <path d="M9 12l2 2 4-4"/>
+    </svg>
+  </span>
+  <span id="toastMensaje">Operación realizada</span>
+</div>
+
+<!-- ===== MODAL DE CIERRE DE SESIÓN ===== -->
+<div class="modal-overlay" id="modalCierreSesion">
+  <div class="modal modal-confirm">
+    <div class="modal-head">
+      <h3>Confirmar cierre</h3>
+      <button class="modal-close" onclick="cerrarModalCierre()">✕</button>
+    </div>
+    <div class="modal-body">
+      <p>¿Está seguro de que desea cerrar sesión? Se perderán los cambios no guardados.</p>
+    </div>
+    <div class="modal-foot">
+      <button class="btn-cancel" onclick="cerrarModalCierre()">Cancelar</button>
+      <button class="btn-danger" id="btnConfirmarCierre">Cerrar sesión</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== MODAL DE CONFIRMACIÓN PARA ELIMINAR SERVICIO ===== -->
+<div class="modal-overlay" id="modalEliminarServicio">
+  <div class="modal modal-confirm">
+    <div class="modal-head">
+      <h3>Confirmar eliminación</h3>
+      <button class="modal-close" onclick="cerrarModalEliminarServicio()">✕</button>
+    </div>
+    <div class="modal-body">
+      <p id="modalEliminarTexto">¿Está seguro de eliminar el servicio <strong>Nombre</strong>? Esta acción no se puede deshacer.</p>
+    </div>
+    <div class="modal-foot">
+      <button class="btn-cancel" onclick="cerrarModalEliminarServicio()">Cancelar</button>
+      <button class="btn-danger" id="btnConfirmarEliminarServicio">Eliminar</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== MODAL DE SERVICIO (AGREGAR/EDITAR) ===== -->
+<div class="modal-overlay modal-servicio" id="modalServicio">
+  <div class="modal">
+    <div class="modal-head">
+      <h3 id="modalServicioTitulo">Nuevo servicio</h3>
+      <button class="modal-close" onclick="cerrarModalServicio()">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="field">
+        <label>Nombre del servicio <span class="req">*</span></label>
+        <input type="text" id="servicioNombre" placeholder="Ej. Desayuno buffet">
+      </div>
+      <div class="field-row">
+        <div class="field">
+          <label>Precio base (Gs) <span class="req">*</span></label>
+          <input type="number" id="servicioPrecio" placeholder="85000">
+        </div>
+        <div class="field">
+          <label>Exento de IVA</label>
+          <select id="servicioExento">
+            <option value="false">No (10% IVA)</option>
+            <option value="true">Sí (0% IVA)</option>
+          </select>
+        </div>
+      </div>
+      <input type="hidden" id="servicioEditId" value="">
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-ghost" onclick="cerrarModalServicio()">Cancelar</button>
+      <button class="btn btn-primary" id="btnGuardarServicio">Guardar servicio</button>
+    </div>
+  </div>
+</div>
+
+<script src="assets/app.js"></script>
+<script>
+  // ---- Modal de cierre de sesión ----
+  (function() {
+    const modalCierre = document.getElementById('modalCierreSesion');
+    const btnConfirmar = document.getElementById('btnConfirmarCierre');
+
+    window.abrirModalCierre = function() {
+      modalCierre.classList.add('open');
+    };
+    window.cerrarModalCierre = function() {
+      modalCierre.classList.remove('open');
+    };
+    btnConfirmar.addEventListener('click', function() {
+      if (typeof logout === 'function') {
+        logout();
+      } else {
+        localStorage.removeItem('hoteleria_auth');
+        localStorage.removeItem('hoteleria_sucursal');
+        window.location.href = 'index.html';
+      }
+      modalCierre.classList.remove('open');
+    });
+    modalCierre.addEventListener('click', function(e) {
+      if (e.target === modalCierre) modalCierre.classList.remove('open');
+    });
+  })();
+
+  // ---- Modal de confirmación para eliminar servicio ----
+  (function() {
+    const modalEliminar = document.getElementById('modalEliminarServicio');
+    const btnConfirmar = document.getElementById('btnConfirmarEliminarServicio');
+    let indexAEliminar = null;
+
+    window.abrirModalEliminarServicio = function(index, nombre) {
+      indexAEliminar = index;
+      document.getElementById('modalEliminarTexto').innerHTML =
+        `¿Está seguro de eliminar el servicio <strong>${nombre}</strong>? Esta acción no se puede deshacer.`;
+      modalEliminar.classList.add('open');
+    };
+
+    window.cerrarModalEliminarServicio = function() {
+      modalEliminar.classList.remove('open');
+      indexAEliminar = null;
+    };
+
+    btnConfirmar.addEventListener('click', function() {
+      if (indexAEliminar !== null) {
+        const servicios = getServicios();
+        servicios.splice(indexAEliminar, 1);
+        guardarServicios(servicios);
+        renderServicios();
+        mostrarToast('Servicio eliminado');
+        cerrarModalEliminarServicio();
+      }
+    });
+
+    modalEliminar.addEventListener('click', function(e) {
+      if (e.target === modalEliminar) cerrarModalEliminarServicio();
+    });
+  })();
+
+  // ---- Datos de sucursal ----
+  requireAuth();
+  const suc = getSucursalActual();
+  const direcciones = {
+    centro: 'Palma c/ 14 de Mayo, Asunción',
+    este: 'Av. Monseñor Rodríguez, Ciudad del Este'
+  };
+  document.getElementById('sucursalNombre').textContent = suc.corto || 'Sucursal';
+  document.getElementById('sucursalDireccion').textContent = direcciones[suc.id] || '';
+
+  // ---- Gestión de servicios en localStorage ----
+  const STORAGE_KEY = 'hoteleria_servicios';
+
+  function getServicios() {
+    try {
+      const data = localStorage.getItem(STORAGE_KEY);
+      return data ? JSON.parse(data) : [];
+    } catch {
+      return [];
+    }
+  }
+
+  function guardarServicios(servicios) {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(servicios));
+  }
+
+  // ---- Renderizar lista de servicios ----
+  function renderServicios() {
+    const servicios = getServicios();
+    const contenedor = document.getElementById('listaServicios');
+    const contador = document.getElementById('contadorServicios');
+
+    if (servicios.length === 0) {
+      contenedor.innerHTML = `
+        <div style="grid-column:1/-1; text-align:center; padding:2rem; color:#94a3b8; font-size:0.95rem;">
+          No hay servicios agregados. Haz clic en "Nuevo servicio" para comenzar.
+        </div>
+      `;
+      contador.textContent = '0 servicios';
+      return;
+    }
+
+    contador.textContent = `${servicios.length} servicios`;
+
+    // Iconos SVG
+    const editIcon = `<svg viewBox="0 0 24 24"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>`;
+    const deleteIcon = `<svg viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg>`;
+
+    contenedor.innerHTML = servicios.map((s, index) => `
+      <div class="servicio-card">
+        <div class="nombre">${s.nombre}</div>
+        <div class="precio">Gs ${Number(s.precio).toLocaleString('es-PY')}</div>
+        <div class="exento">${s.exento ? 'Exento de IVA' : '10% IVA'}</div>
+        <div class="acciones">
+          <button class="edit-btn" onclick="editarServicio(${index})">${editIcon} Editar</button>
+          <button class="del-btn" onclick="abrirModalEliminarServicio(${index}, '${s.nombre}')">${deleteIcon} Eliminar</button>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  // ---- Abrir modal para nuevo servicio ----
+  function abrirModalServicio() {
+    document.getElementById('modalServicioTitulo').textContent = 'Nuevo servicio';
+    document.getElementById('servicioNombre').value = '';
+    document.getElementById('servicioPrecio').value = '';
+    document.getElementById('servicioExento').value = 'false';
+    document.getElementById('servicioEditId').value = '';
+    document.getElementById('modalServicio').classList.add('open');
+  }
+
+  // ---- Editar servicio ----
+  function editarServicio(index) {
+    const servicios = getServicios();
+    const s = servicios[index];
+    if (!s) return;
+    document.getElementById('modalServicioTitulo').textContent = 'Editar servicio';
+    document.getElementById('servicioNombre').value = s.nombre;
+    document.getElementById('servicioPrecio').value = s.precio;
+    document.getElementById('servicioExento').value = s.exento ? 'true' : 'false';
+    document.getElementById('servicioEditId').value = index;
+    document.getElementById('modalServicio').classList.add('open');
+  }
+
+  // ---- Guardar servicio (nuevo o edición) ----
+  document.getElementById('btnGuardarServicio').addEventListener('click', function() {
+    const nombre = document.getElementById('servicioNombre').value.trim();
+    const precio = parseInt(document.getElementById('servicioPrecio').value.trim());
+    const exento = document.getElementById('servicioExento').value === 'true';
+    const editId = document.getElementById('servicioEditId').value;
+
+    if (!nombre || isNaN(precio) || precio <= 0) {
+      mostrarToast('Complete todos los campos correctamente');
+      return;
+    }
+
+    let servicios = getServicios();
+
+    if (editId !== '') {
+      const idx = parseInt(editId);
+      if (idx >= 0 && idx < servicios.length) {
+        servicios[idx] = { nombre, precio, exento };
+        mostrarToast('Servicio actualizado');
+      } else {
+        mostrarToast('Error al actualizar');
+        return;
+      }
+    } else {
+      servicios.push({ nombre, precio, exento });
+      mostrarToast('Servicio agregado');
+    }
+
+    guardarServicios(servicios);
+    cerrarModalServicio();
+    renderServicios();
+  });
+
+  function cerrarModalServicio() {
+    document.getElementById('modalServicio').classList.remove('open');
+  }
+
+  // ---- Toast ----
+  function mostrarToast(mensaje) {
+    const toast = document.getElementById('toastNotificacion');
+    const msg = document.getElementById('toastMensaje');
+    msg.textContent = mensaje;
+    toast.classList.add('visible');
+    clearTimeout(window.toastTimeout);
+    window.toastTimeout = setTimeout(() => toast.classList.remove('visible'), 3000);
+  }
+
+  // ---- Inicializar con servicios por defecto si no existen ----
+  (function initServicios() {
+    if (!localStorage.getItem(STORAGE_KEY)) {
+      const defaults = [
+        { nombre: 'Desayuno buffet', precio: 85000, exento: false },
+        { nombre: 'Estacionamiento cubierto', precio: 45000, exento: false },
+        { nombre: 'Servicio de lavandería', precio: 60000, exento: false },
+        { nombre: 'Cena especial', precio: 120000, exento: true },
+        { nombre: 'Traslado al aeropuerto', precio: 150000, exento: false },
+        { nombre: 'Minibar', precio: 35000, exento: false },
+        { nombre: 'Llamadas telefónicas', precio: 20000, exento: true },
+        { nombre: 'Mascota (cargo extra)', precio: 50000, exento: false }
+      ];
+      guardarServicios(defaults);
+    }
+  })();
+
+  renderServicios();
+</script>
+</body>
+</html>
